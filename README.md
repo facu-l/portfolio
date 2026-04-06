@@ -79,10 +79,6 @@ src/
 - **Projects** - Galería de proyectos destacados
 - **Contact** - Formulario para contactarme
 
-## 🤝 Contribuciones
-
-Si tienes sugerencias para mejorar el portafolio, siéntete libre de abrir un issue o PR.
-
 ## 📧 Contacto
 
 Para comunicarte conmigo, usa el formulario en la sección de Contact o envía un email.
