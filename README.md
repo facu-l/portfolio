@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# 🎨 Mi Portafolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portafolio personal construido con **React**, **TypeScript** y **Vite**. Un sitio moderno y rápido que muestra mis habilidades, proyectos y experiencia.
 
-Currently, two official plugins are available:
+## 🚀 Stack Tecnológico
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19.2.4** - Biblioteca de UI
+- **TypeScript 5.9** - Tipado estático
+- **Vite 8** - Bundler ultrarrápido
+- **Tailwind CSS 4.2** - Estilos modernos
+- **ESLint** - Validación de código
+- **Vite Plugin React** - Optimizaciones para React
 
-## React Compiler
+## 📋 Requisitos Previos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+ 
+- npm o yarn
 
-## Expanding the ESLint configuration
+## 🛠️ Instalación
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Clonar el repositorio (si está en un repo git)
+git clone <tu-repo>
+cd portfolio
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Instalar dependencias
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏃 Ejecutar el Proyecto
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Modo desarrollo (con HMR)
+npm run dev
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Construir para producción
+npm run build
+
+# Vista previa de la build
+npm run preview
+
+# Validar código
+npm run lint
 ```
+
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── components/
+│   ├── Hero.tsx       # Sección de bienvenida
+│   ├── About.tsx      # Información personal
+│   ├── Skills.tsx     # Habilidades técnicas
+│   ├── Projects.tsx   # Portafolio de proyectos
+│   └── Contact.tsx    # Formulario de contacto
+├── data/
+│   └── projects.ts    # Información de proyectos
+├── types/
+│   └── index.ts       # Tipos TypeScript globales
+├── App.tsx            # Componente principal
+├── main.tsx           # Punto de entrada
+└── index.css          # Estilos globales
+```
+
+## 🎯 Características
+
+- ✨ Diseño responsivo con Tailwind CSS
+- ⚡ Carga ultrarrápida con Vite
+- 🔒 Tipado completo con TypeScript
+- 🎨 Componentes modulares y reutilizables
+- 📱 Mobile-first
+- 🚀 Optimizado para SEO
+
+## 📝 Componentes Principales
+
+- **Hero** - Presentación inicial impactante
+- **About** - Biografía y experiencia
+- **Skills** - Habilidades técnicas
+- **Projects** - Galería de proyectos destacados
+- **Contact** - Formulario para contactarme
+
+## 🤝 Contribuciones
+
+Si tienes sugerencias para mejorar el portafolio, siéntete libre de abrir un issue o PR.
+
+## 📧 Contacto
+
+Para comunicarte conmigo, usa el formulario en la sección de Contact o envía un email.
+
+---
+
+**Hecho con ❤️ y React**
