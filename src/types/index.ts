@@ -10,5 +10,4 @@ export interface Project {
 export interface Skill {
     name: string;
     category: 'frontend' | 'backend' | 'tools' | 'languages';
-    description: string;
 }

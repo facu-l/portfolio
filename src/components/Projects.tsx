@@ -64,7 +64,7 @@ export default function Projects() {
         <section id="projects" className="py-24 px-6">
             <div className="max-w-5xl mx-auto">
 
-                {/* Label estilo Irene */}
+                {/* Label */}
                 <div className="flex items-center gap-2 mb-12">
                     <span className="text-accent text-xl">•</span>
                     <h2 className="text-zinc-100 text-2xl font-bold">Proyectos</h2>
