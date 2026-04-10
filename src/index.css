@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+@theme {
+    --font-sans: "Geist", sans-serif;
+    --color-accent: #F2F983;
+}
+
+html {
+    scroll-behavior: smooth;
+}
