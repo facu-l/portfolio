@@ -6,7 +6,7 @@ export default function Hero() {
         >
             {/* Etiqueta superior */}
             <p className="text-accent text-sm font-semibold tracking-widest uppercase mb-4">
-                Hola, soy 
+                Hola, soy
             </p>
 
             {/* Nombre - lo mas importante visualmente */}
@@ -29,7 +29,7 @@ export default function Hero() {
                 </a>
                 <a
                     href="#contact"
-                    className="px-6 py-3 border border-zinc-700 text-zinc-300 font-semibold rounded-lg hover:borderg-zinc-400 transition-colors"
+                    className="px-6 py-3 border border-zinc-700 text-zinc-300 font-semibold rounded-lg hover:border-zinc-400 transition-colors"
                 >
                     Contactame
                 </a>

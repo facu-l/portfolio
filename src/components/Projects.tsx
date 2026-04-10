@@ -1,17 +1,17 @@
 import { projects } from '../data/projects';
 import type { Project } from '../types';
 
-function PorjectCard({title, description, stack, imageUrl, githubUrl, demoUrl}: Project) {
+function ProjectCard({title, description, stack, imageUrl, githubUrl, demoUrl}: Project) {
     return (
         <article className="group flex flex-col">
 
-            {/*Imagen con hover: sube levemente y se opaca un poco*/}
+            {/* Imagen con hover: zoom suave y leve opacidad */}
             <div className="overflow-hidden rounded-xl mb-4">
                 {imageUrl ? (
                     <img
                         src={imageUrl}
                         alt={title}
-                        className="w-full aspect-video object cover transition-all duration-300 group-hover:scale-[1.03] group-hover:opacity-80"
+                        className="w-full aspect-video object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:opacity-80"
                     />
                 ) : (
                     <div className="w-full aspect-video bg-zinc-800 rounded-xl" />
@@ -22,7 +22,7 @@ function PorjectCard({title, description, stack, imageUrl, githubUrl, demoUrl}: 
             <h3 className="text-zinc-100 font-bold text-lg mb-1">{title}</h3>
             <p className="text-zinc-500 text-sm mb-3">{description}</p>
 
-            {/* Stack badges*/}
+            {/* Stack badges */}
             <div className="flex flex-wrap gap-2 mb-4">
                 {stack.map((tech) => (
                     <span
@@ -31,10 +31,10 @@ function PorjectCard({title, description, stack, imageUrl, githubUrl, demoUrl}: 
                     >
                         {tech}
                     </span>
-                ))} 
-            </div>  
+                ))}
+            </div>
 
-            {/* Botones */}
+            {/* Botones — mt-auto los empuja al fondo independientemente del contenido */}
             <div className="flex gap-3 mt-auto">
                 <a
                     href={githubUrl}
@@ -64,7 +64,7 @@ export default function Projects() {
         <section id="projects" className="py-24 px-6">
             <div className="max-w-5xl mx-auto">
 
-                {/* Label */}
+                {/* Label estilo Irene */}
                 <div className="flex items-center gap-2 mb-12">
                     <span className="text-accent text-xl">•</span>
                     <h2 className="text-zinc-100 text-2xl font-bold">Proyectos</h2>
@@ -72,11 +72,11 @@ export default function Projects() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {projects.map((project) => (
-                        <PorjectCard key={project.title} {...project} />
+                        <ProjectCard key={project.title} {...project} />
                     ))}
                 </div>
 
             </div>
-        </section>    
+        </section>
     );
 }
