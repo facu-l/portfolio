@@ -6,13 +6,13 @@ const links = [
   },
   {
     label: 'LinkedIn',
-    href: 'https://linkedin.com/in/facundo-lambertucci',
-    description: 'facundo-lambertucci',
+    href: 'https://linkedin.com/in/facundolambertucci',
+    description: 'facundolambertucci',
   },
   {
     label: 'Email',
-    href: 'mailto:facuambertucci@gmail.com',
-    description: 'facuambertucci@gmail.com',
+    href: 'mailto:faculambertucci98@gmail.com',
+    description: 'faculambertucci98@gmail.com',
   },
 ]
 
