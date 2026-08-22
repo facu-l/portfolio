@@ -1,5 +1,6 @@
-# Documento de diseño interno — no versionado por decisión propia
+# Documentos de trabajo internos — no versionados por decisión propia
 SPEC.md
+CLAUDE.md
 
 # Dependencias
 node_modules/
