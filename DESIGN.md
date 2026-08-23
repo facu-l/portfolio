@@ -132,28 +132,18 @@ Breakpoints de Tailwind sin modificar: `sm 640` · `md 768` · `lg 1024` · `xl 
 |---|---|
 | **< 768px** | Hero en una columna, **foto abajo del contenido**. Con ratio 3:4 la foto mide ~427px de alto: puesta arriba empuja el titular abajo del fold en un teléfono chico, y el titular es el mensaje. Navbar solo con el wordmark, **sin links**: el sitio es una sola página, el scroll ya llega a todo y un menú hamburguesa es una máquina de estados entera (overlay, focus trap, cierre con Escape) para saltar entre 4 secciones |
 | **≥ 768px** | Hero en dos columnas |
-| **Puntero fino** | El efecto líquido se anima |
+| **Puntero fino** | El glow de la foto se intensifica en hover |
 
-### El efecto líquido no se decide por ancho, se decide por puntero
+### El hover no reemplaza al estado de reposo
 
-El SPEC dice "desactivar por debajo de `md`". El ancho es un proxy impreciso: una
-tablet de 1024px no tiene mouse, una notebook de 1280px sí. La pregunta real es
-si hay cursor que seguir, y eso se consulta directamente:
+El glow es visible en reposo (55%) y llega al 100% en hover. Esa base no es un
+detalle: **en un teléfono no hay hover.** Un efecto que solo aparece al pasar el
+mouse simplemente no existe para la mayoría del tráfico, que llega desde un link
+compartido y se abre en mobile.
 
-```css
-@media (pointer: fine) { /* efecto interactivo */ }
-```
-
-**En dispositivos táctiles el efecto no se apaga: se renderiza estático**, sin
-animación. Cero costo de batería, y el Hero conserva su identidad en mobile, que
-es donde llega la mayoría del tráfico de un link compartido.
-
-> **No hay seguimiento del cursor.** El SPEC pedía "reacción leve al cursor" y
-> eso **no está implementado**: las blobs siguen su propia órbita en CSS, sin
-> mirar el mouse. La reacción al cursor que sí existe es el glow azul de la foto,
-> que aparece en hover. Seguir el puntero exigiría un listener de `mousemove` y
-> un bucle de animación en JavaScript — justamente lo que esta implementación
-> evita. Queda como posible mejora, no como algo hecho.
+El SPEC pedía además "reacción leve al cursor". **Eso no está implementado:** el
+glow reacciona a que el mouse esté encima, no sigue su posición. Seguir el
+puntero exige un listener de `mousemove` y animación en JavaScript. Ver TODOS.md.
 
 ---
 
@@ -164,14 +154,17 @@ es donde llega la mayoría del tráfico de un link compartido.
 | `--duration-fast` | `duration-fast` | 150ms | Hover, foco |
 | `--duration-base` | `duration-base` | 250ms | Cambios de estado |
 | `--duration-slow` | `duration-slow` | 400ms | Entradas al scrollear |
-| `--ease-out` | `ease-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | Animaciones del efecto líquido |
+| `--ease-out` | `ease-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | **Declarado y sin usar** |
 
-> **Corrección (2026-08-23):** esta fila decía *"todas las transiciones"* y era
-> falso. Las transiciones del sitio usan el easing por defecto de Tailwind; el
-> token solo lo consumen las animaciones del líquido. Se documentó una intención
-> como si fuera un hecho, que es peor que no documentarla: alguien lee la tabla,
-> asume que el sistema ya es consistente, y no lo unifica. Unificarlo es trabajo
-> pendiente, no algo hecho.
+> **`--ease-out` no lo usa nadie hoy.** La fila decía *"todas las transiciones"*
+> y era falso: las transiciones del sitio usan el easing por defecto de Tailwind.
+> Lo consumían las animaciones del efecto líquido, y ese efecto se descartó.
+>
+> Queda declarado porque la decisión de tener una sola curva sigue siendo la
+> correcta; lo que falta es aplicarla. **Está escrito como pendiente y no como
+> hecho a propósito:** documentar una intención como si fuera realidad es peor
+> que no documentarla, porque el que lee asume que el sistema ya es consistente
+> y no lo unifica.
 
 Una sola familia de duraciones. Duraciones distintas por componente hacen que la
 interfaz se sienta desprolija sin que se pueda señalar por qué.
@@ -229,39 +222,41 @@ directamente no se percibe.
 
 ---
 
-## Efecto líquido del Hero
+## Glow del Hero
 
-Vive en `components/LiquidGooey.tsx`, aislado detrás de un componente propio
-porque `liquid-gooey` tiene **una sola versión publicada (0.1.0)**. Sacarla es
-borrar un archivo y una línea del Hero.
+Un resplandor azul que rodea el contorno de la foto y se intensifica al pasar
+el mouse. **Puro CSS: cero JavaScript, cero dependencias.**
 
-### Cómo funciona
-
-1. `blur` desenfoca las formas: los bordes se difuminan
-2. `contrast` sube el contraste del canal alfa: lo semitransparente pasa a ser
-   opaco o nada, sin término medio
-
-Cuando dos blobs se acercan, sus halos superpuestos se vuelven opacos y se
-fusionan como dos gotas de mercurio. No hay física ni simulación de fluidos.
-
-### Decisiones que no son ajuste fino
+```
+absolute -inset-6 -z-10 rounded-lg bg-accent/40
+opacity-55 blur-2xl
+transition-opacity duration-slow group-hover:opacity-100
+```
 
 | Decisión | Por qué |
 |---|---|
-| **`opacity: 0.45`** | A opacidad completa el azul le ganaba a la foto y competía con el CTA, que es el único elemento que sí tiene que gritar. La regla de esta paleta es que el azul nunca domina |
-| **Blobs transparentes** | La librería dibuja la silueta filtrada detrás y tu contenido nítido encima. Con las blobs pintadas, el contenido tapaba la silueta |
-| **`-inset-16` (negativo)** | Con `inset-0` el efecto quedaba exactamente detrás de una foto opaca: existía y no se veía. El SPEC pide formas *alrededor* |
-| **`overflow-x-clip` en el Hero** | El inset negativo generaba scroll horizontal en mobile y tablet. `clip` y no `hidden`: `hidden` convierte la sección en contenedor de scroll y rompe `sticky` |
-| **Duraciones 13s / 17s / 19s** | Primos: las tres órbitas no se realinean en más de una hora. Con 12/15/18 el patrón se cerraría cada minuto y el ojo lo detecta |
-| **Animación en CSS, no en JS** | Sin bucle en el hilo principal. `prefers-reduced-motion` la apaga sola desde `globals.css` |
+| **`-inset-6` negativo** | El resplandor sale 24px por los **cuatro** lados. La versión anterior era `inset-4`: un círculo metido *adentro* de la caja de la foto, del que solo escapaba el desenfoque, así que no rodeaba nada |
+| **`rounded-lg`** | Copia el radio de la foto. Un `rounded-full` detrás de un rectángulo deja las esquinas sin resplandor |
+| **`blur-2xl`** | Es lo que lo convierte en glow. Sin desenfoque esto es un rectángulo azul, o sea una forma, no un resplandor |
+| **55% en reposo, 100% en hover** | Un efecto que solo existe en hover no existe para nadie en mobile, y de ahí viene la mayoría del tráfico de un link compartido |
+| **`overflow-x-clip` en el Hero** | El glow se extiende más allá de la caja y en mobile la foto tiene 24px de padding. `clip` y no `hidden`: `hidden` convierte la sección en contenedor de scroll y rompe `sticky` |
+| **`bg-background` en la foto** | La máscara desvanece el 22% inferior de la imagen hasta volverlo transparente. Sin fondo propio, el azul se cuela por ese hueco y tiñe el hombro |
 
-### Costo medido
+### Por qué se descartó `liquid-gooey`
 
-| | gzip |
-|---|---|
-| Sin el efecto | 178.0 KB |
-| Con el efecto | 190.1 KB |
-| **Delta** | **+12.1 KB** |
+Se implementó, se midió y **pasó el criterio de corte** (+12.1 KB gzip contra un
+límite de 30, sin regresión de LCP, sin warnings de hidratación). Igual se
+descartó, por una razón de diseño y no técnica:
 
-El criterio de corte, escrito **antes** de instalar nada, era +30 KB gzip, sin
-empeorar el LCP y sin warnings de hidratación. Pasa los tres.
+**el efecto gooey produce bordes duros por definición.** Su segundo paso sube el
+contraste del canal alfa para fusionar las formas, y eso convierte todo lo
+semitransparente en opaco. Sirve para gotas que se juntan; es lo contrario de un
+resplandor difuso. Lo que se buscaba alrededor de la foto era lo segundo.
+
+Sacarla costó borrar un archivo y una línea del Hero, que es exactamente para lo
+que estaba aislada detrás de un componente propio. El bundle volvió a 178.0 KB,
+idéntico al baseline previo a instalarla.
+
+**Lo que queda como pendiente:** el SPEC pedía "reacción leve al cursor" y el
+glow reacciona al hover, no sigue al puntero. Seguir el cursor exige un listener
+de `mousemove` y animación en JavaScript. Ver TODOS.md.

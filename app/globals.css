@@ -107,8 +107,8 @@ html {
 }
 
 /* prefers-reduced-motion aplicado a TODO el sitio, no solo al Hero.
-   Es un ítem del checklist de seguridad del SPEC. La librería liquid-gooey ya
-   lo respeta por su cuenta; esto cubre el resto. */
+   Es un ítem del checklist de seguridad del SPEC. Cubre el glow del Hero y
+   cualquier transición que se agregue más adelante. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -172,120 +172,4 @@ body::before {
 body > * {
   position: relative;
   z-index: 1;
-}
-
-/* ==========================================================================
-   Efecto líquido del Hero
-
-   Las blobs se mueven con keyframes de CSS, no con JavaScript: no hay bucle de
-   animación en el hilo principal y el compositor del navegador se encarga.
-   ========================================================================== */
-.gooey-blob {
-  position: absolute;
-  border-radius: 9999px;
-  /* TRANSPARENTE, NO currentColor.
-
-     La librería dibuja DOS capas: la silueta fusionada (pintada con la prop
-     `fill` del grupo) detrás, y tu contenido nítido encima. Con las blobs
-     pintadas de blanco, ese contenido tapaba la silueta y se veían tres
-     círculos blancos con un borde azul asomando — el efecto estaba funcionando
-     y no se veía.
-
-     Vacías, lo único que se pinta es la silueta: el líquido azul de verdad. */
-  background: transparent;
-}
-
-/* Las tres se agrupan sobre el BORDE DERECHO de la foto, encadenadas en
-   vertical. Dos razones:
-
-   1. La foto tapa la mitad izquierda de cada blob, así que lo que se ve es el
-      borde asomando — que es lo que pide el SPEC: formas ALREDEDOR, no un
-      fondo detrás.
-   2. Tienen que estar lo bastante cerca para fusionarse. Repartidas por las
-      esquinas nunca se tocarían, y sin contacto no hay efecto gooey: habría
-      tres círculos sueltos.
-
-   La primera versión las hacía de 48%, 38% y 30%: se fusionaban en una sola
-   masa azul enorme que le ganaba a la foto y al botón. Más chicas, la cadena
-   se lee como líquido en movimiento y no como una mancha. */
-.gooey-blob-a {
-  width: 34%;
-  height: 34%;
-  top: 4%;
-  left: 58%;
-}
-
-.gooey-blob-b {
-  width: 26%;
-  height: 26%;
-  top: 36%;
-  left: 72%;
-}
-
-.gooey-blob-c {
-  width: 30%;
-  height: 30%;
-  top: 58%;
-  left: 56%;
-}
-
-@keyframes gooey-drift-a {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(18%, 14%) scale(1.12);
-  }
-  100% {
-    transform: translate(-8%, 20%) scale(0.94);
-  }
-}
-
-@keyframes gooey-drift-b {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-22%, -18%) scale(0.88);
-  }
-  100% {
-    transform: translate(10%, -26%) scale(1.15);
-  }
-}
-
-@keyframes gooey-drift-c {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-14%, 22%) scale(1.2);
-  }
-  100% {
-    transform: translate(16%, 6%) scale(0.9);
-  }
-}
-
-/* EL EFECTO SE DECIDE POR PUNTERO, NO POR ANCHO (DESIGN.md).
-
-   Una tablet de 1024px no tiene mouse; una notebook de 1280px sí. La pregunta
-   real no es cuánto mide la pantalla, es si hay cursor.
-
-   En táctil las blobs NO desaparecen: se quedan quietas donde están. Cero
-   costo de batería, y el Hero conserva su identidad en mobile, que es de donde
-   llega la mayoría del tráfico de un link compartido. */
-@media (pointer: fine) {
-  /* Duraciones primas: 13, 17 y 19 segundos. Las tres órbitas no vuelven a
-     alinearse en más de una hora. Con 12/15/18 el patrón se cerraría cada
-     minuto y el ojo detecta la repetición. */
-  .gooey-blob-a {
-    animation: gooey-drift-a 13s var(--ease-out) infinite alternate;
-  }
-
-  .gooey-blob-b {
-    animation: gooey-drift-b 17s var(--ease-out) infinite alternate;
-  }
-
-  .gooey-blob-c {
-    animation: gooey-drift-c 19s var(--ease-out) infinite alternate;
-  }
 }

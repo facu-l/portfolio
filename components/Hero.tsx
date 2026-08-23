@@ -2,7 +2,6 @@ import Image from "next/image";
 import { SITE, SOCIAL_LINKS } from "@/content/site";
 import { ButtonLink } from "./Button";
 import { CvDownload } from "./CvDownload";
-import { LiquidGooey } from "./LiquidGooey";
 
 const GITHUB_URL =
   SOCIAL_LINKS.find((l) => l.label === "GitHub")?.href ?? "https://github.com";
@@ -10,12 +9,12 @@ const GITHUB_URL =
 /**
  * Hero. SERVER COMPONENT — y tiene que seguir siéndolo.
  *
- * La directiva "use client" va SOLO en LiquidGooey.tsx, nunca acá. En el App
- * Router "use client" no marca un componente, marca una frontera: todo lo que
- * cuelga debajo se vuelve cliente. Si sube a este archivo, el nombre, el
- * título, la foto y los CTAs dejan de existir en el HTML inicial y pasan a
- * depender de que cargue JavaScript. Es exactamente el contenido que un
- * recruiter y un crawler tienen que ver primero.
+ * Nada del Hero es Client Component: ni el glow ni el popover del CV necesitan
+ * JavaScript. En el App Router "use client" no marca un componente, marca una
+ * frontera: todo lo que cuelga debajo se vuelve cliente. Si alguna vez sube a
+ * este archivo, el nombre, el título, la foto y los CTAs dejan de existir en el
+ * HTML inicial y pasan a depender de que cargue JavaScript. Es exactamente el
+ * contenido que un recruiter y un crawler tienen que ver primero.
  *
  * Nota sobre el copy: el SPEC lista una "descripción corta" además del
  * subtítulo. No está acá a propósito — ya cumple su función como meta
@@ -23,16 +22,17 @@ const GITHUB_URL =
  * entre sí. El Hero tiene una sola frase de apoyo; la evidencia larga va en
  * About.
  *
- * El efecto líquido (SPEC §2) vive en LiquidGooey.tsx y se construyó último a
- * propósito: es la pieza más riesgosa y el Hero tiene que funcionar sin ella.
- * Si hay que sacarla, se borra ese archivo y esta línea — nada más.
+ * El glow azul del contorno de la foto (SPEC §2) es puro CSS y vive en este
+ * archivo. Hubo una versión con la librería `liquid-gooey`: se descartó porque
+ * el efecto de fusión da bordes duros, y lo que se buscaba era un resplandor.
  */
 export function Hero() {
   /*
-    overflow-x-clip por el -inset-16 de LiquidGooey: en mobile las blobs asoman
-    64px más allá de la foto, la foto está centrada con solo 24px de padding, y
-    el resultado era scroll horizontal en TODA la página. Medido: 419px de
-    contenido en un viewport de 390, y 808 en uno de 768.
+    overflow-x-clip por el glow: se extiende más allá de la caja de la foto, y
+    en mobile la foto está centrada con solo 24px de padding. Sin esto, el
+    desborde se convierte en scroll horizontal de TODA la página — pasó con la
+    versión anterior del efecto y se midió: 419px de contenido en un viewport
+    de 390, y 808 en uno de 768.
 
     `clip` Y NO `hidden`: `overflow-x: hidden` obliga al otro eje a `auto` y
     convierte la sección en un contenedor de scroll, lo que rompe cualquier
@@ -82,41 +82,41 @@ export function Hero() {
           */}
           <div className="group relative mx-auto w-full max-w-xs md:max-w-none">
             {/*
-              Efecto líquido (SPEC §2). Va DETRAS de la foto y del glow: es un
-              elemento secundario, no compite con la protagonista.
+              Glow azul que rodea el contorno de la foto (SPEC §2).
+              Puro CSS: cero JavaScript, cero dependencias.
 
-              Aislado en su propio archivo a propósito — es el único punto del
-              sitio que depende de una librería con una sola versión publicada.
-              Ver el comentario de LiquidGooey.tsx.
-            */}
-            <LiquidGooey />
+              -inset-6 Y rounded-lg: el resplandor sale 24px por los CUATRO
+              lados y copia el radio de la foto. Antes esto era `inset-4
+              rounded-full` — un círculo METIDO ADENTRO de la caja, del que solo
+              escapaba el desenfoque. Por eso no rodeaba nada.
 
-            {/*
-              Glow azul detrás de la foto. Aparece en hover (SPEC §2).
-              -z-10 lo manda atrás; blur-3xl lo difumina para que sea un
-              resplandor y no una forma. Es puro CSS: cero JavaScript.
+              blur-2xl es lo que lo convierte en resplandor. Sin el desenfoque
+              esto sería un rectángulo azul con bordes redondeados detrás de la
+              foto, que es una forma, no un glow.
 
-              CONVIVE CON EL LIQUIDO, no lo reemplaza: el líquido está siempre y
-              es ambiente; el glow responde al mouse y es respuesta directa.
+              VISIBLE EN REPOSO Y MAS FUERTE EN HOVER: 55% de base, 100% al
+              pasar el mouse. Un efecto que solo existe en hover no existe para
+              nadie en mobile, y ahí llega la mayoría del tráfico de un link
+              compartido. La transición usa --duration-slow, que es la duración
+              del sistema para este tipo de cambio.
             */}
             <div
               aria-hidden="true"
-              className="absolute inset-4 -z-10 rounded-full bg-accent/25 opacity-0 blur-3xl transition-opacity duration-slow group-hover:opacity-100"
+              className="absolute -inset-6 -z-10 rounded-lg bg-accent/40 opacity-55 blur-2xl transition-opacity duration-slow group-hover:opacity-100"
             />
 
             {/*
-              bg-background NO ES DECORATIVO: es lo que impide que el líquido
-              se transparente a través de la foto.
+              bg-background NO ES DECORATIVO: es lo que impide que el glow se
+              transparente a través de la foto.
 
               La máscara de abajo desvanece el 22% inferior de la imagen hasta
-              volverlo transparente. Sin un fondo propio, por ese hueco se ve lo
-              que haya detrás — y detrás hay una blob azul, así que el efecto se
-              superponía sobre el hombro.
+              volverlo transparente, y por ese hueco se ve lo que haya detrás.
+              Detrás está el glow, así que sin fondo propio el azul teñiría el
+              hombro en vez de quedarse en el borde.
 
-              Con el fondo puesto, la máscara desvanece contra `--color-background`,
-              que es el mismo color de la página: el degradado se ve idéntico a
-              antes, pero ahora tapa. El líquido queda solo donde tiene que
-              estar, alrededor del borde.
+              Con el fondo puesto, la máscara desvanece contra
+              `--color-background`, que es el mismo color de la página: el
+              degradado se ve idéntico, pero ahora tapa.
             */}
             <div className="overflow-hidden rounded-lg bg-background">
               <Image

@@ -56,3 +56,23 @@ la mesa.
 **Effort:** S
 **Priority:** P4
 **Depends on:** Decisión de contenido, no técnica.
+
+## Hero
+
+### Hacer que el glow siga al cursor
+
+**What:** Que el resplandor azul de la foto se desplace siguiendo la posición del mouse dentro del Hero, en vez de solo intensificarse al pasar por encima.
+
+**Why:** El SPEC §2 pedía "reacción leve al cursor". Hoy el glow reacciona a que el mouse esté encima (hover), pero no sigue su posición. Es la única parte del SPEC que quedó sin implementar.
+
+**Context:** Primero se construyó el efecto con la librería `liquid-gooey`. Pasó el criterio de corte que se había escrito antes de instalarla (+12.1 KB gzip contra un límite de 30, sin regresión de LCP, sin warnings de hidratación), pero se descartó por diseño: el efecto de fusión produce bordes duros por definición — su segundo paso sube el contraste del canal alfa — y lo que se buscaba alrededor de la foto era un resplandor difuso. El glow actual es CSS puro y el bundle volvió a 178.0 KB, idéntico al baseline.
+
+**Seguir el cursor cambia esa cuenta.** Exige un listener de `mousemove` y actualizar una posición en cada frame, así que el Hero pasaría a tener un Client Component y un bucle de animación en el hilo principal. Hoy el Hero no tiene ni una cosa ni la otra.
+
+Si se hace, dos requisitos no negociables: aislarlo detrás de su propio componente (`use client` nunca en `Hero.tsx`, o el titular y los CTAs dejan de existir en el HTML inicial), y gatearlo con `@media (pointer: fine)` — en un teléfono no hay cursor que seguir y sería batería tirada.
+
+**El disparador:** que el hover actual se sienta pobre en uso real, no antes. **Y una advertencia honesta:** el mismo efecto se implementó, se midió, pasó el corte y se descartó igual por razones de diseño. Antes de volver a invertir acá, la pregunta es si el Hero necesita más movimiento o si el problema está en otra sección.
+
+**Effort:** M
+**Priority:** P4
+**Depends on:** Evidencia de que hace falta. No implementar por completitud del SPEC.
