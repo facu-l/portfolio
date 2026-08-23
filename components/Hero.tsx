@@ -2,6 +2,7 @@ import Image from "next/image";
 import { SITE, SOCIAL_LINKS } from "@/content/site";
 import { ButtonLink } from "./Button";
 import { CvDownload } from "./CvDownload";
+import { LiquidGooey } from "./LiquidGooey";
 
 const GITHUB_URL =
   SOCIAL_LINKS.find((l) => l.label === "GitHub")?.href ?? "https://github.com";
@@ -22,12 +23,27 @@ const GITHUB_URL =
  * entre sí. El Hero tiene una sola frase de apoyo; la evidencia larga va en
  * About.
  *
- * PENDIENTE: el efecto líquido alrededor de la foto (SPEC §2). Va último a
+ * El efecto líquido (SPEC §2) vive en LiquidGooey.tsx y se construyó último a
  * propósito: es la pieza más riesgosa y el Hero tiene que funcionar sin ella.
+ * Si hay que sacarla, se borra ese archivo y esta línea — nada más.
  */
 export function Hero() {
+  /*
+    overflow-x-clip por el -inset-16 de LiquidGooey: en mobile las blobs asoman
+    64px más allá de la foto, la foto está centrada con solo 24px de padding, y
+    el resultado era scroll horizontal en TODA la página. Medido: 419px de
+    contenido en un viewport de 390, y 808 en uno de 768.
+
+    `clip` Y NO `hidden`: `overflow-x: hidden` obliga al otro eje a `auto` y
+    convierte la sección en un contenedor de scroll, lo que rompe cualquier
+    `position: sticky` que quede adentro. `clip` recorta sin crear scroll.
+  */
   return (
-    <section id="top" aria-labelledby="hero-heading" className="py-section">
+    <section
+      id="top"
+      aria-labelledby="hero-heading"
+      className="overflow-x-clip py-section"
+    >
       <div className="mx-auto w-full max-w-5xl px-6">
         <div className="grid gap-block md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-16">
           {/* --- Columna de contenido --- */}
@@ -66,9 +82,22 @@ export function Hero() {
           */}
           <div className="group relative mx-auto w-full max-w-xs md:max-w-none">
             {/*
+              Efecto líquido (SPEC §2). Va DETRAS de la foto y del glow: es un
+              elemento secundario, no compite con la protagonista.
+
+              Aislado en su propio archivo a propósito — es el único punto del
+              sitio que depende de una librería con una sola versión publicada.
+              Ver el comentario de LiquidGooey.tsx.
+            */}
+            <LiquidGooey />
+
+            {/*
               Glow azul detrás de la foto. Aparece en hover (SPEC §2).
               -z-10 lo manda atrás; blur-3xl lo difumina para que sea un
               resplandor y no una forma. Es puro CSS: cero JavaScript.
+
+              CONVIVE CON EL LIQUIDO, no lo reemplaza: el líquido está siempre y
+              es ambiente; el glow responde al mouse y es respuesta directa.
             */}
             <div
               aria-hidden="true"

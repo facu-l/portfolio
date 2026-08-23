@@ -130,9 +130,9 @@ Breakpoints de Tailwind sin modificar: `sm 640` · `md 768` · `lg 1024` · `xl 
 
 | Viewport | Comportamiento |
 |---|---|
-| **< 768px** | Hero en una columna, foto arriba. Navbar solo con el wordmark, **sin links**: el sitio es una sola página, el scroll ya llega a todo y un menú hamburguesa es una máquina de estados entera (overlay, focus trap, cierre con Escape) para saltar entre 4 secciones |
+| **< 768px** | Hero en una columna, **foto abajo del contenido**. Con ratio 3:4 la foto mide ~427px de alto: puesta arriba empuja el titular abajo del fold en un teléfono chico, y el titular es el mensaje. Navbar solo con el wordmark, **sin links**: el sitio es una sola página, el scroll ya llega a todo y un menú hamburguesa es una máquina de estados entera (overlay, focus trap, cierre con Escape) para saltar entre 4 secciones |
 | **≥ 768px** | Hero en dos columnas |
-| **Puntero fino** | El efecto líquido se vuelve interactivo |
+| **Puntero fino** | El efecto líquido se anima |
 
 ### El efecto líquido no se decide por ancho, se decide por puntero
 
@@ -145,9 +145,15 @@ si hay cursor que seguir, y eso se consulta directamente:
 ```
 
 **En dispositivos táctiles el efecto no se apaga: se renderiza estático**, sin
-seguimiento del puntero ni animación. Cero costo de batería, y el Hero conserva
-su identidad en mobile, que es donde llega la mayoría del tráfico de un link
-compartido.
+animación. Cero costo de batería, y el Hero conserva su identidad en mobile, que
+es donde llega la mayoría del tráfico de un link compartido.
+
+> **No hay seguimiento del cursor.** El SPEC pedía "reacción leve al cursor" y
+> eso **no está implementado**: las blobs siguen su propia órbita en CSS, sin
+> mirar el mouse. La reacción al cursor que sí existe es el glow azul de la foto,
+> que aparece en hover. Seguir el puntero exigiría un listener de `mousemove` y
+> un bucle de animación en JavaScript — justamente lo que esta implementación
+> evita. Queda como posible mejora, no como algo hecho.
 
 ---
 
@@ -158,7 +164,14 @@ compartido.
 | `--duration-fast` | `duration-fast` | 150ms | Hover, foco |
 | `--duration-base` | `duration-base` | 250ms | Cambios de estado |
 | `--duration-slow` | `duration-slow` | 400ms | Entradas al scrollear |
-| `--ease-out` | `ease-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | Todas las transiciones |
+| `--ease-out` | `ease-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | Animaciones del efecto líquido |
+
+> **Corrección (2026-08-23):** esta fila decía *"todas las transiciones"* y era
+> falso. Las transiciones del sitio usan el easing por defecto de Tailwind; el
+> token solo lo consumen las animaciones del líquido. Se documentó una intención
+> como si fuera un hecho, que es peor que no documentarla: alguien lee la tabla,
+> asume que el sistema ya es consistente, y no lo unifica. Unificarlo es trabajo
+> pendiente, no algo hecho.
 
 Una sola familia de duraciones. Duraciones distintas por componente hacen que la
 interfaz se sienta desprolija sin que se pueda señalar por qué.
@@ -194,3 +207,61 @@ Languages, Databases, Tools y Concepts van como texto secundario.
 **Por qué:** un recruiter escanea en 30 segundos. Con 7 bloques de igual peso no
 elige ninguno y se lleva cero. Con 3, se lleva tres.
 
+
+---
+
+## Textura de fondo: el grid técnico
+
+Una retícula de 1px cada 80px en `--color-border`, al 28% de opacidad, con una
+máscara radial que la desvanece hacia los bordes.
+
+**Va en `body::before` con `position: fixed`, no como background del body.** Fija
+al viewport, la retícula no se mueve con el scroll: el contenido pasa por delante
+de una grilla quieta, que es lo que da la sensación de plano técnico. Un
+background en el body scrollearía junto con el texto y se leería como papel
+cuadriculado.
+
+`pointer-events: none` es obligatorio. Sin eso, una capa a pantalla completa se
+come todos los clicks del sitio.
+
+**El 28% no es un número al azar:** más arriba compite con el texto, más abajo
+directamente no se percibe.
+
+---
+
+## Efecto líquido del Hero
+
+Vive en `components/LiquidGooey.tsx`, aislado detrás de un componente propio
+porque `liquid-gooey` tiene **una sola versión publicada (0.1.0)**. Sacarla es
+borrar un archivo y una línea del Hero.
+
+### Cómo funciona
+
+1. `blur` desenfoca las formas: los bordes se difuminan
+2. `contrast` sube el contraste del canal alfa: lo semitransparente pasa a ser
+   opaco o nada, sin término medio
+
+Cuando dos blobs se acercan, sus halos superpuestos se vuelven opacos y se
+fusionan como dos gotas de mercurio. No hay física ni simulación de fluidos.
+
+### Decisiones que no son ajuste fino
+
+| Decisión | Por qué |
+|---|---|
+| **`opacity: 0.45`** | A opacidad completa el azul le ganaba a la foto y competía con el CTA, que es el único elemento que sí tiene que gritar. La regla de esta paleta es que el azul nunca domina |
+| **Blobs transparentes** | La librería dibuja la silueta filtrada detrás y tu contenido nítido encima. Con las blobs pintadas, el contenido tapaba la silueta |
+| **`-inset-16` (negativo)** | Con `inset-0` el efecto quedaba exactamente detrás de una foto opaca: existía y no se veía. El SPEC pide formas *alrededor* |
+| **`overflow-x-clip` en el Hero** | El inset negativo generaba scroll horizontal en mobile y tablet. `clip` y no `hidden`: `hidden` convierte la sección en contenedor de scroll y rompe `sticky` |
+| **Duraciones 13s / 17s / 19s** | Primos: las tres órbitas no se realinean en más de una hora. Con 12/15/18 el patrón se cerraría cada minuto y el ojo lo detecta |
+| **Animación en CSS, no en JS** | Sin bucle en el hilo principal. `prefers-reduced-motion` la apaga sola desde `globals.css` |
+
+### Costo medido
+
+| | gzip |
+|---|---|
+| Sin el efecto | 178.0 KB |
+| Con el efecto | 190.1 KB |
+| **Delta** | **+12.1 KB** |
+
+El criterio de corte, escrito **antes** de instalar nada, era +30 KB gzip, sin
+empeorar el LCP y sin warnings de hidratación. Pasa los tres.
