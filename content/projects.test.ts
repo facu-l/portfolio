@@ -82,7 +82,7 @@ describe("PROJECTS (datos)", () => {
   it("las contribuciones propias del gym no reclaman el backend", () => {
     const gym = PROJECTS.find((p) => p.slug === "gym-management-system")!;
     expect(gym.contributions).toBeDefined();
-    expect(gym.contributions).not.toMatch(/rust|backend/i);
+    expect(gym.contributions!.join(" ")).not.toMatch(/rust|backend/i);
     expect(gym.caseStudy!.myRole).toMatch(/teammate/i);
   });
 });

@@ -64,7 +64,16 @@ export default function GymManagementSystemCaseStudy() {
         <TechStack items={project.stack} label={`Tecnologías de ${project.title}`} />
       </div>
 
-      <ProjectLinks projectTitle={project.title} repoUrl={project.repoUrl} />
+      {/*
+        Sin `caseStudyHref`: ya estás en el case study. Un botón que te lleva a
+        la página donde ya estás es el tipo de detalle que delata que los links
+        se copiaron sin mirar dónde iban.
+      */}
+      <ProjectLinks
+        projectTitle={project.title}
+        repoUrl={project.repoUrl}
+        liveUrl={project.liveUrl}
+      />
 
       <CaseStudySection title="The Challenge">
         {caseStudy.challenge}

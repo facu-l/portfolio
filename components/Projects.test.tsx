@@ -24,9 +24,9 @@ describe("Projects", () => {
   it("etiqueta las contribuciones propias en vez de mezclarlas con el resumen", () => {
     render(<Projects />);
     expect(screen.getByText(/key contributions/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(FEATURED_PROJECT.contributions!)
-    ).toBeInTheDocument();
+    for (const item of FEATURED_PROJECT.contributions!) {
+      expect(screen.getByText(item)).toBeInTheDocument();
+    }
   });
 
   it("lista el stack completo del destacado", () => {
@@ -48,15 +48,26 @@ describe("Projects", () => {
     );
   });
 
-  it("renderiza los proyectos secundarios sin captura", () => {
+  it("renderiza los proyectos secundarios con su propia captura", () => {
     render(<Projects />);
     for (const p of OTHER_PROJECTS) {
       expect(
         screen.getByRole("heading", { level: 3, name: p.title })
       ).toBeInTheDocument();
+      expect(screen.getByAltText(p.screenshot!.alt)).toBeInTheDocument();
     }
-    // Solo el destacado tiene imagen: es lo que crea la jerarquía.
-    expect(screen.getAllByRole("img")).toHaveLength(1);
+  });
+
+  /**
+   * Cada captura necesita un alt propio. Dos imágenes con el mismo texto
+   * alternativo es el síntoma de que alguien copió el objeto y no lo editó, y
+   * para un lector de pantalla las dos pasan a ser la misma imagen.
+   */
+  it("cada captura tiene un alt distinto", () => {
+    render(<Projects />);
+    const alts = screen.getAllByRole("img").map((img) => img.getAttribute("alt"));
+    expect(alts.every((a) => a && a.length > 20)).toBe(true);
+    expect(new Set(alts).size).toBe(alts.length);
   });
 
   /**

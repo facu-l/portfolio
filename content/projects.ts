@@ -46,8 +46,13 @@ export type Project = {
    * en un párrafo deja que el lector asuma lo segundo cuando solo dijiste lo
    * primero — y esa es exactamente la pregunta incómoda de la entrevista.
    * `undefined` en proyectos individuales, donde la distinción no existe.
+   *
+   * POR QUE UNA LISTA Y NO UN PARRAFO: son módulos independientes, no una idea
+   * con subordinadas. En prosa, tres contribuciones concretas se convierten en
+   * una oración de 45 palabras que un recruiter escaneando saltea entera; en
+   * lista, se lleva las tres aunque solo mire la sección tres segundos.
    */
-  contributions?: string;
+  contributions?: readonly string[];
   /** Stack del proyecto completo, no solo de la parte propia. */
   stack: readonly string[];
   screenshot?: Screenshot;
@@ -76,14 +81,19 @@ export const PROJECTS: readonly Project[] = [
     title: "Gym Management System",
     summary:
       "A management platform for a real gym client, with separate access for owners, front-desk staff and members: memberships, class scheduling, attendance and payments in one place.",
-    contributions:
-      "Mercado Pago payments integration and QR-based attendance tracking.",
+    contributions: [
+      "Mercado Pago integration, with the monthly membership renewing automatically on payment",
+      "Class credit system: cancelling more than 24 hours ahead refunds 50% of the points, redeemable as payment for another class",
+      "QR-based attendance tracking",
+    ],
     stack: ["React", "TypeScript", "Tailwind CSS", "Rust", "SQLite"],
+    repoUrl: "https://github.com/canizafa/sistema-cef",
+    liveUrl: "https://sistema-cef.vercel.app/",
     screenshot: {
-      src: "/proyectos/cef-admin-clientes.png",
-      alt: "Panel de administración del gimnasio mostrando el listado de clientes con su estado de membresía",
-      width: 1902,
-      height: 915,
+      src: "/proyectos/cef-landing.png",
+      alt: "Landing pública del gimnasio CEF con el llamado a la acción para asociarse",
+      width: 1888,
+      height: 910,
     },
     caseStudy: {
       slug: "gym-management-system",
@@ -92,13 +102,13 @@ export const PROJECTS: readonly Project[] = [
       teamAndWorkflow:
         "A 5-person team working with Git Flow and agile ceremonies. Every change went through a pull request and code review before reaching the main branch, which meant coordinating branches across five people without blocking each other.",
       myRole:
-        "I owned two modules end to end: the Mercado Pago payments integration and the QR-based attendance system. The Rust backend was implemented by a teammate — my work was the client-side integration with it.",
+        "I owned the payments side end to end. Beyond wiring up Mercado Pago, that meant the rules around it: a successful payment renews the member's monthly plan automatically, and class bookings run on credits — cancel more than 24 hours before the class and you get 50% of the points back to spend on another one. I also built the QR-based attendance tracking. The Rust backend was implemented by a teammate; my work was the client side and its integration.",
       gallery: [
         {
-          src: "/proyectos/cef-landing.png",
-          alt: "Landing pública del gimnasio con el llamado a la acción para asociarse",
-          width: 1888,
-          height: 910,
+          src: "/proyectos/cef-admin-clientes.png",
+          alt: "Panel de administración del gimnasio mostrando el listado de clientes con su estado de membresía",
+          width: 1902,
+          height: 915,
         },
         {
           src: "/proyectos/cef-clases.png",
@@ -121,6 +131,12 @@ export const PROJECTS: readonly Project[] = [
     summary:
       "A responsive landing page focused on lead generation through WhatsApp and Web3Forms, optimized for SEO and performance and deployed on Vercel.",
     stack: ["React", "Vite", "TypeScript", "Tailwind CSS"],
+    screenshot: {
+      src: "/proyectos/landing-personal-trainer.png",
+      alt: "Landing page del personal trainer con la sección principal y el botón de contacto por WhatsApp",
+      width: 1537,
+      height: 903,
+    },
   },
 ] as const;
 

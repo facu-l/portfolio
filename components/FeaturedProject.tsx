@@ -52,10 +52,33 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
           todo es tuyo — y eso se cae en la primera repregunta.
         */}
         {project.contributions && (
-          <p className="mt-stack max-w-2xl leading-relaxed">
-            <span className="font-bold">Key contributions: </span>
-            <span className="text-muted">{project.contributions}</span>
-          </p>
+          <div className="mt-block max-w-2xl">
+            <h4 className="text-sm font-semibold uppercase tracking-[0.2em] text-muted">
+              Key contributions
+            </h4>
+            <ul className="mt-stack flex flex-col gap-2">
+              {project.contributions.map((item) => (
+                <li key={item} className="flex gap-3 leading-relaxed">
+                  {/*
+                    El bullet es un <span> propio y no list-style, porque el
+                    marcador nativo se alinea con la primera línea y en un item
+                    de dos renglones queda pegado al texto. Con flex, el texto
+                    sangra parejo y el bullet no se mueve.
+                  */}
+                  {/*
+                    Gris y no azul: DESIGN.md prohíbe el acento sobre `surface`
+                    (3.97:1). Un marcador decorativo técnicamente queda exento
+                    del mínimo de contraste, pero la regla existe para que nadie
+                    tenga que decidir eso caso por caso.
+                  */}
+                  <span aria-hidden="true" className="text-muted">
+                    ▸
+                  </span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         <div className="mt-block">
