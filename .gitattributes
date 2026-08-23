@@ -1,0 +1,33 @@
+# Finales de línea: LF en todos lados, siempre.
+#
+# POR QUE ESTE ARCHIVO Y NO core.autocrlf:
+# core.autocrlf vive en la instalación de Git de cada máquina. Este archivo
+# vive en el repo. Uno es una preferencia que nadie más hereda; el otro es una
+# regla del proyecto que se clona con el código.
+#
+# Sin esto, alguien que clone en Linux o en un Windows configurado distinto
+# puede ver el repo entero como modificado sin haber tocado nada.
+#
+# eol=lf hace que los archivos se escriban con LF también en el working dir,
+# no solo en el repo. Es lo que espera el ecosistema de JS (ESLint, Prettier)
+# y lo que corre en el build de Vercel, que es Linux.
+* text=auto eol=lf
+
+# Binarios: git nunca debe tocarles un byte.
+# Los detecta solo, pero declararlo evita cualquier ambigüedad si algún día
+# un archivo empieza con bytes que parecen texto.
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.webp   binary
+*.avif   binary
+*.ico    binary
+*.pdf    binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.otf    binary
+
+# package-lock.json lo genera npm: en un conflicto no se resuelve a mano,
+# se regenera con npm install.
+package-lock.json  -diff  linguist-generated=true
