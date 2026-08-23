@@ -21,12 +21,14 @@
      Las superficies (surface/surface-2) están a 1.17:1 del fondo: NO separan
      por color. Se separan con espacio y tipografía. Ver DESIGN.md.
   */
-  --color-bg: #16181c;
-  --color-bg-2: #1d2025;
-  --color-surface: #22262c;
+  /* Nombres pensados para la utilidad que generan:
+     bg-background, bg-surface, text-foreground, text-muted, text-accent. */
+  --color-background: #16181c;
+  --color-surface-sunken: #1d2025;  /* footer */
+  --color-surface: #22262c;          /* tarjetas de proyecto */
   --color-accent: #007fff;
-  --color-text: #f5f7fa;
-  --color-text-muted: #9299a5;
+  --color-foreground: #f5f7fa;
+  --color-muted: #9299a5;
   --color-border: #30353d;
 
   /* --- Tipografía ----------------------------------------------------------
@@ -80,11 +82,17 @@
    ========================================================================= */
 
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   font-family: var(--font-sans);
   font-size: var(--text-body);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Scroll suave al usar los anclas del navbar.
+   Respeta prefers-reduced-motion por el bloque del final del archivo. */
+html {
+  scroll-behavior: smooth;
 }
 
 /* Foco visible y consistente en todo el sitio.
