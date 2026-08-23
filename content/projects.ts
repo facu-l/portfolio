@@ -102,7 +102,7 @@ export const PROJECTS: readonly Project[] = [
       teamAndWorkflow:
         "A 5-person team working with Git Flow and agile ceremonies. Every change went through a pull request and code review before reaching the main branch, which meant coordinating branches across five people without blocking each other.",
       myRole:
-        "I owned the payments side end to end. Beyond wiring up Mercado Pago, that meant the rules around it: a successful payment renews the member's monthly plan automatically, and class bookings run on credits — cancel more than 24 hours before the class and you get 50% of the points back to spend on another one. I also built the QR-based attendance tracking. The Rust backend was implemented by a teammate; my work was the client side and its integration.",
+        "I owned the payments side end to end. Beyond wiring up Mercado Pago, that meant the rules around it: a successful payment renews the member's monthly plan automatically, and class bookings run on credits — cancel more than 24 hours before the class and you get 50% of the points back to spend on another one. I also built the QR-based attendance tracking. The Rust backend was implemented by a teammate; my work was the client side of these modules and their integration with it.",
       gallery: [
         {
           src: "/proyectos/cef-admin-clientes.png",

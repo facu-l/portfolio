@@ -2,6 +2,16 @@ type TechStackProps = {
   items: readonly string[];
   /** Nombre accesible de la lista. Hay más de un stack por página. */
   label: string;
+  /**
+   * Tamaño y color del texto. El default es el de una línea de apoyo debajo del
+   * título de un proyecto; en Skills, donde la lista ES el contenido de la
+   * sección, se pasa una más prominente.
+   *
+   * Es un className y no un prop `variant` porque son dos usos, no dos
+   * variantes de un sistema: en cuanto haya que inventar nombres como "small"
+   * y "prominent" para dos casos, el nombre miente más de lo que aclara.
+   */
+  className?: string;
 };
 
 /**
@@ -17,17 +27,31 @@ type TechStackProps = {
  * dos componentes de tarjeta distintos no impliquen dos estilos distintos para
  * la misma información (eng review, issue 6).
  */
-export function TechStack({ items, label }: TechStackProps) {
+export function TechStack({
+  items,
+  label,
+  className = "text-sm text-muted",
+}: TechStackProps) {
   return (
-    <ul aria-label={label} className="flex flex-wrap items-center text-sm text-muted">
+    <ul
+      aria-label={label}
+      className={`flex flex-wrap items-center ${className}`}
+    >
       {items.map((item, i) => (
         <li key={item} className="flex items-center">
-          {i > 0 && (
+          {item}
+          {/*
+            El separador va DESPUES del item, no antes. Puesto antes, cuando la
+            lista envuelve el punto queda solo al principio del renglón
+            siguiente (`· Express.js`), que se lee como una viñeta rota. Yendo
+            al final, se queda pegado al último item de la línea anterior, que
+            es donde el ojo lo espera.
+          */}
+          {i < items.length - 1 && (
             <span aria-hidden="true" className="px-2 text-muted/50">
               ·
             </span>
           )}
-          {item}
         </li>
       ))}
     </ul>
