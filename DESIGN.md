@@ -76,8 +76,9 @@ agrupa texto que ya estaba agrupado por su posición, es decoración.
 
 ## Tipografía
 
-Inter variable, cargada con `next/font` en `app/layout.tsx` (un solo archivo
-cubre los pesos 100-900 y se auto-hospeda, sin request a Google en runtime).
+Inter variable en `--font-sans` (utilidad `font-sans`), cargada con `next/font`
+en `app/layout.tsx`: un solo archivo cubre los pesos 100-900 y se auto-hospeda,
+sin request a Google en runtime.
 
 | Token | Tamaño | Peso | Uso |
 |---|---|---|---|
@@ -111,7 +112,11 @@ termina una idea y empieza la otra.
 
 ## Radios
 
-`4px` inputs · `8px` botones y tarjetas de proyecto · `12px` foto del Hero.
+| Token | Utilidad | Valor | Uso |
+|---|---|---|---|
+| `--radius-sm` | `rounded-sm` | 4px | Inputs |
+| `--radius-md` | `rounded-md` | 8px | Botones, tarjetas de proyecto |
+| `--radius-lg` | `rounded-lg` | 12px | Foto del Hero |
 
 Contenidos a propósito. Radios grandes y uniformes en todos los elementos son
 uno de los patrones que delatan una interfaz generada. El tono del sitio es
@@ -148,8 +153,12 @@ compartido.
 
 ## Movimiento
 
-`150ms` hover y foco · `250ms` cambios de estado · `400ms` entradas.
-Easing único: `cubic-bezier(0.4, 0, 0.2, 1)`.
+| Token | Utilidad | Valor | Uso |
+|---|---|---|---|
+| `--duration-fast` | `duration-fast` | 150ms | Hover, foco |
+| `--duration-base` | `duration-base` | 250ms | Cambios de estado |
+| `--duration-slow` | `duration-slow` | 400ms | Entradas al scrollear |
+| `--ease-out` | `ease-out` | `cubic-bezier(0.4, 0, 0.2, 1)` | Todas las transiciones |
 
 Una sola familia de duraciones. Duraciones distintas por componente hacen que la
 interfaz se sienta desprolija sin que se pueda señalar por qué.
