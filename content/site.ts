@@ -31,5 +31,31 @@ export const SOCIAL_LINKS: readonly SocialLink[] = [
   },
 ] as const;
 
-/** Ruta al CV público. Decidido en el design review: va en el Hero. */
-export const CV_PATH = "/cv-facundo-lambertucci.pdf";
+export type CvFile = {
+  /** Código de idioma para el atributo hreflang */
+  lang: string;
+  /** Nombre del idioma en su propio idioma, como corresponde en un selector */
+  label: string;
+  href: string;
+};
+
+/**
+ * CVs disponibles. Decidido en el design review: el CV va en el Hero, porque
+ * es lo que un recruiter quiere apenas le interesás.
+ *
+ * Los nombres de archivo van en kebab-case: el original tenía un espacio
+ * ("CV_Facundo Lambertucci_EN.pdf") y en Vercel, que corre sobre Linux, eso
+ * obliga a codificarlo como %20 y se rompe fácil.
+ */
+export const CV_FILES: readonly CvFile[] = [
+  {
+    lang: "es",
+    label: "Español",
+    href: "/cv-facundo-lambertucci-es.pdf",
+  },
+  {
+    lang: "en",
+    label: "English",
+    href: "/cv-facundo-lambertucci-en.pdf",
+  },
+] as const;

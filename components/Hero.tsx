@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { SITE, SOCIAL_LINKS, CV_PATH } from "@/content/site";
+import { SITE, SOCIAL_LINKS } from "@/content/site";
 import { ButtonLink } from "./Button";
+import { CvDownload } from "./CvDownload";
 
 const GITHUB_URL =
   SOCIAL_LINKS.find((l) => l.label === "GitHub")?.href ?? "https://github.com";
@@ -49,9 +50,7 @@ export function Hero() {
               <ButtonLink href={GITHUB_URL} variant="secondary" external>
                 GITHUB ↗
               </ButtonLink>
-              <ButtonLink href={CV_PATH} variant="secondary" external>
-                DOWNLOAD CV ↓
-              </ButtonLink>
+              <CvDownload />
             </div>
 
             <p className="mt-block text-sm text-muted">{SITE.location}</p>

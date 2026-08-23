@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Hero } from "./Hero";
-import { SITE, CV_PATH } from "@/content/site";
+import { SITE } from "@/content/site";
 
 describe("Hero", () => {
   it("tiene un único h1 con el título del SPEC", () => {
@@ -35,10 +35,10 @@ describe("Hero", () => {
       "href",
       expect.stringContaining("github.com")
     );
-    expect(screen.getByRole("link", { name: /download cv/i })).toHaveAttribute(
-      "href",
-      CV_PATH
-    );
+    // El CV ya no es un link: es un boton que abre la popover de idioma.
+    expect(
+      screen.getByRole("button", { name: /download cv/i })
+    ).toBeInTheDocument();
   });
 
   /**
@@ -53,11 +53,14 @@ describe("Hero", () => {
    */
   it("los CTAs conservan el tamaño y el peso que exige el contraste", () => {
     render(<Hero />);
-    for (const nombre of [/view my work/i, /github/i, /download cv/i]) {
+    for (const nombre of [/view my work/i, /github/i]) {
       const cta = screen.getByRole("link", { name: nombre });
       expect(cta.className).toContain("text-cta");
       expect(cta.className).toContain("font-bold");
     }
+    const cvBtn = screen.getByRole("button", { name: /download cv/i });
+    expect(cvBtn.className).toContain("text-cta");
+    expect(cvBtn.className).toContain("font-bold");
   });
 
   it("los links externos van con noopener y noreferrer", () => {

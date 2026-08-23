@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { SITE, SOCIAL_LINKS, CV_PATH } from "./site";
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { SITE, SOCIAL_LINKS, CV_FILES } from "./site";
 
 /**
  * Estos tests NO verifican que los links estén vivos: eso necesita red y sería
@@ -44,9 +46,47 @@ describe("SITE", () => {
   });
 });
 
-describe("CV_PATH", () => {
-  it("es una ruta absoluta del sitio a un PDF", () => {
-    expect(CV_PATH.startsWith("/")).toBe(true);
-    expect(CV_PATH.endsWith(".pdf")).toBe(true);
+describe("CV_FILES", () => {
+  it("cada CV es una ruta absoluta del sitio a un PDF", () => {
+    for (const cv of CV_FILES) {
+      expect(cv.href.startsWith("/")).toBe(true);
+      expect(cv.href.endsWith(".pdf")).toBe(true);
+    }
+  });
+
+  it("los nombres de archivo no tienen espacios ni mayúsculas", () => {
+    // En Vercel (Linux) las mayúsculas importan y los espacios obligan a
+    // codificar %20. Un archivo llamado "CV Facundo.pdf" anda en Windows y da
+    // 404 en producción.
+    for (const cv of CV_FILES) {
+      expect(cv.href).not.toMatch(/\s/);
+      expect(cv.href).toBe(cv.href.toLowerCase());
+    }
+  });
+
+  it("cada idioma tiene etiqueta y código distintos", () => {
+    const langs = CV_FILES.map((c) => c.lang);
+    expect(new Set(langs).size).toBe(langs.length);
+    for (const cv of CV_FILES) {
+      expect(cv.label.trim().length).toBeGreaterThan(0);
+      expect(cv.lang).toMatch(/^[a-z]{2}$/);
+    }
+  });
+
+  /**
+   * EL TEST QUE EVITA UN 404 EN PRODUCCION.
+   *
+   * Los otros verifican la forma de la ruta; este verifica que el archivo
+   * exista de verdad en public/. Si alguien renombra o borra un PDF, el botón
+   * de descarga queda apuntando al vacío y nada más lo detecta: el sitio
+   * compila, se ve bien, y el link no baja nada.
+   */
+  it("los PDFs existen realmente en public/", () => {
+    for (const cv of CV_FILES) {
+      const archivo = path.join(process.cwd(), "public", cv.href);
+      expect(existsSync(archivo), `falta el archivo: public${cv.href}`).toBe(
+        true
+      );
+    }
   });
 });
