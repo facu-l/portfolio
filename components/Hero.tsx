@@ -104,7 +104,21 @@ export function Hero() {
               className="absolute inset-4 -z-10 rounded-full bg-accent/25 opacity-0 blur-3xl transition-opacity duration-slow group-hover:opacity-100"
             />
 
-            <div className="overflow-hidden rounded-lg">
+            {/*
+              bg-background NO ES DECORATIVO: es lo que impide que el líquido
+              se transparente a través de la foto.
+
+              La máscara de abajo desvanece el 22% inferior de la imagen hasta
+              volverlo transparente. Sin un fondo propio, por ese hueco se ve lo
+              que haya detrás — y detrás hay una blob azul, así que el efecto se
+              superponía sobre el hombro.
+
+              Con el fondo puesto, la máscara desvanece contra `--color-background`,
+              que es el mismo color de la página: el degradado se ve idéntico a
+              antes, pero ahora tapa. El líquido queda solo donde tiene que
+              estar, alrededor del borde.
+            */}
+            <div className="overflow-hidden rounded-lg bg-background">
               <Image
                 src="/foto-facu.jpg"
                 alt={`${SITE.name}, ${SITE.role}`}
