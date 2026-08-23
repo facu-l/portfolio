@@ -36,6 +36,21 @@ const VARIANTS: Record<Variant, string> = {
     "border border-border text-foreground hover:border-accent hover:text-accent",
 };
 
+/**
+ * Las clases de un botón, para el caso en que el elemento NO puede ser un <a>.
+ *
+ * El submit de un formulario tiene que ser un <button type="submit"> de verdad:
+ * un <a> con onClick no se dispara con Enter desde un input, no participa del
+ * submit nativo y le miente al lector de pantalla sobre lo que va a pasar.
+ *
+ * Exportar las clases (y no duplicarlas en el form) es lo que mantiene la
+ * restricción de los 19px en un solo lugar: el día que alguien la cambie acá,
+ * cambia en los dos.
+ */
+export function buttonClasses(variant: Variant = "primary") {
+  return `${BASE} ${VARIANTS[variant]}`;
+}
+
 export function ButtonLink({
   href,
   variant = "primary",
@@ -47,7 +62,7 @@ export function ButtonLink({
     : {};
 
   return (
-    <a href={href} className={`${BASE} ${VARIANTS[variant]}`} {...externalProps}>
+    <a href={href} className={buttonClasses(variant)} {...externalProps}>
       {children}
       {external && (
         <span className="sr-only">{" (opens in a new tab)"}</span>
