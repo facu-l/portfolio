@@ -75,6 +75,20 @@
   --duration-base: 250ms;                        /* cambios de estado */
   --duration-slow: 400ms;                        /* entradas al hacer scroll */
   --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- Glow de la foto del Hero --------------------------------------------
+     Un box-shadow y NO un div desenfocado detrás. La diferencia no es de estilo:
+     el navegador dibuja la sombra exterior por FUERA de la caja y nunca por
+     debajo, así que la foto puede seguir desvaneciéndose en su borde inferior
+     sin que el azul se cuele por ese hueco. Un div relleno detrás obliga a
+     taparlo con un fondo opaco, y ahí se pierde el desvanecimiento.
+
+     Los valores usan --color-accent en vez de un hexadecimal: si cambia el
+     acento, cambia el glow. Es la regla número uno de DESIGN.md. */
+  --shadow-glow: 0 0 46px 2px
+    color-mix(in oklab, var(--color-accent) 34%, transparent);
+  --shadow-glow-strong: 0 0 64px 8px
+    color-mix(in oklab, var(--color-accent) 62%, transparent);
 }
 
 /* ============================================================================

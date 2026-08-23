@@ -136,10 +136,10 @@ Breakpoints de Tailwind sin modificar: `sm 640` · `md 768` · `lg 1024` · `xl 
 
 ### El hover no reemplaza al estado de reposo
 
-El glow es visible en reposo (55%) y llega al 100% en hover. Esa base no es un
-detalle: **en un teléfono no hay hover.** Un efecto que solo aparece al pasar el
-mouse simplemente no existe para la mayoría del tráfico, que llega desde un link
-compartido y se abre en mobile.
+El glow es visible en reposo (`--shadow-glow`) y se intensifica en hover
+(`--shadow-glow-strong`). Esa base no es un detalle: **en un teléfono no hay
+hover.** Un efecto que solo aparece al pasar el mouse simplemente no existe para
+la mayoría del tráfico, que llega desde un link compartido y se abre en mobile.
 
 El SPEC pedía además "reacción leve al cursor". **Eso no está implementado:** el
 glow reacciona a que el mouse esté encima, no sigue su posición. Seguir el
@@ -224,23 +224,47 @@ directamente no se percibe.
 
 ## Glow del Hero
 
-Un resplandor azul que rodea el contorno de la foto y se intensifica al pasar
-el mouse. **Puro CSS: cero JavaScript, cero dependencias.**
+Un resplandor azul que rodea la foto y se intensifica al pasar el mouse.
+**Puro CSS: cero JavaScript, cero dependencias.** Los valores son tokens
+(`--shadow-glow`, `--shadow-glow-strong`) construidos con `color-mix` sobre
+`--color-accent`, así que si cambia el acento cambia el glow.
 
-```
-absolute -inset-6 -z-10 rounded-lg bg-accent/40
-opacity-55 blur-2xl
-transition-opacity duration-slow group-hover:opacity-100
-```
+Son dos elementos y una máscara, y los tres se necesitan entre sí:
 
-| Decisión | Por qué |
+| Pieza | Qué hace |
 |---|---|
-| **`-inset-6` negativo** | El resplandor sale 24px por los **cuatro** lados. La versión anterior era `inset-4`: un círculo metido *adentro* de la caja de la foto, del que solo escapaba el desenfoque, así que no rodeaba nada |
-| **`rounded-lg`** | Copia el radio de la foto. Un `rounded-full` detrás de un rectángulo deja las esquinas sin resplandor |
-| **`blur-2xl`** | Es lo que lo convierte en glow. Sin desenfoque esto es un rectángulo azul, o sea una forma, no un resplandor |
-| **55% en reposo, 100% en hover** | Un efecto que solo existe en hover no existe para nadie en mobile, y de ahí viene la mayoría del tráfico de un link compartido |
-| **`overflow-x-clip` en el Hero** | El glow se extiende más allá de la caja y en mobile la foto tiene 24px de padding. `clip` y no `hidden`: `hidden` convierte la sección en contenedor de scroll y rompe `sticky` |
-| **`bg-background` en la foto** | La máscara desvanece el 22% inferior de la imagen hasta volverlo transparente. Sin fondo propio, el azul se cuela por ese hueco y tiñe el hombro |
+| **Caja invisible que solo proyecta sombra**, terminando en `bottom-[20%]` | Es el glow |
+| **Máscara en la imagen**, `black 74% → transparent 93%` | Desvanece el borde inferior |
+| **Contenedor sin fondo** | Deja que ese desvanecimiento llegue hasta la página |
+
+### Las tres decisiones, y qué se rompe si se cambian
+
+**`box-shadow` y no un div relleno y desenfocado.** El navegador dibuja la
+sombra exterior por fuera de la caja y **nunca por debajo**. Un div relleno
+detrás de la foto se ve a través del hueco que deja la máscara y tiñe el hombro
+de azul; taparlo obliga a ponerle fondo opaco al contenedor, y ahí se pierde el
+desvanecimiento. Con `box-shadow` no hay nada detrás que tapar.
+
+**La caja del glow termina al 80% de la altura, no abajo de todo.** Si llega
+hasta el final, su sombra dibuja un contorno nítido justo donde la imagen se
+está disolviendo: queda un rectángulo vacío marcado debajo de la foto. Cortada
+antes, el glow se apaga en el mismo lugar donde la foto se desvanece. Los bordes
+de esa caja no se ven nunca — no tiene fondo y está detrás de la parte opaca de
+la imagen.
+
+**La máscara cierra en 93%, no en 100%.** `scale-105` agranda la imagen un 5% y
+el contenedor recorta el sobrante: lo último visible es el ~97.6% de la imagen.
+Con el degradado terminando en 100%, el corte caía donde todavía quedaba ~11% de
+opacidad, y ese 11% dibujaba una línea horizontal nítida — el desvanecimiento
+existía y no se veía. Cerrando en 93%, para cuando llega el recorte ya no queda
+nada que cortar. También aguanta el hover: con `scale-110` lo visible baja al
+~95.2%, y sigue estando después del final.
+
+### Reposo y hover
+
+El glow es visible en reposo y se intensifica en hover. Esa base no es un
+detalle: **en un teléfono no hay hover.** Un efecto que solo aparece al pasar el
+mouse no existe para la mayoría del tráfico, que llega desde un link compartido.
 
 ### Por qué se descartó `liquid-gooey`
 

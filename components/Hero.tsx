@@ -82,43 +82,37 @@ export function Hero() {
           */}
           <div className="group relative mx-auto w-full max-w-xs md:max-w-none">
             {/*
-              Glow azul que rodea el contorno de la foto (SPEC §2).
-              Puro CSS: cero JavaScript, cero dependencias.
+              Glow azul alrededor de la foto (SPEC §2). Puro CSS: cero
+              JavaScript, cero dependencias.
 
-              -inset-6 Y rounded-lg: el resplandor sale 24px por los CUATRO
-              lados y copia el radio de la foto. Antes esto era `inset-4
-              rounded-full` — un círculo METIDO ADENTRO de la caja, del que solo
-              escapaba el desenfoque. Por eso no rodeaba nada.
+              ES UNA CAJA INVISIBLE QUE SOLO PROYECTA SOMBRA, y termina al 80%
+              de la altura de la foto. Las dos cosas son deliberadas:
 
-              blur-2xl es lo que lo convierte en resplandor. Sin el desenfoque
-              esto sería un rectángulo azul con bordes redondeados detrás de la
-              foto, que es una forma, no un glow.
+              1. `box-shadow` y no un div relleno y desenfocado. El navegador
+                 dibuja la sombra exterior POR FUERA de la caja y nunca por
+                 debajo, así que el azul no puede colarse por el hueco que deja
+                 la máscara de la foto. Un div relleno obliga a taparlo con un
+                 fondo opaco, y ahí se pierde el desvanecimiento.
 
-              VISIBLE EN REPOSO Y MAS FUERTE EN HOVER: 55% de base, 100% al
-              pasar el mouse. Un efecto que solo existe en hover no existe para
-              nadie en mobile, y ahí llega la mayoría del tráfico de un link
-              compartido. La transición usa --duration-slow, que es la duración
-              del sistema para este tipo de cambio.
+              2. `bottom-[20%]` en vez de cubrir toda la foto. Si la caja llega
+                 hasta abajo, su sombra dibuja un contorno nítido justo donde la
+                 imagen se está disolviendo: queda un rectángulo vacío marcado
+                 debajo de la foto. Terminándola antes, el glow se apaga en el
+                 mismo lugar donde la foto se desvanece.
+
+              Los bordes de esta caja no se ven nunca: no tiene fondo y está
+              detrás de la parte opaca de la imagen. Lo único que aporta es la
+              sombra.
+
+              Los valores viven como tokens en globals.css: ningún color
+              hardcodeado acá (regla número uno de DESIGN.md).
             */}
             <div
               aria-hidden="true"
-              className="absolute -inset-6 -z-10 rounded-lg bg-accent/40 opacity-55 blur-2xl transition-opacity duration-slow group-hover:opacity-100"
+              className="absolute inset-x-0 top-0 bottom-[20%] -z-10 rounded-lg shadow-glow transition-shadow duration-slow group-hover:shadow-glow-strong"
             />
 
-            {/*
-              bg-background NO ES DECORATIVO: es lo que impide que el glow se
-              transparente a través de la foto.
-
-              La máscara de abajo desvanece el 22% inferior de la imagen hasta
-              volverlo transparente, y por ese hueco se ve lo que haya detrás.
-              Detrás está el glow, así que sin fondo propio el azul teñiría el
-              hombro en vez de quedarse en el borde.
-
-              Con el fondo puesto, la máscara desvanece contra
-              `--color-background`, que es el mismo color de la página: el
-              degradado se ve idéntico, pero ahora tapa.
-            */}
-            <div className="overflow-hidden rounded-lg bg-background">
+            <div className="overflow-hidden rounded-lg">
               <Image
                 src="/foto-facu.jpg"
                 alt={`${SITE.name}, ${SITE.role}`}
@@ -135,13 +129,26 @@ export function Hero() {
                 sizes="(max-width: 768px) 20rem, 40vw"
                 className="h-auto w-full scale-105 transition-transform duration-slow group-hover:scale-110"
                 style={{
-                  // Difumina el borde inferior para que la foto se integre con
-                  // el fondo grafito en vez de leerse como un recorte pegado
-                  // encima (SPEC §2).
+                  /*
+                    Difumina el borde inferior para que la foto se integre con
+                    el fondo grafito en vez de leerse como un recorte pegado
+                    encima (SPEC §2).
+
+                    TERMINA EN 93% Y NO EN 100%, y eso es lo que hace que el
+                    desvanecimiento se vea. `scale-105` agranda la imagen un 5%
+                    y el contenedor recorta el sobrante: lo último visible es el
+                    ~97.6% de la imagen. Con el degradado terminando en 100%, el
+                    corte caía donde todavía quedaba ~11% de opacidad, y ese 11%
+                    dibujaba una línea horizontal nítida. Cerrando en 93%, para
+                    cuando llega el recorte ya no queda nada que cortar.
+
+                    El 93% también aguanta el hover: con `scale-110` lo visible
+                    baja al ~95.2%, y sigue estando después del final.
+                  */
                   WebkitMaskImage:
-                    "linear-gradient(to bottom, black 78%, transparent 100%)",
+                    "linear-gradient(to bottom, black 74%, transparent 93%)",
                   maskImage:
-                    "linear-gradient(to bottom, black 78%, transparent 100%)",
+                    "linear-gradient(to bottom, black 74%, transparent 93%)",
                 }}
               />
             </div>
