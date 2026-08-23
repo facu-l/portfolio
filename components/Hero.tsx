@@ -1,10 +1,8 @@
 import Image from "next/image";
-import { SITE, SOCIAL_LINKS } from "@/content/site";
+import { SITE } from "@/content/site";
 import { ButtonLink } from "./Button";
 import { CvDownload } from "./CvDownload";
-
-const GITHUB_URL =
-  SOCIAL_LINKS.find((l) => l.label === "GitHub")?.href ?? "https://github.com";
+import { SocialIconLinks } from "./SocialIconLinks";
 
 /**
  * Hero. SERVER COMPONENT — y tiene que seguir siéndolo.
@@ -91,13 +89,25 @@ export function Hero() {
               {SITE.tagline}
             </p>
 
-            <div className="mt-block flex flex-wrap gap-4">
+            {/*
+              DOS ACCIONES ARRIBA, LAS REDES ABAJO Y MAS CHICAS.
+
+              Antes había tres botones del mismo tamaño en una fila: ver el
+              trabajo, GitHub y el CV. Tres CTAs con el mismo peso no son una
+              jerarquía, son un menú — el visitante elige el que le queda más
+              cerca, no el que importa.
+
+              Arriba quedan las dos acciones que querés que haga alguien que
+              recién llega. GitHub bajó a la fila de iconos, que es donde
+              cualquiera espera encontrarlo, y de paso dejó de competir con el
+              CV por atención.
+            */}
+            <div className="mt-block flex flex-wrap gap-3">
               <ButtonLink href="#work">VIEW MY WORK</ButtonLink>
-              <ButtonLink href={GITHUB_URL} variant="secondary" external>
-                GITHUB ↗
-              </ButtonLink>
               <CvDownload />
             </div>
+
+            <SocialIconLinks />
 
             <p className="mt-block text-sm text-muted">{SITE.location}</p>
           </div>

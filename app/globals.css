@@ -17,7 +17,7 @@
        texto sobre fondo          16.56:1  AAA
        texto-muted sobre fondo     6.20:1  AA
        accent sobre fondo          4.64:1  AA
-       texto sobre accent          3.57:1  AA solo como texto grande (ver --text-cta)
+       fondo sobre accent          4.64:1  AA  <- el botón primario va con texto OSCURO
      Las superficies (surface/surface-2) están a 1.17:1 del fondo: NO separan
      por color. Se separan con espacio y tipografía. Ver DESIGN.md.
   */
@@ -53,11 +53,15 @@
   --text-body: 1rem;                             /* 16px        párrafos */
   --text-sm: 0.875rem;                           /* 14px        microtexto, eyebrows */
 
-  /* RESTRICCIÓN DE ACCESIBILIDAD — NO BAJAR DE ESTE VALOR.
-     Texto #F5F7FA sobre botón #007FFF da 3.57:1. Eso falla AA para texto normal
-     (4.5:1) y pasa para texto grande (3:1). WCAG define texto grande como
-     18.66px en bold. A 19px con peso 700 el CTA cumple; a 16px, no. */
-  --text-cta: 1.1875rem;                         /* 19px con font-weight 700 */
+  /* EL TOKEN --text-cta SE ELIMINO, y vale la pena saber por qué.
+     Eran 19px y no era una decisión estética: el texto claro #F5F7FA sobre el
+     botón azul #007FFF da 3.57:1, que falla AA para texto normal (4.5:1) y solo
+     pasa como "texto grande" de WCAG (>=18.66px en bold). El tamaño era la
+     única forma de que ese contraste fuera legal.
+     Invirtiendo el botón a texto OSCURO (#16181C sobre #007FFF) el contraste
+     sube a 4.64:1 y pasa AA para texto normal. Los botones ahora usan
+     --text-body como cualquier otro texto: la restricción desapareció porque
+     desapareció su causa, no porque la ignoremos. Ver components/Button.tsx. */
 
   /* --- Ritmo vertical ------------------------------------------------------
      "Espaciado generoso" del SPEC, traducido a números.

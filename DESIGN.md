@@ -43,14 +43,18 @@ habría producido `bg-bg`.
 | `muted` sobre `background` | 6.20:1 | AA |
 | `muted` sobre `surface-sunken` | 5.70:1 | AA |
 | `accent` sobre `background` | 4.64:1 | AA |
-| **`foreground` sobre `accent`** | **3.57:1** | **AA solo como texto grande** |
+| **`background` sobre `accent`** | **4.64:1** | **AA — el botón primario** |
+| `foreground` sobre `accent` | 3.57:1 | Solo texto grande. **No usar** |
 | `accent` sobre `surface` | 3.97:1 | Falla AA normal |
 
 **Dos restricciones que salen de esta tabla:**
 
-1. **El texto de los CTAs no puede bajar de 19px en bold** (`--text-cta`). A ese
-   tamaño califica como "texto grande" de WCAG y el mínimo baja de 4.5:1 a 3:1.
-   A 16px, el botón principal del sitio falla accesibilidad.
+1. **El botón primario lleva texto OSCURO sobre el azul**, no claro. Texto claro
+   da 3.57:1 y solo pasa como "texto grande" de WCAG (≥18.66px en bold), lo que
+   obligaba a mantener los botones en 19px. Texto oscuro da 4.64:1 y pasa AA para
+   texto normal, así que los botones pueden tener el tamaño que convenga al
+   diseño. **La restricción ahora es el par de colores, no el tamaño de letra**,
+   y hay un test en `Hero.test.tsx` que lo fija.
 2. **El azul no se usa como texto sobre `surface`** (3.97:1). Sobre el fondo
    principal sí (4.64:1).
 
@@ -86,8 +90,7 @@ sin request a Google en runtime.
 | `text-h2` | 28 → 40px | 700 | Títulos de sección, y el rol en el Hero |
 | `text-h3` | 20px | 700 | Títulos de proyecto |
 | `text-lead` | 18px | 400 | Tagline del Hero, bio de About |
-| `text-body` | 16px | 400 | Párrafos |
-| `text-cta` | **19px** | **700** | Botones. **No bajar** |
+| `text-body` | 16px | 400-600 | Párrafos y botones |
 | `text-sm` | 14px | 400-600 | Microtexto, eyebrows |
 
 ### La jerarquía del Hero: saludo → nombre → rol

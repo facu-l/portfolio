@@ -13,24 +13,33 @@ type ButtonLinkProps = {
 /**
  * Botón-link del sitio.
  *
- * POR QUE ES UN COMPONENTE Y NO CLASES SUELTAS EN CADA CTA:
+ * EL BOTON PRIMARIO LLEVA TEXTO OSCURO SOBRE EL AZUL, Y ESO ES LO QUE PERMITE
+ * QUE SEA CHICO.
  *
- * `text-cta` son 19px y NO es una decisión estética, es una restricción de
- * accesibilidad. El texto #F5F7FA sobre el azul #007FFF da 3.57:1, que falla
+ * Antes era texto claro (#F5F7FA) sobre el azul #007FFF: **3.57:1**, que falla
  * AA para texto normal (necesita 4.5:1) y solo pasa como "texto grande" de
- * WCAG, definido como 18.66px en bold.
+ * WCAG, definido como 18.66px en bold. Por eso el botón estaba clavado en 19px:
+ * no era una decisión estética, era la única forma de que ese contraste fuera
+ * legal.
  *
- * Escrito como clases sueltas en cada botón, alguien lo achica a text-sm en un
- * refactor de estilos y el CTA principal del sitio queda fallando accesibilidad
- * sin que nada avise. Acá el tamaño y el peso son parte del componente: para
- * romperlo hay que venir a este archivo, donde está escrito el porqué.
+ * Invirtiendo el texto a #16181C (el fondo de la página) sobre el mismo azul,
+ * el contraste sube a **4.64:1** y pasa AA para texto normal. La restricción de
+ * tamaño desaparece porque desaparece su causa, no porque la ignoremos.
+ *
+ * POR QUE ES UN COMPONENTE Y NO CLASES SUELTAS EN CADA CTA: para romper el
+ * contraste hay que venir a este archivo, donde está escrito el porqué. Con
+ * clases sueltas, alguien le pone `text-foreground` al primario en un refactor
+ * de estilos y el CTA principal del sitio vuelve a fallar sin que nada avise.
  */
 const BASE =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-6 py-3 text-cta font-bold transition-colors duration-fast";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-body font-semibold transition-colors duration-fast";
 
 const VARIANTS: Record<Variant, string> = {
-  // Sólido azul. El texto claro sobre este fondo es el caso de los 3.57:1.
-  primary: "bg-accent text-foreground hover:bg-accent/90",
+  /*
+    Sólido azul con texto OSCURO: 4.64:1, pasa AA para texto normal.
+    Ver el comentario de arriba antes de cambiar cualquiera de los dos colores.
+  */
+  primary: "bg-accent text-background hover:bg-accent/90",
   // Contorno. Acá el texto va sobre el fondo de la página: 16.56:1, sin drama.
   secondary:
     "border border-border text-foreground hover:border-accent hover:text-accent",

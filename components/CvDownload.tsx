@@ -39,7 +39,7 @@ export function CvDownload() {
       <button
         type="button"
         popoverTarget={POPOVER_ID}
-        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border px-6 py-3 text-cta font-bold text-foreground transition-colors duration-fast hover:border-accent hover:text-accent"
+        className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border px-5 py-2.5 text-body font-semibold text-foreground transition-colors duration-fast hover:border-accent hover:text-accent"
       >
         DOWNLOAD CV ↓
       </button>
@@ -79,7 +79,7 @@ export function CvDownload() {
                 // que es el caso: están en /public.
                 download
                 hrefLang={cv.lang}
-                className="flex min-h-11 items-center justify-between rounded-md border border-border px-4 py-3 text-cta font-bold transition-colors duration-fast hover:border-accent hover:text-accent"
+                className="flex min-h-11 items-center justify-between rounded-md border border-border px-4 py-3 text-body font-semibold transition-colors duration-fast hover:border-accent hover:text-accent"
               >
                 {cv.label}
                 <span aria-hidden="true">↓</span>

@@ -68,23 +68,44 @@ describe("Hero", () => {
   /**
    * EL TEST QUE PROTEGE LA ACCESIBILIDAD DEL BOTON PRINCIPAL.
    *
-   * #F5F7FA sobre #007FFF da 3.57:1: falla AA para texto normal y solo pasa
-   * como texto grande de WCAG (>=18.66px en bold). El token text-cta son 19px.
+   * Lo que se protege CAMBIO, y por eso este test cambió con él.
    *
-   * Si alguien cambia el botón a text-sm en un refactor de estilos, el CTA
-   * principal del sitio queda fallando accesibilidad y nada más lo detecta:
-   * se ve bien, funciona bien, y está mal.
+   * Antes el botón era texto claro sobre azul: 3.57:1, que falla AA para texto
+   * normal y solo pasa como "texto grande" de WCAG (>=18.66px en bold). El
+   * test fijaba el TAMAÑO en 19px, porque ese tamaño era lo único que hacía
+   * legal ese contraste.
+   *
+   * Ahora el texto es oscuro sobre el mismo azul: 4.64:1, que pasa AA para
+   * texto normal. La restricción de tamaño desapareció porque desapareció su
+   * causa. Lo que hay que proteger ya no es cuán grande es la letra, sino que
+   * el par de colores siga siendo ese.
+   *
+   * Si alguien le pone `text-foreground` al primario "para que se lea mejor",
+   * el contraste vuelve a 3.57:1 y el CTA principal del sitio queda fallando
+   * accesibilidad: se ve bien, funciona bien, y está mal.
    */
-  it("los CTAs conservan el tamaño y el peso que exige el contraste", () => {
+  it("el CTA principal mantiene el par de colores que le da 4.64:1", () => {
     render(<Hero />);
-    for (const nombre of [/view my work/i, /github/i]) {
-      const cta = screen.getByRole("link", { name: nombre });
-      expect(cta.className).toContain("text-cta");
-      expect(cta.className).toContain("font-bold");
-    }
+    const cta = screen.getByRole("link", { name: /view my work/i });
+    expect(cta.className).toContain("bg-accent");
+    expect(cta.className).toContain("text-background");
+    expect(cta.className).not.toContain("text-foreground");
+  });
+
+  /**
+   * 44x44px es el mínimo de touch target de DESIGN.md. Achicar los botones no
+   * puede llevarse puesto eso: en un teléfono, un botón más chico que el pulgar
+   * es un botón al que se le erra.
+   */
+  it("los botones conservan el touch target mínimo", () => {
+    render(<Hero />);
+    const cta = screen.getByRole("link", { name: /view my work/i });
     const cvBtn = screen.getByRole("button", { name: /download cv/i });
-    expect(cvBtn.className).toContain("text-cta");
-    expect(cvBtn.className).toContain("font-bold");
+    const github = screen.getByRole("link", { name: /github/i });
+
+    for (const el of [cta, cvBtn, github]) {
+      expect(el.className).toMatch(/min-h-11|size-11/);
+    }
   });
 
   it("los links externos van con noopener y noreferrer", () => {
