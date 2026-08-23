@@ -20,26 +20,30 @@ está escrito en 12 archivos con un typo en uno solo, y nadie encuentra cuál.
 
 ## Color
 
-| Token | Valor | Uso |
-|---|---|---|
-| `bg` | `#16181C` | Fondo principal |
-| `bg-2` | `#1D2025` | Footer |
-| `surface` | `#22262C` | Tarjetas de proyecto |
-| `accent` | `#007FFF` | Acento. Poco y estratégico: título, CTAs, glow. Nunca dominante |
-| `text` | `#F5F7FA` | Texto principal |
-| `text-muted` | `#9299A5` | Texto secundario |
-| `border` | `#30353D` | Bordes |
+Los nombres están elegidos por la utilidad de Tailwind que generan, no por
+descripción. `--color-background` produce `bg-background`; un `--color-bg`
+habría producido `bg-bg`.
+
+| Token | Utilidad | Valor | Uso |
+|---|---|---|---|
+| `--color-background` | `bg-background` | `#16181C` | Fondo principal |
+| `--color-surface-sunken` | `bg-surface-sunken` | `#1D2025` | Footer |
+| `--color-surface` | `bg-surface` | `#22262C` | Tarjetas de proyecto |
+| `--color-accent` | `bg-accent` / `text-accent` | `#007FFF` | Acento. Poco y estratégico: título, CTAs, glow. Nunca dominante |
+| `--color-foreground` | `text-foreground` | `#F5F7FA` | Texto principal |
+| `--color-muted` | `text-muted` | `#9299A5` | Texto secundario |
+| `--color-border` | `border-border` | `#30353D` | Bordes |
 
 ### Contraste verificado (WCAG 2.1)
 
 | Combinación | Ratio | Veredicto |
 |---|---|---|
-| `text` sobre `bg` | 16.56:1 | AAA |
-| `text` sobre `surface` | 14.16:1 | AAA |
-| `text-muted` sobre `bg` | 6.20:1 | AA |
-| `text-muted` sobre `bg-2` | 5.70:1 | AA |
-| `accent` sobre `bg` | 4.64:1 | AA |
-| **`text` sobre `accent`** | **3.57:1** | **AA solo como texto grande** |
+| `foreground` sobre `background` | 16.56:1 | AAA |
+| `foreground` sobre `surface` | 14.16:1 | AAA |
+| `muted` sobre `background` | 6.20:1 | AA |
+| `muted` sobre `surface-sunken` | 5.70:1 | AA |
+| `accent` sobre `background` | 4.64:1 | AA |
+| **`foreground` sobre `accent`** | **3.57:1** | **AA solo como texto grande** |
 | `accent` sobre `surface` | 3.97:1 | Falla AA normal |
 
 **Dos restricciones que salen de esta tabla:**
@@ -180,3 +184,4 @@ Languages, Databases, Tools y Concepts van como texto secundario.
 
 **Por qué:** un recruiter escanea en 30 segundos. Con 7 bloques de igual peso no
 elige ninguno y se lleva cero. Con 3, se lleva tres.
+
