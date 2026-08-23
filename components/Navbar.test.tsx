@@ -62,7 +62,7 @@ describe("Navbar", () => {
 
   it("renderiza los 4 links de navegación apuntando a anclas de la página", () => {
     render(<Navbar />);
-    const nav = screen.getByRole("navigation", { name: /principal/i });
+    const nav = screen.getByRole("navigation", { name: /main/i });
     expect(nav).toBeInTheDocument();
 
     for (const label of ["About", "Work", "Skills", "Contact"]) {

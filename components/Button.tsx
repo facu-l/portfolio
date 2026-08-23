@@ -50,7 +50,7 @@ export function ButtonLink({
     <a href={href} className={`${BASE} ${VARIANTS[variant]}`} {...externalProps}>
       {children}
       {external && (
-        <span className="sr-only">(abre en una pestaña nueva)</span>
+        <span className="sr-only">{" (opens in a new tab)"}</span>
       )}
     </a>
   );

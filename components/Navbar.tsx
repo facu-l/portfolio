@@ -25,7 +25,7 @@ export function Navbar() {
   return (
     <StickyHeader>
       <nav
-        aria-label="Principal"
+        aria-label="Main"
         className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5"
       >
         <a

@@ -61,7 +61,7 @@ export default function GymManagementSystemCaseStudy() {
       </p>
 
       <div className="mt-block">
-        <TechStack items={project.stack} label={`Tecnologías de ${project.title}`} />
+        <TechStack items={project.stack} label={`Tech stack for ${project.title}`} />
       </div>
 
       {/*

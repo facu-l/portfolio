@@ -131,6 +131,15 @@ export const PROJECTS: readonly Project[] = [
     summary:
       "A responsive landing page focused on lead generation through WhatsApp and Web3Forms, optimized for SEO and performance and deployed on Vercel.",
     stack: ["React", "Vite", "TypeScript", "Tailwind CSS"],
+    /**
+     * Apunta a la subcarpeta, no a la raíz de `quick-builds`. El repo es una
+     * colección de micro-proyectos: quien clickea "GitHub" desde esta tarjeta
+     * quiere el código de ESTA landing, y en la raíz tendría que buscarlo.
+     * Un link correcto que aterriza en el lugar equivocado igual cuesta un
+     * click y algo de confianza.
+     */
+    repoUrl: "https://github.com/facu-l/quick-builds/tree/main/personal-trainer-landing",
+    liveUrl: "https://ludmila-montes.vercel.app/",
     screenshot: {
       src: "/proyectos/landing-personal-trainer.png",
       alt: "Landing page del personal trainer con la sección principal y el botón de contacto por WhatsApp",

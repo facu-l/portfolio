@@ -37,7 +37,7 @@ export function ExternalLink({
     >
       {children}
       <span aria-hidden="true">↗</span>
-      <span className="sr-only">(abre en una pestaña nueva)</span>
+      <span className="sr-only">{" (opens in a new tab)"}</span>
     </a>
   );
 }

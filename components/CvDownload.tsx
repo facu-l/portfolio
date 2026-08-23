@@ -83,7 +83,7 @@ export function CvDownload() {
               >
                 {cv.label}
                 <span aria-hidden="true">↓</span>
-                <span className="sr-only">(descargar PDF)</span>
+                <span className="sr-only">{" (PDF download)"}</span>
               </a>
             </li>
           ))}

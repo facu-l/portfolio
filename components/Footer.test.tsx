@@ -45,13 +45,13 @@ describe("Footer", () => {
   it("avisa que los links abren en otra pestaña", () => {
     render(<Footer />);
     expect(
-      screen.getAllByText(/abre en una pestaña nueva/i).length
+      screen.getAllByText(/opens in a new tab/i).length
     ).toBe(SOCIAL_LINKS.length);
   });
 
   it("el footer es un landmark y las redes un nav con nombre", () => {
     render(<Footer />);
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
-    expect(screen.getByRole("navigation", { name: /redes/i })).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: /social/i })).toBeInTheDocument();
   });
 });

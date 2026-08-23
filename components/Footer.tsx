@@ -24,7 +24,7 @@ export function Footer() {
         </p>
 
         <div className="flex flex-col gap-stack sm:flex-row sm:items-center sm:gap-8">
-          <nav aria-label="Redes">
+          <nav aria-label="Social">
             <ul className="flex items-center gap-6">
               {SOCIAL_LINKS.map((link) => (
                 <li key={link.href}>

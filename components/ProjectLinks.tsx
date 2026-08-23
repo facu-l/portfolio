@@ -38,7 +38,7 @@ export function ProjectLinks({
         <ButtonLink href={caseStudyHref}>
           View Case Study
           <span aria-hidden="true">→</span>
-          <span className="sr-only">de {projectTitle}</span>
+          <span className="sr-only">{` for ${projectTitle}`}</span>
         </ButtonLink>
       )}
 
@@ -48,7 +48,7 @@ export function ProjectLinks({
           className="font-semibold text-foreground underline-offset-4 hover:underline"
         >
           Live Demo
-          <span className="sr-only">de {projectTitle}</span>
+          <span className="sr-only">{` for ${projectTitle}`}</span>
         </ExternalLink>
       )}
 
@@ -58,7 +58,7 @@ export function ProjectLinks({
           className="font-semibold text-foreground underline-offset-4 hover:underline"
         >
           GitHub
-          <span className="sr-only">de {projectTitle}</span>
+          <span className="sr-only">{` for ${projectTitle}`}</span>
         </ExternalLink>
       )}
     </div>

@@ -84,7 +84,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
         <div className="mt-block">
           <TechStack
             items={project.stack}
-            label={`Tecnologías de ${project.title}`}
+            label={`Tech stack for ${project.title}`}
           />
         </div>
 
