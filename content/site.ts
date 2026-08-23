@@ -11,6 +11,13 @@
  */
 
 export const SITE = {
+  /**
+   * Saludo que abre el Hero. Va separado del nombre y no como un solo string
+   * ("Hi, I'm Facundo Lambertucci") porque en pantalla tienen pesos distintos:
+   * el saludo es tejido conectivo y el nombre es el dato. Si fueran un solo
+   * string habría que partirlo en el JSX, que es donde no debe vivir el copy.
+   */
+  greeting: "Hi, I'm",
   name: "Facundo Lambertucci",
   role: "Full Stack Developer",
   tagline: "Building software with code, systems & AI.",

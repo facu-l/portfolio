@@ -48,13 +48,43 @@ export function Hero() {
         <div className="grid gap-block md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-16">
           {/* --- Columna de contenido --- */}
           <div>
-            <h1
-              id="hero-heading"
-              className="text-display font-black uppercase leading-[0.92] tracking-tight"
-            >
-              Full Stack
-              <br />
-              Developer
+            {/*
+              JERARQUIA: saludo → NOMBRE → rol.
+
+              Antes el h1 era "FULL STACK DEVELOPER" a tamaño display. El
+              problema no era el tamaño, era qué ocupaba el lugar más grande de
+              la página: un puesto que comparten millones de personas. El nombre
+              es lo único irrepetible acá, y es lo que tiene que quedar cuando
+              alguien cierra la pestaña.
+
+              EL SALUDO NO ES DECORACION NI ES EL TITULO. Va chico y en gris
+              porque es tejido conectivo: sin él, "FACUNDO LAMBERTUCCI" solo,
+              gigante, se lee como una portada. Con él, se lee como alguien
+              presentándose.
+
+              Los tres van DENTRO del h1 con <span> de bloque, no como elementos
+              separados. Un lector de pantalla anuncia un solo encabezado:
+              "Hi, I'm Facundo Lambertucci, Full Stack Developer". Partirlo en
+              h1 + p sueltos rompe esa frase en pedazos sin relación.
+            */}
+            <h1 id="hero-heading" className="text-balance">
+              <span className="block text-lead text-muted">
+                {SITE.greeting}
+              </span>
+
+              <span className="mt-2 block text-display font-black uppercase leading-[0.95] tracking-tight">
+                {SITE.name}
+              </span>
+
+              {/*
+                El rol en acento: es la promesa del sitio y lo que un recruiter
+                busca en los primeros 3 segundos. Sobre el fondo de página el
+                azul da 4.64:1 y pasa AA — la restricción de DESIGN.md es no
+                usarlo sobre `surface` (3.97:1), y acá no hay surface.
+              */}
+              <span className="mt-stack block text-h2 font-bold text-accent">
+                {SITE.role}
+              </span>
             </h1>
 
             <p className="mt-block max-w-md text-lead text-muted">

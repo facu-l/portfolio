@@ -82,13 +82,37 @@ sin request a Google en runtime.
 
 | Token | Tamaño | Peso | Uso |
 |---|---|---|---|
-| `text-display` | 40 → 96px | 900 | `FULL STACK DEVELOPER` |
-| `text-h2` | 28 → 40px | 700 | Títulos de sección |
+| `text-display` | 36 → 72px | 900 | El nombre en el Hero |
+| `text-h2` | 28 → 40px | 700 | Títulos de sección, y el rol en el Hero |
 | `text-h3` | 20px | 700 | Títulos de proyecto |
-| `text-lead` | 18px | 400 | Subtítulo del Hero |
+| `text-lead` | 18px | 400 | Tagline del Hero, bio de About |
 | `text-body` | 16px | 400 | Párrafos |
 | `text-cta` | **19px** | **700** | Botones. **No bajar** |
 | `text-sm` | 14px | 400-600 | Microtexto, eyebrows |
+
+### La jerarquía del Hero: saludo → nombre → rol
+
+El h1 dice `Hi, I'm` chico y en gris, **`FACUNDO LAMBERTUCCI`** en display, y
+`Full Stack Developer` en `text-h2` sobre acento.
+
+**Por qué el nombre y no el puesto en el lugar más grande:** "Full Stack
+Developer" lo comparten millones de personas. El nombre es lo único irrepetible
+de la página, y es lo que tiene que quedar cuando alguien cierra la pestaña. El
+puesto sigue estando primero en jerarquía de color, que es lo que un recruiter
+escanea.
+
+**Los tres van dentro del mismo `<h1>`**, en `<span>` de bloque. Un lector de
+pantalla anuncia un solo encabezado — "Hi, I'm Facundo Lambertucci, Full Stack
+Developer" — en vez de partir la frase en un encabezado y dos párrafos sueltos.
+
+**`--text-display` bajó de 96px a 72px por esta decisión, no por gusto.** El
+titular anterior se partía a mano en dos líneas de 10 caracteres. "LAMBERTUCCI"
+son 11 caracteres que no se pueden cortar: a 96px medía 690px, y como una
+columna de grid no baja de su contenido mínimo, empujaba a la foto hasta dejarla
+en 200px de ancho. **El tamaño de la tipografía estaba decidiendo el layout.**
+A 72px la foto vuelve a 373px y las dos columnas se equilibran.
+
+---
 
 Los tamaños fluidos usan `clamp()`: mínimo en mobile, escalado con el viewport,
 máximo en desktop. Evita declarar un tamaño distinto por breakpoint y que se

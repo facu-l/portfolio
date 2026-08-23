@@ -39,7 +39,14 @@
 
   /* Escala tipográfica. clamp() = mínimo mobile, escalado fluido, máximo desktop.
      Evita tener que declarar un tamaño distinto por breakpoint. */
-  --text-display: clamp(2.5rem, 8vw, 6rem);      /* 40 -> 96px  FULL STACK DEVELOPER */
+  /* 36 -> 72px. El nombre del Hero.
+     BAJO DE 96px A 72px CUANDO EL TITULAR PASO A SER EL NOMBRE. El anterior
+     ("FULL STACK DEVELOPER") se partía a mano en dos líneas de 10 caracteres y
+     entraba. "LAMBERTUCCI" son 11 caracteres que no se pueden cortar: a 96px
+     medía 690px, y como una columna de grid no baja de su contenido mínimo,
+     empujaba a la foto hasta dejarla en 200px. El tamaño de la tipografía
+     estaba decidiendo el layout. */
+  --text-display: clamp(2.25rem, 6vw, 4.5rem);
   --text-h2: clamp(1.75rem, 4vw, 2.5rem);        /* 28 -> 40px  títulos de sección */
   --text-h3: 1.25rem;                            /* 20px        títulos de proyecto */
   --text-lead: 1.125rem;                         /* 18px        subtítulo del Hero */

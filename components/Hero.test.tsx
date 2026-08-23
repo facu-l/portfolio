@@ -4,12 +4,36 @@ import { Hero } from "./Hero";
 import { SITE } from "@/content/site";
 
 describe("Hero", () => {
-  it("tiene un único h1 con el título del SPEC", () => {
+  /**
+   * El h1 es UNO SOLO y contiene las tres partes: saludo, nombre y rol.
+   *
+   * Podrían ser un h1 y dos <p>, y se vería igual. Pero un lector de pantalla
+   * que lista los encabezados de la página leería solo el nombre, sin el rol
+   * — que es la afirmación que sostiene todo el sitio. Juntos se anuncian como
+   * una frase: "Hi, I'm Facundo Lambertucci, Full Stack Developer".
+   */
+  it("tiene un único h1 que presenta nombre y rol juntos", () => {
     render(<Hero />);
-    const h1 = screen.getByRole("heading", { level: 1 });
-    expect(h1.textContent?.replace(/\s+/g, " ")).toMatch(
-      /full stack\s*developer/i
-    );
+    const encabezados = screen.getAllByRole("heading", { level: 1 });
+    expect(encabezados).toHaveLength(1);
+
+    const texto = encabezados[0].textContent?.replace(/\s+/g, " ") ?? "";
+    expect(texto).toContain(SITE.greeting);
+    expect(texto).toContain(SITE.name);
+    expect(texto).toContain(SITE.role);
+  });
+
+  /**
+   * El nombre va antes que el rol y no al revés. "Full Stack Developer" lo
+   * comparten millones de personas; el nombre es lo único irrepetible de esta
+   * página, y es lo que tiene que quedar cuando alguien cierra la pestaña.
+   */
+  it("el nombre aparece antes que el rol", () => {
+    render(<Hero />);
+    const texto =
+      screen.getByRole("heading", { level: 1 }).textContent?.replace(/\s+/g, " ") ??
+      "";
+    expect(texto.indexOf(SITE.name)).toBeLessThan(texto.indexOf(SITE.role));
   });
 
   it("muestra el tagline y la ubicación", () => {
