@@ -88,8 +88,31 @@ export function ContactForm({ accessKey }: ContactFormProps) {
 
   const isSubmitting = status === "submitting";
 
+  /*
+    max-w-2xl PARA COMPARTIR EL BORDE DERECHO CON EL INTRO DE Contact.tsx.
+
+    Era `max-w-xl` (576px) mientras el intro es `max-w-2xl` (672px), y no se
+    notaba: los dos estaban sobre el fondo de página, alineados a la izquierda,
+    y a la derecha no había nada contra qué comparar.
+
+    Al meter la sección en un panel de 976px aparecieron TRES bordes derechos
+    distintos — 976 el recuadro, 672 el párrafo, 576 los campos — y eso se lee
+    como accidente, no como diseño. Igualando el form al intro quedan dos: el
+    del panel y el de la columna de contenido.
+
+    NO SE ENSANCHA HASTA LLENAR EL PANEL. La longitud de línea legible ronda los
+    60-75 caracteres y 672px está ahí; un campo de 976px es incómodo de usar y
+    se lee como formulario roto. El aire a la derecha es correcto: lo que estaba
+    mal era que hubiera dos anchos de contenido en vez de uno.
+
+    Si cambiás este valor, cambiá también el del intro en Contact.tsx. Hay un
+    test que falla si se desincronizan.
+
+    (Va acá arriba y no adentro del return: un comentario JSX puesto antes del
+    elemento raíz son dos expresiones de primer nivel y no compila.)
+  */
   return (
-    <form onSubmit={handleSubmit} className="mt-block max-w-xl">
+    <form onSubmit={handleSubmit} className="mt-block max-w-2xl">
       <div className="flex flex-col gap-block">
         <div className="flex flex-col gap-2">
           <label htmlFor="contact-name" className={LABEL_CLASSES}>
