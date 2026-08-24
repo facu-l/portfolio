@@ -3,7 +3,6 @@ import { render, screen } from "@testing-library/react";
 import { eyebrowClasses } from "./Eyebrow";
 import { About } from "./About";
 import { Projects } from "./Projects";
-import { CurrentlyLearning } from "./CurrentlyLearning";
 import { Skills } from "./Skills";
 
 describe("Eyebrow", () => {
@@ -25,7 +24,6 @@ describe("Eyebrow", () => {
         <About />
         <Projects />
         <Skills />
-        <CurrentlyLearning />
       </>
     );
 

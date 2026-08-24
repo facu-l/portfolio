@@ -3,17 +3,27 @@ import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
-import { CurrentlyLearning } from "@/components/CurrentlyLearning";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 
 /**
- * Orden de secciones confirmado en el SPEC:
- * Hero -> About (incluye Education) -> Projects -> Skills ->
- * Currently Learning -> Contact -> Footer
+ * Orden de secciones:
+ * Hero -> About (incluye Education) -> Projects -> Skills -> Contact -> Footer
  *
  * About va ANTES que Projects a propósito: el visitante lee quién sos antes de
  * ver qué construiste.
+ *
+ * EL SPEC TENIA UNA SECCION MAS, "Currently Learning", ENTRE SKILLS Y CONTACT.
+ * Se sacó, y no por espacio: su contenido era un roadmap que todavía no había
+ * empezado. Un encabezado que dice CURRENTLY LEARNING sobre algo que no arrancó
+ * no es contenido flojo, es una afirmación falsa — y este portfolio se sostiene
+ * sobre la regla contraria, escrita en content/about.ts: un curso listado es una
+ * afirmación, un repo que se puede abrir es evidencia.
+ *
+ * El mensaje no se perdió: la bio ya cierra con "building toward AI engineering
+ * as a deeper specialization", que dice lo mismo como dirección y no como
+ * actividad en curso. Las condiciones para que la sección vuelva están en
+ * TODOS.md.
  */
 export default function Home() {
   return (
@@ -38,7 +48,6 @@ export default function Home() {
         <About />
         <Projects />
         <Skills />
-        <CurrentlyLearning />
         <Contact />
       </main>
 
