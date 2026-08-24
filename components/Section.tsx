@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Reveal } from "./Reveal";
-import { Eyebrow } from "./Eyebrow";
+import { SplitHeading } from "./SplitHeading";
 
 type SectionProps = {
   /** Ancla para los links del navbar. Ej: "about" -> href="#about" */
@@ -43,21 +43,16 @@ export function Section({ id, title, children }: SectionProps) {
     <section id={id} aria-labelledby={headingId} className="py-section">
       <Reveal className="mx-auto w-full max-w-5xl px-6">
         {/*
-          EL TITULO NO CAMBIO DE TAMAÑO, CAMBIO DE PESO VISUAL. Sigue siendo
-          `text-sm` con el mismo tracking: es una etiqueta de sección, no un
-          titular, y agrandarla la pondría a competir con el contenido.
+          EL TITULO AHORA MIDE 22-32px, contra los 18px de antes. No es que se
+          agrandó porque sí: medía menos de la mitad que el título de un proyecto
+          que vive ADENTRO de esta misma sección (40px), así que el nivel del
+          encabezado decía una cosa y el tamaño decía la contraria.
 
-          Lo que cambió es que era `text-muted` (6.20:1, gris) y ahora es
-          `text-foreground` con un glow azul detrás. El glow es text-shadow y no
-          una caja: sigue la forma de las letras.
-
-          La receta vive en Eyebrow y no acá porque estaba copiada en cinco
-          archivos: el glow se agregó a este <h2> y quedaron sin él "Education",
-          "More work" y "Next up". Ver components/Eyebrow.tsx.
+          Le entran las letras de a una al aparecer. Eso vive en SplitHeading
+          porque necesita JavaScript; la receta tipográfica sigue viniendo de
+          Eyebrow, que es la que comparte con "Education" y "More work".
         */}
-        <Eyebrow as="h2" tone="section" id={headingId}>
-          {title}
-        </Eyebrow>
+        <SplitHeading id={headingId}>{title}</SplitHeading>
         {children}
       </Reveal>
     </section>
