@@ -132,6 +132,14 @@
   --text-shadow-glow:
     0 0 6px color-mix(in oklab, var(--color-accent) 85%, transparent),
     0 0 16px color-mix(in oklab, var(--color-accent) 40%, transparent);
+
+  /* El mismo glow para las etiquetas internas de una sección ("Education",
+     "More work", "Next up"). Es más débil a propósito: con el mismo valor que
+     el <h2>, la etiqueta interna pesa igual que el título de la sección y la
+     sección deja de tener adentro y afuera. Ver components/Eyebrow.tsx. */
+  --text-shadow-glow-sm:
+    0 0 5px color-mix(in oklab, var(--color-accent) 55%, transparent),
+    0 0 14px color-mix(in oklab, var(--color-accent) 22%, transparent);
 }
 
 /* ============================================================================

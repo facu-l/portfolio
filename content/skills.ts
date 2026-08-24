@@ -12,8 +12,20 @@
  * fija en 3.
  */
 
+import type { SkillIconName } from "@/components/icons";
+
 export type SkillCategory = {
   title: string;
+  /**
+   * Icono de la categoría, por CLAVE y no por título.
+   *
+   * Mapear "Backend" -> icono desde el componente parece más simple, y lo es
+   * hasta que alguien renombra la categoría a "Backend & APIs": el icono
+   * desaparece en silencio, sin error de TypeScript y sin test roto. Con una
+   * clave propia, el título es copy (cambia cuando quieras) y el icono es
+   * estructura (si la clave no existe, no compila).
+   */
+  icon: SkillIconName;
   items: readonly string[];
   /**
    * Qué hacés con esas herramientas. Solo en las destacadas.
@@ -34,6 +46,7 @@ export type SkillCategory = {
 export const FEATURED_SKILLS: readonly SkillCategory[] = [
   {
     title: "Backend",
+    icon: "backend",
     items: [
       "Java",
       "Spring Boot",
@@ -46,11 +59,13 @@ export const FEATURED_SKILLS: readonly SkillCategory[] = [
   },
   {
     title: "Frontend",
+    icon: "frontend",
     items: ["React", "TypeScript", "Tailwind CSS", "Vite", "HTML5", "CSS3"],
     note: "Component-driven UIs, responsive by default and accessible by design.",
   },
   {
     title: "AI-assisted workflow",
+    icon: "ai",
     items: ["Claude", "ChatGPT", "GitHub Copilot", "Gemini"],
     note: "Debugging, refactoring and documenting faster — reviewing what the model writes instead of shipping it blind.",
   },
@@ -65,18 +80,22 @@ export const FEATURED_SKILLS: readonly SkillCategory[] = [
 export const OTHER_SKILLS: readonly SkillCategory[] = [
   {
     title: "Languages",
+    icon: "languages",
     items: ["JavaScript", "TypeScript", "Java", "Python", "SQL"],
   },
   {
     title: "Databases",
+    icon: "databases",
     items: ["MySQL", "SQLite"],
   },
   {
     title: "Tools",
+    icon: "tools",
     items: ["Git", "GitHub", "Postman", "Vercel"],
   },
   {
     title: "Concepts",
+    icon: "concepts",
     items: ["OOP", "Data structures", "Clean code", "API design"],
   },
 ] as const;

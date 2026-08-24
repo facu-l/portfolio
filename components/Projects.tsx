@@ -1,4 +1,5 @@
 import { Section } from "./Section";
+import { Eyebrow } from "./Eyebrow";
 import { FeaturedProject } from "./FeaturedProject";
 import { ProjectCard } from "./ProjectCard";
 import { FEATURED_PROJECT, OTHER_PROJECTS } from "@/content/projects";
@@ -24,9 +25,12 @@ export function Projects() {
 
       {OTHER_PROJECTS.length > 0 && (
         <div className="mt-block">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted">
-            More work
-          </p>
+          {/*
+            Sigue siendo un <p> y no un heading: los headings de este bloque son
+            los títulos de los proyectos, que es lo que alguien busca navegando
+            por headings. "More work" es una etiqueta de agrupación.
+          */}
+          <Eyebrow>More work</Eyebrow>
 
           <div className="mt-stack flex flex-col gap-stack">
             {OTHER_PROJECTS.map((project) => (

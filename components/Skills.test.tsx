@@ -36,11 +36,25 @@ describe("Skills", () => {
     }
   });
 
+  /**
+   * El rediseño a tarjetas con icono hizo que este test cambiara de forma pero
+   * no de intención. Antes el título de la categoría ERA el <dt>; ahora es un
+   * <span> adentro del <dt>, porque el <dt> además contiene el icono.
+   *
+   * Lo que se protege es lo mismo y sigue siendo lo importante: que sea un par
+   * categoría/items y NO un heading. Convertirlo en <h3> para que se vea igual
+   * a las destacadas es el cambio natural al rediseñar, se ve idéntico, y lleva
+   * el índice de encabezados de tres entradas (las categorías que importan) a
+   * siete.
+   */
   it("las secundarias van como pares categoría/items, no como headings", () => {
     render(<Skills />);
     for (const category of OTHER_SKILLS) {
-      const dt = screen.getByText(category.title);
-      expect(dt.tagName).toBe("DT");
+      const titulo = screen.getByText(category.title);
+      expect(titulo.closest("dt")).not.toBeNull();
+      expect(
+        screen.queryByRole("heading", { name: category.title })
+      ).toBeNull();
     }
   });
 

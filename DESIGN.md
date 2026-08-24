@@ -86,9 +86,24 @@ superficie.
 Dónde se usa:
 
 - **About** — la bio en un panel `md`, cada estudio en uno `sm`
+- **Skills** — las tres categorías destacadas en paneles `md`, las otras cuatro
+  en `sm`
 - **Las tarjetas de proyecto** llevan `bg-surface`, y ahí sí corresponde: la
   tarjeta *es* la unidad de interacción, es lo que se clickea, y adentro no hay
   texto en acento
+
+### La excepción: superficies chicas sí llevan fondo
+
+`IconBadge` (44px) y las cápsulas de tecnología (28px de alto) **sí** tienen
+fondo, y no contradice lo de arriba. La misma diferencia de color rinde distinto
+según el tamaño de la superficie: en un panel que ocupa media pantalla, 1.17:1 no
+separa de nada; en un parche de 44px, el ojo compara contra lo que tiene pegado
+al lado y la diferencia se percibe.
+
+La regla del acento no cambia: el badge usa acento diluido de fondo con el icono
+en acento pleno (el fondo sigue siendo casi el de la página, 4.64:1); las
+cápsulas usan `surface` con texto en `foreground` y **nunca en acento**, que
+sobre `surface` cae a 3.97:1.
 
 **El principio general:** una card tiene que ganarse su existencia. Si solo
 agrupa texto que ya estaba agrupado por su posición, es decoración.
@@ -116,6 +131,18 @@ Tres decisiones que sostienen esto:
 ---
 
 ## Glow: el blur escala con el texto, no con el sitio
+
+Hay dos tokens: `--text-shadow-glow` para el `<h2>` de una sección y
+`--text-shadow-glow-sm`, más débil, para sus etiquetas internas ("Education",
+"More work", "Next up"). Con el mismo valor, la etiqueta interna pesa igual que
+el título y la sección deja de tener adentro y afuera. Los dos salen del
+componente `Eyebrow`, que existe porque esta receta tipográfica estaba copiada
+en cinco archivos: el glow se agregó al `<h2>` y las otras cuatro etiquetas
+quedaron sin él, no por decisión sino porque nadie fue a los otros archivos.
+
+Las etiquetas internas pasaron de `text-muted` a `text-foreground` al recibir el
+glow. Un halo azul sobre texto gris se lee como un error de renderizado: el
+resplandor termina más brillante que la letra que lo genera.
 
 `--text-shadow-glow` usa radios de 6px y 16px, mucho más chicos que los 46px del
 glow de la foto. No es inconsistencia: **se midió**. Con 14px y 32px de blur, el
@@ -359,3 +386,30 @@ idéntico al baseline previo a instalarla.
 **Lo que queda como pendiente:** el SPEC pedía "reacción leve al cursor" y el
 glow reacciona al hover, no sigue al puntero. Seguir el cursor exige un listener
 de `mousemove` y animación en JavaScript. Ver TODOS.md.
+
+
+---
+
+## Iconos
+
+Once SVG inline en `components/icons.tsx`, sin librería. Dos familias, y la
+mezcla es deliberada: los logos de marca (GitHub, LinkedIn) van como silueta
+rellena con los paths oficiales de Simple Icons (CC0), y los iconos de interfaz
+van como contorno de 1.75px dibujados en el repo. Mezclar relleno y contorno
+*dentro* de una familia se ve desprolijo; que un logo y un icono de UI se traten
+distinto, no.
+
+Todos llevan `aria-hidden`: al lado siempre hay un texto que dice lo mismo, así
+que para un lector de pantalla el icono no es información, es una repetición.
+
+**Education distingue por icono, no por estilo.** Birrete para el título de
+grado, medalla para los cursos. Una carrera de cinco años y un curso de 80 horas
+son cosas distintas y en una pila de recuadros iguales esa diferencia se pierde.
+El icono no viaja en los datos: la distinción ya existe en la estructura
+(`DEGREE` es un objeto, `CERTIFICATIONS` un array).
+
+**Skills sí lo lleva en los datos, y por clave.** Cada categoría declara
+`icon: "backend"`, no se mapea desde el título. Mapear por título parece más
+simple hasta que alguien renombra "Backend" a "Backend & APIs" y el icono
+desaparece en silencio: sin error de compilación y sin test roto. Con una clave
+propia, el título es copy y el icono es estructura.

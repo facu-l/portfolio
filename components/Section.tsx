@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Reveal } from "./Reveal";
+import { Eyebrow } from "./Eyebrow";
 
 type SectionProps = {
   /** Ancla para los links del navbar. Ej: "about" -> href="#about" */
@@ -48,14 +49,15 @@ export function Section({ id, title, children }: SectionProps) {
 
           Lo que cambió es que era `text-muted` (6.20:1, gris) y ahora es
           `text-foreground` con un glow azul detrás. El glow es text-shadow y no
-          una caja: sigue la forma de las letras. Ver --text-shadow-glow.
+          una caja: sigue la forma de las letras.
+
+          La receta vive en Eyebrow y no acá porque estaba copiada en cinco
+          archivos: el glow se agregó a este <h2> y quedaron sin él "Education",
+          "More work" y "Next up". Ver components/Eyebrow.tsx.
         */}
-        <h2
-          id={headingId}
-          className="text-sm font-semibold uppercase tracking-[0.2em] text-foreground text-shadow-glow"
-        >
+        <Eyebrow as="h2" tone="section" id={headingId}>
           {title}
-        </h2>
+        </Eyebrow>
         {children}
       </Reveal>
     </section>

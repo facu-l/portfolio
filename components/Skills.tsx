@@ -1,5 +1,8 @@
 import { Section } from "./Section";
+import { Panel } from "./Panel";
+import { IconBadge } from "./IconBadge";
 import { TechStack } from "./TechStack";
+import { SKILL_ICONS } from "./icons";
 import { FEATURED_SKILLS, OTHER_SKILLS } from "@/content/skills";
 
 /**
@@ -7,73 +10,100 @@ import { FEATURED_SKILLS, OTHER_SKILLS } from "@/content/skills";
  *
  * DECISION (design review): las 7 categorías NO pesan igual. Adelante y
  * destacadas van Backend, Frontend y AI-assisted workflow. Languages,
- * Databases, Tools y Concepts van como texto secundario.
+ * Databases, Tools y Concepts van después y más compactas.
  *
  * Por qué: un recruiter escanea en 30 segundos. Con 7 bloques de peso idéntico
  * no elige ninguno y se lleva cero. Con 3, se lleva tres.
  *
- * SIN CARDS (DESIGN.md): las tres superficies de la paleta están a 1.17:1 entre
- * sí y no separan por color. Acá la jerarquía la hacen el tamaño del título, el
- * color del texto y una línea de 1px. En dark UI el aire es la estructura.
+ * LA JERARQUIA SOBREVIVIO AL REDISEÑO, Y ESO NO ERA GRATIS. Poner las 7 en la
+ * misma grilla de recuadros iguales era lo más directo y habría borrado la
+ * decisión de arriba sin que se note: se vería prolijo y comunicaría menos.
+ * Las tres destacadas son paneles `md` con nota; las otras cuatro son paneles
+ * `sm` sin nota, en una grilla de dos columnas.
  *
- * ACA SI SE PUEDE USAR EL ACENTO: el azul sobre el fondo de página da 4.64:1 y
- * pasa AA. Lo que no se puede es azul sobre `surface` (3.97:1), que es por qué
- * en las tarjetas de proyecto los links van en blanco. Misma paleta, distinta
- * regla según el fondo.
+ * LAS TECNOLOGIAS AHORA VAN EN CAPSULAS y no separadas por puntos. En una lista
+ * de seis items la línea con puntos se lee como una oración larga; en cápsulas
+ * cada tecnología es un objeto que el ojo cuenta. Es lo que hace escaneable la
+ * sección, que es literalmente su trabajo.
  */
 export function Skills() {
   return (
     <Section id="skills" title="SKILLS">
-      <div className="mt-block grid gap-block md:grid-cols-3">
-        {FEATURED_SKILLS.map((category) => (
-          <div key={category.title}>
-            <h3 className="text-h3 font-bold">{category.title}</h3>
+      {/*
+        DOS COLUMNAS EN TABLET Y TRES RECIEN EN DESKTOP, y esto se midió en el
+        navegador. Con tres columnas desde 768px cada panel queda en ~230px:
+        "AI-assisted workflow" se parte en tres líneas, la cápsula "Modular
+        architecture" se parte adentro de su propia cápsula y las demás caen de
+        a una por renglón. La sección existe para escanearse rápido, y una
+        columna de cápsulas apiladas es una lista vertical con bordes.
+      */}
+      <div className="mt-block grid gap-stack md:grid-cols-2 lg:grid-cols-3">
+        {FEATURED_SKILLS.map((category) => {
+          const Icon = SKILL_ICONS[category.icon];
 
-            {/*
-              Los items van primero y en el color principal porque son lo que
-              se escanea. La nota va debajo y en gris: la lee quien ya se
-              interesó por la categoría.
-            */}
-            <TechStack
-              items={category.items}
-              label={`${category.title} skills`}
-              className="mt-stack text-body text-foreground"
-            />
+          return (
+            <Panel key={category.title} className="flex flex-col">
+              <div className="flex items-center gap-3">
+                <IconBadge icon={Icon} />
+                <h3 className="text-h3 font-bold">{category.title}</h3>
+              </div>
 
-            {category.note && (
-              <p className="mt-stack text-sm leading-relaxed text-muted">
-                {category.note}
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Separador: una línea, no un cambio de fondo. Igual que en About. */}
-      <dl className="mt-block border-t border-border pt-block">
-        {OTHER_SKILLS.map((category) => (
-          /*
-            <dl> y no <ul>: esto es "categoría → items", una lista de
-            definiciones. Un <ul> con el nombre de la categoría metido adentro
-            del <li> pierde esa relación, y un lector de pantalla anuncia el
-            label como si fuera un item más.
-          */
-          <div
-            key={category.title}
-            className="flex flex-col gap-1 py-2 sm:flex-row sm:gap-6"
-          >
-            <dt className="text-sm font-semibold uppercase tracking-[0.2em] text-muted sm:w-40 sm:shrink-0">
-              {category.title}
-            </dt>
-            <dd className="text-sm">
+              {/*
+                Los items van primero porque son lo que se escanea. La nota va
+                debajo y en gris: la lee quien ya se interesó por la categoría.
+              */}
               <TechStack
                 items={category.items}
                 label={`${category.title} skills`}
-                className="text-sm text-muted"
+                variant="pills"
+                className="mt-stack"
               />
-            </dd>
-          </div>
-        ))}
+
+              {category.note && (
+                <p className="mt-stack text-sm leading-relaxed text-muted">
+                  {category.note}
+                </p>
+              )}
+            </Panel>
+          );
+        })}
+      </div>
+
+      {/*
+        SIGUE SIENDO UN <dl> AUNQUE AHORA PAREZCA UNA GRILLA DE TARJETAS.
+
+        Esto es "categoría → items", una lista de definiciones. La tentación al
+        rediseñar era convertirlo en <ul> con un <h3> por tarjeta, como las
+        destacadas — se ve idéntico y rompe dos cosas a la vez: la relación
+        dt/dd, y el índice de encabezados, que pasa de tres entradas (las
+        categorías que importan) a siete.
+
+        Un <dl> acepta <div> como envoltorio de cada par, así que el panel puede
+        ser el item de la grilla sin perder la semántica. El título va en el
+        <dt> con peso de negrita, no como heading: se ve igual de importante y
+        no compite en la navegación por encabezados.
+      */}
+      <dl className="mt-stack grid gap-stack sm:grid-cols-2">
+        {OTHER_SKILLS.map((category) => {
+          const Icon = SKILL_ICONS[category.icon];
+
+          return (
+            <Panel size="sm" key={category.title}>
+              <dt className="flex items-center gap-3">
+                <IconBadge icon={Icon} size="sm" />
+                <span className="font-bold">{category.title}</span>
+              </dt>
+
+              <dd className="mt-stack">
+                <TechStack
+                  items={category.items}
+                  label={`${category.title} skills`}
+                  variant="pills"
+                />
+              </dd>
+            </Panel>
+          );
+        })}
       </dl>
     </Section>
   );

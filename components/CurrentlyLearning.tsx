@@ -1,4 +1,5 @@
 import { Section } from "./Section";
+import { Eyebrow } from "./Eyebrow";
 import { LEARNING_STATEMENT, NEXT_UP } from "@/content/learning";
 
 /**
@@ -21,9 +22,9 @@ export function CurrentlyLearning() {
       </p>
 
       <div className="mt-block">
-        <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+        <Eyebrow as="h3" tone="accent">
           Next up
-        </h3>
+        </Eyebrow>
 
         <ul className="mt-stack flex flex-col gap-2">
           {NEXT_UP.map((topic) => (
