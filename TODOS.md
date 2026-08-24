@@ -1,15 +1,22 @@
 # TODOS
 
-Trabajo diferido conscientemente durante el `/plan-eng-review` del 2026-08-22.
-Cada item es el reverso de una decisión que ya se tomó: no son ideas sueltas,
-son la alternativa que se descartó y bajo qué condición volvería a estar sobre
-la mesa.
+Trabajo diferido conscientemente. Cada item es el reverso de una decisión que ya
+se tomó: no son ideas sueltas, son la alternativa que se descartó y bajo qué
+condición volvería a estar sobre la mesa.
 
 ## Currently Learning
 
 ### Devolver la sección cuando haya algo que mostrar
 
-**What:** Reponer la sección "Currently Learning" entre Skills y Contact. Se sacó el 2026-08-24 junto con `components/CurrentlyLearning.tsx`, su test y `content/learning.ts`. Para recuperarla: `git show 288de9f:components/CurrentlyLearning.tsx` (y lo mismo con `components/CurrentlyLearning.test.tsx` y `content/learning.ts`). `288de9f` es el último commit que todavía los tiene — el código funciona, no hay que reescribirlo.
+**What:** Reponer la sección "Currently Learning" entre Skills y Contact. Se sacó el 2026-08-24 junto con `components/CurrentlyLearning.tsx`, su test y `content/learning.ts`. Para recuperar cualquiera de los tres archivos, sin depender de un SHA fijo:
+
+```bash
+F=components/CurrentlyLearning.tsx      # o el .test.tsx, o content/learning.ts
+git show "$(git rev-list -1 HEAD -- $F)^:$F" > $F
+```
+
+Busca el commit que borró el archivo y lee la versión de su padre. El código
+funcionaba: no hay que reescribirlo.
 
 **Why:** La sección existía por una buena razón y esa razón sigue en pie: Education son certificaciones ya rendidas, evidencia del pasado; esto comunica hacia dónde vas. Son dos mensajes distintos y mezclarlos en About diluye los dos.
 

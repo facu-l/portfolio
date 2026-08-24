@@ -44,3 +44,8 @@ next-env.d.ts
 # documentos de trabajo internos (decision propia, ver TODOS.md)
 SPEC.md
 CLAUDE.md
+
+# AGENTS.md lo regenera `next dev` en cada arranque: son instrucciones para
+# herramientas de desarrollo, no documentacion del proyecto. Va ignorado y no
+# solo borrado, porque si no reaparece como cambio sin commitear cada vez.
+AGENTS.md

@@ -91,12 +91,39 @@ falta un valor que no existe, se agrega primero como token en `globals.css`.
 
 ## Client Components
 
-Solo dos, y cada uno tiene su razón escrita en el archivo:
+Cuatro, y cada uno tiene su razón escrita en el archivo:
 
-- [components/StickyHeader.tsx](components/StickyHeader.tsx) — observa el scroll
-- [components/ContactForm.tsx](components/ContactForm.tsx) — estado de envío
+| Componente | Por qué necesita el navegador |
+|---|---|
+| [StickyHeader.tsx](components/StickyHeader.tsx) | Observa el scroll para compactar el header |
+| [ContactForm.tsx](components/ContactForm.tsx) | Estado de envío del formulario |
+| [Reveal.tsx](components/Reveal.tsx) | `IntersectionObserver` para la aparición al scroll |
+| [SplitHeading.tsx](components/SplitHeading.tsx) | Anima el `<h2>` de cada sección letra por letra |
 
 Todo lo demás es Server Component y no viaja como JavaScript al navegador.
+
+`"use client"` es una **frontera, no una etiqueta**: se hereda hacia abajo por el
+árbol de imports, no por el de JSX. Por eso `Reveal` puede envolver una sección
+entera sin volverla cliente — la sección se renderiza en el servidor y le llega
+como `children` ya armada.
+
+Los dos últimos cargan su dependencia tarde. `SplitHeading` hace `await
+import("animejs")` recién cuando la sección entra en pantalla, así que la
+librería sale en su propio chunk y quien no scrollea nunca la descarga.
+
+### La aparición al scroll, en tres piezas
+
+Vale la pena saber que no es solo CSS:
+
+1. [globals.css](app/globals.css) oculta los bloques `[data-reveal]`, pero dentro
+   de `@media (scripting: enabled)`. Con JavaScript apagado la regla no aplica y
+   se ve todo el contenido — un `opacity: 0` estático dejaría la página en blanco
+   para un crawler.
+2. [revealAboveFold.ts](components/revealAboveFold.ts) es un script inline al
+   final del `<body>`. Corre **antes del primer pintado** y marca los bloques que
+   ya estaban a la vista para que aparezcan de una, sin animarse. Sin él, lo que
+   entra en el primer pantallazo queda en blanco hasta que React hidrata.
+3. `Reveal` anima el resto cuando entran al viewport.
 
 ## Documentación relacionada
 

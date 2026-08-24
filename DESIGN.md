@@ -4,8 +4,6 @@ Los tokens viven en [app/globals.css](app/globals.css) con `@theme` de Tailwind 
 Este documento explica **por qué** son esos valores. Si vas a cambiar uno, leé
 primero la sección correspondiente.
 
-Generado por `/plan-design-review` el 2026-08-22.
-
 ---
 
 ## Regla número uno
