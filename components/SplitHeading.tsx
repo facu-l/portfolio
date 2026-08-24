@@ -69,14 +69,32 @@ export function SplitHeading({ id, children }: SplitHeadingProps) {
         // El componente pudo desmontarse mientras bajaba el chunk.
         if (cancelado || !ref.current) return;
 
-        const partido = splitText(el, { chars: true, accessible: true });
+        /*
+          EL EFECTO ES UN RODILLO, y sale de estos dos parámetros:
+
+            clone: "bottom"  duplica cada letra y la posiciona justo abajo
+            wrap:  "clip"    recorta lo que se sale de la caja de la letra
+
+          Con eso, mover las letras `y: -100%` saca la original por arriba
+          mientras la copia sube a ocupar su lugar. El texto no aparece: gira.
+        */
+        const partido = splitText(el, {
+          chars: { wrap: "clip", clone: "bottom" },
+          accessible: true,
+        });
 
         animate(partido.chars, {
-          opacity: [0, 1],
-          y: ["0.35em", 0],
-          duration: 650,
-          delay: stagger(26),
-          ease: "outQuad",
+          y: "-100%",
+          duration: 750,
+          ease: "inOut(2)",
+          /*
+            SIN `loop: true`, que es lo que trae el ejemplo de la documentación.
+            Un título de sección que gira para siempre es movimiento que no
+            comunica nada: compite con el contenido, se lleva el ojo cada vez que
+            el visitante intenta leer otra cosa, y en un teléfono es batería
+            gastada en decorar. Gira una vez, al aparecer, y se queda quieto.
+          */
+          delay: stagger(60, { from: "center" }),
         });
 
         revertir = () => partido.revert();
