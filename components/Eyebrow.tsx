@@ -2,9 +2,15 @@ import type { ElementType, ReactNode } from "react";
 
 /**
  * `section` es el <h2> de una sección. `sub` es una etiqueta interna
- * ("Education", "More work"). `accent` es `sub` marcada en azul ("Next up").
+ * ("Education", "More work").
+ *
+ * HUBO UN TERCER TONO, `accent`: `sub` marcada en azul. Lo usaba "Next up" en
+ * Currently Learning, y era el único lugar del sitio donde el acento marcaba un
+ * bloque de texto. Al sacarse esa lista el tono quedó sin usar y se eliminó.
+ * Un tono que nadie usa no es una opción disponible: es una decisión vieja que
+ * alguien va a tomar por error creyendo que sigue vigente.
  */
-type EyebrowTone = "section" | "sub" | "accent";
+type EyebrowTone = "section" | "sub";
 
 type EyebrowProps = {
   as?: ElementType;
@@ -59,7 +65,6 @@ const BASE = "font-semibold uppercase tracking-[0.15em]";
 const TONES: Record<EyebrowTone, string> = {
   section: "text-lead text-foreground text-shadow-glow", // 18px
   sub: "text-body text-foreground text-shadow-glow-sm", // 16px
-  accent: "text-body text-accent text-shadow-glow-sm", // 16px
 };
 
 export function eyebrowClasses(tone: EyebrowTone = "sub") {

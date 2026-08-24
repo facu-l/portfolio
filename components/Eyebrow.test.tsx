@@ -44,7 +44,7 @@ describe("Eyebrow", () => {
     expect(eyebrowClasses("section")).toContain("text-shadow-glow");
     expect(eyebrowClasses("section")).not.toContain("text-shadow-glow-sm");
 
-    for (const tone of ["sub", "accent"] as const) {
+    for (const tone of ["sub"] as const) {
       expect(eyebrowClasses(tone)).toContain("text-shadow-glow-sm");
     }
   });
@@ -55,7 +55,7 @@ describe("Eyebrow", () => {
    * etiquetas a `text-muted` "para bajar el ruido", esto lo frena.
    */
   it("ninguna etiqueta con glow queda en gris", () => {
-    for (const tone of ["section", "sub", "accent"] as const) {
+    for (const tone of ["section", "sub"] as const) {
       expect(eyebrowClasses(tone)).not.toContain("text-muted");
     }
   });

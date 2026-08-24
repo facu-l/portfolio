@@ -14,7 +14,7 @@ import { LEARNING_STATEMENT } from "@/content/learning";
  * siente muda, se sepa qué se quitó y por qué.
  *
  * Con eso también se fue el único uso del acento como marca de bloque en el
- * sitio. El tono `accent` de Eyebrow quedó sin usar.
+ * sitio: el tono `accent` de Eyebrow quedó sin usar y se eliminó.
  */
 export function CurrentlyLearning() {
   return (
