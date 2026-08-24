@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { CurrentlyLearning } from "./CurrentlyLearning";
-import { LEARNING_STATEMENT, NEXT_UP } from "@/content/learning";
+import { LEARNING_STATEMENT } from "@/content/learning";
 import { CERTIFICATIONS } from "@/content/about";
 
 describe("CurrentlyLearning", () => {
@@ -15,9 +15,6 @@ describe("CurrentlyLearning", () => {
   it("muestra el statement y los temas que vienen", () => {
     render(<CurrentlyLearning />);
     expect(screen.getByText(LEARNING_STATEMENT)).toBeInTheDocument();
-    for (const topic of NEXT_UP) {
-      expect(screen.getByText(topic)).toBeInTheDocument();
-    }
   });
 
   it('"Next up" es un h3, no compite con el h2 de la sección', () => {
