@@ -10,6 +10,21 @@
  * tengan forma válida, así un typo no llega a producción.
  */
 
+/**
+ * URL absoluta del sitio.
+ *
+ * LA NECESITAN CUATRO ARCHIVOS: layout.tsx (metadataBase y og:url), robots.ts,
+ * sitemap.ts y la imagen de Open Graph. Escrita cuatro veces, el día que cambie
+ * el dominio quedan tres desactualizadas y el síntoma es una card rota o un
+ * sitemap que apunta a otro lado — cosas que nadie mira hasta que fallan.
+ *
+ * OJO: NEXT_PUBLIC_ se reemplaza en tiempo de BUILD. Cambiarla en Vercel no
+ * hace efecto hasta redeployar. Ya nos pasó con og:url apuntando a un dominio
+ * que devolvía 404.
+ */
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const SITE = {
   /**
    * Saludo que abre el Hero. Va separado del nombre y no como un solo string

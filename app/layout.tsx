@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/content/site";
 
 /**
  * Inter como fuente variable: un solo archivo cubre los pesos 100-900,
@@ -21,19 +22,23 @@ const inter = Inter({
  * Open Graph. Sin esto, la card que se ve al pegar el link en LinkedIn o
  * WhatsApp apunta a una ruta relativa y no carga.
  *
- * Definir NEXT_PUBLIC_SITE_URL en las variables de entorno de Vercel.
+ * SITE_URL vive en content/site.ts porque también la usan robots.ts, sitemap.ts
+ * y la imagen de Open Graph. Definir NEXT_PUBLIC_SITE_URL en Vercel.
+ *
+ * NO SE DECLARA `openGraph.images` ACA. `app/opengraph-image.tsx` existe, y Next
+ * inyecta `og:image` y `twitter:image` solo, con la URL absoluta y las
+ * dimensiones correctas. Escribirlo a mano además pisaría lo generado y sería
+ * un segundo lugar donde la URL puede quedar vieja.
  */
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: "Facundo Lambertucci — Full Stack Developer",
   description:
     "Systems student at Universidad Nacional de La Plata, focused on building modern web applications and exploring AI engineering.",
   openGraph: {
     title: "Facundo Lambertucci — Full Stack Developer",
     description: "Building software with code, systems & AI.",
-    url: siteUrl,
+    url: SITE_URL,
     siteName: "Facundo Lambertucci",
     locale: "en_US",
     type: "website",

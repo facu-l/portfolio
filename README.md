@@ -43,7 +43,7 @@ Variables** de Vercel para producción.
 
 | Variable | Para qué | Si falta |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | URL absoluta en las metatags de Open Graph | Cae a `http://localhost:3000` y el preview al compartir el link se rompe |
+| `NEXT_PUBLIC_SITE_URL` | URL absoluta del sitio: metatags de Open Graph, `robots.txt` y `sitemap.xml` | Cae a `http://localhost:3000`. La tarjeta al compartir el link apunta a localhost y no carga, y el sitemap declara URLs que no existen |
 | `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Envío del formulario de contacto | La sección Contact muestra los links sociales en vez del formulario |
 
 > **`NEXT_PUBLIC_` se reemplaza en tiempo de BUILD, no de runtime.** Agregar o
@@ -54,6 +54,21 @@ La access key de Web3Forms **es pública por diseño**: viaja en el body de un P
 desde el navegador y cualquiera puede verla en las devtools. No es un secret.
 Está en una variable de entorno igual, para poder rotarla sin tocar código y para
 no dejarla escrita en un repo público.
+
+## La tarjeta al compartir el link
+
+[app/opengraph-image.tsx](app/opengraph-image.tsx) genera en el build la imagen
+de 1200×630 que dibujan WhatsApp, LinkedIn y Slack al pegar el link. Lee `SITE` y
+`BRAND`, así que cambia sola cuando cambia el contenido o la paleta.
+
+Los `.woff` de [app/fonts/](app/fonts/) están versionados porque **Satori —el
+motor que convierte ese JSX en PNG— no soporta woff2**, que es lo que entrega
+`next/font`. Son 60KB que nunca viajan al navegador: los usa solo el build.
+
+> **Las plataformas cachean la tarjeta.** Una vez que LinkedIn o WhatsApp
+> guardan la previsualización de una URL, no la vuelven a mirar aunque cambies el
+> sitio. Si cambiaste la imagen, hay que forzar el refresco desde el debugger de
+> cada plataforma antes de compartir el link en serio.
 
 ## Estructura
 
