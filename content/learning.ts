@@ -17,8 +17,4 @@ export const LEARNING_STATEMENT = `Building a structured roadmap to grow as an A
  * Lo que viene. Temas, no tecnologías: por eso no reusa TechStack, que separa
  * con puntos una lista de nombres de herramientas.
  */
-export const NEXT_UP: readonly string[] = [
-  "LLM engineering",
-  "RAG pipelines",
-  "Applied AI systems",
-] as const;
+

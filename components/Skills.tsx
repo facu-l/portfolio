@@ -29,15 +29,7 @@ import { FEATURED_SKILLS, OTHER_SKILLS } from "@/content/skills";
 export function Skills() {
   return (
     <Section id="skills" title="SKILLS">
-      {/*
-        DOS COLUMNAS EN TABLET Y TRES RECIEN EN DESKTOP, y esto se midió en el
-        navegador. Con tres columnas desde 768px cada panel queda en ~230px:
-        "AI-assisted workflow" se parte en tres líneas, la cápsula "Modular
-        architecture" se parte adentro de su propia cápsula y las demás caen de
-        a una por renglón. La sección existe para escanearse rápido, y una
-        columna de cápsulas apiladas es una lista vertical con bordes.
-      */}
-      <div className="mt-block grid gap-stack md:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-block grid gap-stack md:grid-cols-3">
         {FEATURED_SKILLS.map((category) => {
           const Icon = SKILL_ICONS[category.icon];
 

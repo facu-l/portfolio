@@ -1,6 +1,7 @@
 import { Section } from "./Section";
+import { Panel } from "./Panel";
 import { Eyebrow } from "./Eyebrow";
-import { LEARNING_STATEMENT, NEXT_UP } from "@/content/learning";
+import { LEARNING_STATEMENT } from "@/content/learning";
 
 /**
  * Currently Learning. Sección propia y no fusionada con About:
@@ -16,24 +17,11 @@ import { LEARNING_STATEMENT, NEXT_UP } from "@/content/learning";
  */
 export function CurrentlyLearning() {
   return (
-    <Section id="learning" title="CURRENTLY LEARNING">
-      <p className="mt-block max-w-2xl text-lead leading-relaxed text-muted">
+    <Section id="learning" title="CURRENTLY LEARNING">      
+      <Panel className="mt-block">
+        <p className="max-w-2xl text-lead leading-relaxed text-muted"></p>
         {LEARNING_STATEMENT}
-      </p>
-
-      <div className="mt-block">
-        <Eyebrow as="h3" tone="accent">
-          Next up
-        </Eyebrow>
-
-        <ul className="mt-stack flex flex-col gap-2">
-          {NEXT_UP.map((topic) => (
-            <li key={topic} className="text-h3 font-bold">
-              {topic}
-            </li>
-          ))}
-        </ul>
-      </div>
+      </Panel>
     </Section>
   );
 }

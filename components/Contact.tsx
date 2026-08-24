@@ -6,6 +6,7 @@ import {
   CONTACT_COPY,
   WEB3FORMS_ACCESS_KEY,
 } from "@/content/contact";
+import { Panel } from "./Panel";
 
 /**
  * Contact. Server Component que decide si hay formulario.
@@ -24,15 +25,18 @@ import {
 export function Contact() {
   return (
     <Section id="contact" title="CONTACT">
-      <p className="mt-block max-w-2xl text-lead leading-relaxed text-muted">
-        {CONTACT_INTRO}
-      </p>
+      <Panel className="mt-block">
+        <p className=" max-w-2xl text-lead leading-relaxed text-muted">
+          {CONTACT_INTRO}
+        </p>
+      
 
-      {WEB3FORMS_ACCESS_KEY ? (
-        <ContactForm accessKey={WEB3FORMS_ACCESS_KEY} />
-      ) : (
-        <ContactFallback message={CONTACT_COPY.unavailable} />
-      )}
+        {WEB3FORMS_ACCESS_KEY ? (
+          <ContactForm accessKey={WEB3FORMS_ACCESS_KEY} />
+        ) : (
+          <ContactFallback message={CONTACT_COPY.unavailable} />
+        )}
+      </Panel>
     </Section>
   );
 }

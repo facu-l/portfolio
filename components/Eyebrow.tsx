@@ -33,12 +33,12 @@ type EyebrowProps = {
  * gris se lee como un error de renderizado, no como énfasis: el halo termina
  * más brillante que la letra que lo genera.
  */
-const BASE = "text-sm font-semibold uppercase tracking-[0.2em]";
+const BASE = "font-semibold uppercase tracking-[0.2em]";
 
 const TONES: Record<EyebrowTone, string> = {
-  section: "text-foreground text-shadow-glow",
-  sub: "text-foreground text-shadow-glow-sm",
-  accent: "text-accent text-shadow-glow-sm",
+  section: "text-base text-foreground text-shadow-glow",   // 16px
+  sub: "text-sm text-foreground text-shadow-glow-sm",
+  accent: "text-sm text-accent text-shadow-glow-sm",
 };
 
 export function eyebrowClasses(tone: EyebrowTone = "sub") {
