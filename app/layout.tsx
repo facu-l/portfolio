@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { SITE, SITE_URL } from "@/content/site";
+import { REVEAL_ABOVE_FOLD_SCRIPT } from "@/components/revealAboveFold";
 
 /**
  * Inter como fuente variable: un solo archivo cubre los pesos 100-900,
@@ -71,7 +72,27 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        {/*
+          VA ULTIMO ADENTRO DEL <body>, Y ESO NO ES ESTILO: ES EL REQUISITO.
+
+          El script mide qué bloques quedaron dentro del primer pantallazo, así
+          que necesita que ya estén parseados — antes de {children} el documento
+          todavía está vacío y mediría cero. Y al ser un <script> inline sin
+          `defer`, corre apenas el parser lo alcanza, todavía antes del pintado.
+          Un componente de React con useEffect no serviría: correría después de
+          hidratar, que es justo el retraso que esto viene a eliminar.
+
+          `dangerouslySetInnerHTML` es la única forma de escribir un script
+          inline en JSX, y acá el nombre asusta más de lo que corresponde: el
+          contenido es una constante nuestra, no entra nada de afuera. El CSP de
+          next.config.ts ya permite 'unsafe-inline' en script-src.
+        */}
+        <script
+          dangerouslySetInnerHTML={{ __html: REVEAL_ABOVE_FOLD_SCRIPT }}
+        />
+      </body>
     </html>
   );
 }

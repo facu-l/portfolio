@@ -256,6 +256,26 @@ body > * {
     opacity: 1;
     transform: none;
   }
+
+  /* Lo que ya estaba a la vista al cargar la página no se anima: aparece de
+     una, sin transición.
+
+     `transition: none` NO es un detalle — es el punto. Sin eso el bloque
+     igual arrancaría oculto y entraría con el fade de 400ms, que es
+     exactamente el retraso que se está tratando de sacar. Acá el contenido
+     tiene que estar visible en el primer pintado, no 400ms después.
+
+     Una animación de entrada al hacer scroll es para algo que el visitante
+     todavía no vio. Aplicarla a lo que ya está en pantalla no es un efecto:
+     es contenido que tarda en aparecer.
+
+     Quien pone el atributo es el script de components/revealAboveFold.ts,
+     antes de que el navegador pinte. */
+  [data-reveal][data-reveal-instant] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* Con movimiento reducido el contenido está visible DESDE EL ARRANQUE.

@@ -42,6 +42,14 @@ export function Reveal({ children, className }: RevealProps) {
     const el = ref.current;
     if (!el) return;
 
+    /*
+      ESTE BLOQUE YA ESTABA A LA VISTA CUANDO CARGO LA PAGINA, y el script de
+      revealAboveFold.ts lo marcó antes de que el navegador pintara. No hay nada
+      que revelar: el CSS ya lo dejó visible y sin transición. Observarlo sería
+      esperar a que "entre" algo que nunca se fue.
+    */
+    if (el.hasAttribute("data-reveal-instant")) return;
+
     const reveal = () => el.setAttribute("data-revealed", "true");
 
     // jsdom (y navegadores muy viejos) no implementan IntersectionObserver.
