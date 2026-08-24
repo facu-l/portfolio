@@ -67,7 +67,7 @@
      "Espaciado generoso" del SPEC, traducido a números.
      Como las superficies no separan por color, el aire ES la separación:
      estos valores no son decorativos, son estructurales. */
-  --spacing-section: clamp(5rem, 10vw, 8rem);    /* 80 -> 128px entre secciones */
+  --spacing-section: clamp(2.5rem, 5vw, 4rem);    /* 160 -> 256px entre secciones */
   --spacing-block: 2.5rem;                       /* 40px entre bloques internos */
   --spacing-stack: 1.25rem;                      /* 20px entre elementos hermanos */
 

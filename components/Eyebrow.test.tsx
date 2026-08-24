@@ -29,7 +29,7 @@ describe("Eyebrow", () => {
       </>
     );
 
-    for (const texto of ["ABOUT", "Education", "More work", "Next up"]) {
+    for (const texto of ["ABOUT", "Education", "More work", "SKILLS"]) {
       const el = screen.getByText(texto);
       expect(el.className).toMatch(/text-shadow-glow/);
     }

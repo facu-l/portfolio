@@ -26,10 +26,9 @@ export function Contact() {
   return (
     <Section id="contact" title="CONTACT">
       <Panel className="mt-block">
-        <p className=" max-w-2xl text-lead leading-relaxed text-muted">
+        <p className="max-w-2xl text-lead leading-relaxed text-muted">
           {CONTACT_INTRO}
         </p>
-      
 
         {WEB3FORMS_ACCESS_KEY ? (
           <ContactForm accessKey={WEB3FORMS_ACCESS_KEY} />

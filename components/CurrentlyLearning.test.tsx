@@ -12,18 +12,34 @@ describe("CurrentlyLearning", () => {
     ).toBeInTheDocument();
   });
 
-  it("muestra el statement y los temas que vienen", () => {
+  /**
+   * NO ALCANZA CON QUE EL TEXTO ESTE EN LA PAGINA, y este test existe por un
+   * bug real que la versión anterior dejaba pasar.
+   *
+   * El componente quedó un rato con el párrafo VACIO y el texto suelto al lado:
+   *   <p className="text-lead text-muted"></p>
+   *   {LEARNING_STATEMENT}
+   *
+   * Renderiza igual, el build pasa, y `getByText(...)` lo encontraba lo mismo
+   * — porque el texto seguía estando, solo que como nodo suelto del <div> del
+   * panel y sin una sola de sus clases. Se veía a 16px blanco a lo ancho del
+   * panel en vez de 18px gris.
+   *
+   * Por eso ahora se verifica DONDE está el texto, no solo que esté.
+   */
+  it("el statement va dentro de un <p> con sus estilos, no suelto", () => {
     render(<CurrentlyLearning />);
-    expect(screen.getByText(LEARNING_STATEMENT)).toBeInTheDocument();
+    const parrafo = screen.getByText(LEARNING_STATEMENT);
+
+    expect(parrafo.tagName).toBe("P");
+    expect(parrafo.className).toContain("text-lead");
+    expect(parrafo.className).toContain("text-muted");
   });
 
-  it('"Next up" es un h3, no compite con el h2 de la sección', () => {
+  it("el título de la sección es el único h2", () => {
     render(<CurrentlyLearning />);
     expect(
       screen.getByRole("heading", { level: 2, name: /currently learning/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { level: 3, name: /next up/i })
     ).toBeInTheDocument();
   });
 
