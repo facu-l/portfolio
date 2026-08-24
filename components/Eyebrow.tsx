@@ -23,21 +23,30 @@ type EyebrowProps = {
 /**
  * Etiqueta en versalitas: el título de una sección y sus etiquetas internas.
  *
- * POR QUE EXISTE: esta receta tipográfica (14px, semibold, mayúsculas, 0.2em de
- * tracking) estaba copiada en cinco archivos. Mientras fue solo tipografía, la
- * duplicación era barata. Dejó de serlo cuando se agregó el glow: se aplicó en
- * `Section` y quedaron fuera "Education", "More work" y "Next up" — no por una
- * decisión, sino porque nadie fue a los otros archivos. Eso es exactamente lo
- * que un componente compartido evita.
+ * POR QUE EXISTE: esta receta tipográfica estaba copiada en cinco archivos.
+ * Mientras fue solo tipografía la duplicación era barata; dejó de serlo cuando
+ * se agregó un efecto en `Section` y quedaron fuera "Education", "More work" y
+ * "Next up" — no por una decisión, sino porque nadie fue a los otros archivos.
+ * Eso es exactamente lo que un componente compartido evita.
  *
- * EL GLOW DE LAS ETIQUETAS INTERNAS ES MAS DEBIL QUE EL DEL <h2>, a propósito.
- * Con el mismo glow, "Education" y "ABOUT" pesan igual y la sección deja de
- * tener adentro y afuera. Misma relación que `shadow-panel` con
- * `shadow-panel-sm`: lo menor se ve menor también en el resplandor.
+ * SE SACO EL GLOW AZUL (design review, hallazgo 001). Eran letras blancas con
+ * un `text-shadow` azul al 85%. Dos razones:
  *
- * LAS ETIQUETAS INTERNAS PASARON DE GRIS A BLANCO. Un glow azul sobre texto
- * gris se lee como un error de renderizado, no como énfasis: el halo termina
- * más brillante que la letra que lo genera.
+ *   1. El azul había dejado de ser acento. Estaba en el rol del Hero, el CTA, el
+ *      glow de la foto, los bordes de panel, los iconos, los links de proyecto Y
+ *      las cinco etiquetas. Cuando el acento está en todos lados no acentúa
+ *      nada: es el color de fondo con pasos extra.
+ *   2. El texto con resplandor es uno de los patrones que delatan una interfaz
+ *      generada. Es el mismo que se descartó al copiar la jerarquía del Hero de
+ *      una referencia, y volvió a entrar por otra puerta.
+ *
+ * Los tokens `--text-shadow-glow` y `--text-shadow-glow-sm` se eliminaron de
+ * globals.css en el mismo cambio: nadie más los usaba.
+ *
+ * EL TRACKING VIVE EN CADA TONO, NO EN BASE. No es simetría: a 32px las
+ * mayúsculas necesitan MENOS separación que a 18px — el espacio entre letras
+ * crece con el tamaño, así que el mismo 0.15em que ordena una etiqueta chica
+ * desarma un título grande.
  */
 /*
   EL TAMAÑO VIVE EN CADA TONO Y NO EN BASE, a propósito.
@@ -60,11 +69,11 @@ type EyebrowProps = {
   de Tailwind se quedarían quietas y la escala se partiría en dos sin aviso.
   Es la regla número uno de DESIGN.md.
 */
-const BASE = "font-semibold uppercase tracking-[0.15em]";
+const BASE = "font-semibold uppercase text-foreground";
 
 const TONES: Record<EyebrowTone, string> = {
-  section: "text-lead text-foreground text-shadow-glow", // 18px
-  sub: "text-body text-foreground text-shadow-glow-sm", // 16px
+  section: "text-section tracking-[0.08em]", // 22 -> 32px
+  sub: "text-lead tracking-[0.15em]", // 18px
 };
 
 export function eyebrowClasses(tone: EyebrowTone = "sub") {

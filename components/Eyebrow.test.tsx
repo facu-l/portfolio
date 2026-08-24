@@ -10,16 +10,16 @@ describe("Eyebrow", () => {
   /**
    * EL TEST QUE EXPLICA POR QUE ESTE COMPONENTE EXISTE.
    *
-   * El glow se agregó al <h2> de Section y "Education", "More work" y "Next up"
-   * quedaron sin él — no por una decisión, sino porque la receta tipográfica
-   * estaba copiada en cinco archivos y nadie fue a los otros cuatro. Es el
-   * modo de falla clásico del estilo duplicado: no rompe nada, solo queda a
-   * medias, y se descubre mirando la página.
+   * La receta tipográfica estaba copiada en cinco archivos. Cuando se le agregó
+   * un efecto al <h2> de Section, "Education", "More work" y "Next up" quedaron
+   * sin él — no por una decisión, sino porque nadie fue a los otros cuatro
+   * archivos. Es el modo de falla clásico del estilo duplicado: no rompe nada,
+   * solo queda a medias, y se descubre mirando la página.
    *
-   * Ahora las cuatro etiquetas salen del mismo componente. Este test recorre
-   * las secciones reales y verifica que ninguna se quedó afuera.
+   * Ahora todas salen del mismo componente. Este test recorre las secciones
+   * reales y verifica que ninguna se quedó afuera.
    */
-  it("todas las etiquetas de sección llevan glow", () => {
+  it("todas las etiquetas salen del componente compartido", () => {
     render(
       <>
         <About />
@@ -31,21 +31,34 @@ describe("Eyebrow", () => {
 
     for (const texto of ["ABOUT", "Education", "More work", "SKILLS"]) {
       const el = screen.getByText(texto);
-      expect(el.className).toMatch(/text-shadow-glow/);
+      expect(el.className).toContain("uppercase");
+      expect(el.className).toContain("font-semibold");
     }
   });
 
   /**
-   * La etiqueta interna tiene que verse MENOR que el título de sección. Con el
-   * mismo glow, "Education" y "ABOUT" pesan igual y la sección deja de tener
-   * adentro y afuera.
+   * EL TITULO DE SECCION TIENE QUE VERSE MAS GRANDE QUE SUS ETIQUETAS INTERNAS.
+   * Sin esta diferencia, "Education" y "ABOUT" pesan igual y la sección deja de
+   * tener adentro y afuera.
    */
-  it("las etiquetas internas usan un glow más débil que el h2", () => {
-    expect(eyebrowClasses("section")).toContain("text-shadow-glow");
-    expect(eyebrowClasses("section")).not.toContain("text-shadow-glow-sm");
+  it("el título de sección usa un tamaño mayor que las etiquetas internas", () => {
+    expect(eyebrowClasses("section")).toContain("text-section"); // 22 -> 32px
+    expect(eyebrowClasses("sub")).toContain("text-lead"); // 18px
+    expect(eyebrowClasses("sub")).not.toContain("text-section");
+  });
 
-    for (const tone of ["sub"] as const) {
-      expect(eyebrowClasses(tone)).toContain("text-shadow-glow-sm");
+  /**
+   * SE SACO EL GLOW AZUL (design review, hallazgo 001) y este test impide que
+   * vuelva por descuido.
+   *
+   * El azul estaba en el rol del Hero, el CTA, el glow de la foto, los bordes de
+   * panel, los iconos, los links de proyecto Y las cinco etiquetas. Un acento
+   * que está en todos lados no acentúa nada. Si algún día se decide devolverlo,
+   * que sea borrando este test a propósito y no sin enterarse.
+   */
+  it("las etiquetas no llevan resplandor", () => {
+    for (const tone of ["section", "sub"] as const) {
+      expect(eyebrowClasses(tone)).not.toContain("text-shadow");
     }
   });
 

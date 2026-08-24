@@ -47,7 +47,18 @@
      empujaba a la foto hasta dejarla en 200px. El tamaño de la tipografía
      estaba decidiendo el layout. */
   --text-display: clamp(2.25rem, 6vw, 4.5rem);
-  --text-h2: clamp(1.75rem, 4vw, 2.5rem);        /* 28 -> 40px  títulos de sección */
+  --text-h2: clamp(1.75rem, 4vw, 2.5rem);        /* 28 -> 40px  título del proyecto destacado */
+
+  /* 22 -> 32px. El <h2> de cada sección (ABOUT, WORK, SKILLS...).
+     ANTES MEDIA 18px Y ESE ERA EL PROBLEMA: el título de una sección pesaba
+     menos de la mitad que el título de un proyecto que vive ADENTRO de esa
+     sección (40px). La jerarquía decía una cosa y el tamaño decía la contraria.
+
+     ES clamp() AUNQUE LAS DEMAS ETIQUETAS SEAN FIJAS. A 18px daba igual el
+     viewport, y por eso el tamaño era fijo. A 32px ya no: "CURRENTLY LEARNING"
+     en mayúsculas con tracking mide ~443px, y en un teléfono de 390px hay 342px
+     de ancho útil. Sin clamp se parte en dos renglones. */
+  --text-section: clamp(1.375rem, 4vw, 2rem);
   --text-h3: 1.25rem;                            /* 20px        títulos de proyecto */
   --text-lead: 1.125rem;                         /* 18px        subtítulo del Hero */
   --text-body: 1rem;                             /* 16px        párrafos */
@@ -117,29 +128,6 @@
   --shadow-panel-sm: 0 0 22px
     color-mix(in oklab, var(--color-accent) 12%, transparent);
 
-  /* Glow detrás del título de sección. Es text-shadow y no un div: el
-     resplandor tiene que seguir la forma de las letras, no la de una caja.
-     Dos capas — una cerrada que define el halo, una abierta que lo derrama —
-     porque una sola se lee como texto desenfocado en vez de encendido.
-
-     LOS RADIOS SON CHICOS A PROPOSITO, Y ESTO SE MIDIO.
-     La primera versión usaba 14px y 32px de blur, copiando la escala del glow
-     de la foto. Contra el fondo llegaba a una intensidad máxima de 8 sobre 255:
-     invisible. El título mide 14px de alto, y un blur más ancho que la letra
-     reparte la misma tinta sobre tanta superficie que no queda nada.
-     Con 6px y 16px la intensidad sube a 34 sobre 255 — todavía tenue, pero se
-     ve. El blur tiene que escalar con el tamaño del texto, no con el del sitio. */
-  --text-shadow-glow:
-    0 0 6px color-mix(in oklab, var(--color-accent) 85%, transparent),
-    0 0 16px color-mix(in oklab, var(--color-accent) 40%, transparent);
-
-  /* El mismo glow para las etiquetas internas de una sección ("Education",
-     "More work", "Next up"). Es más débil a propósito: con el mismo valor que
-     el <h2>, la etiqueta interna pesa igual que el título de la sección y la
-     sección deja de tener adentro y afuera. Ver components/Eyebrow.tsx. */
-  --text-shadow-glow-sm:
-    0 0 5px color-mix(in oklab, var(--color-accent) 55%, transparent),
-    0 0 14px color-mix(in oklab, var(--color-accent) 22%, transparent);
 }
 
 /* ============================================================================
