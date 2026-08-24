@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Reveal } from "./Reveal";
 
 type SectionProps = {
   /** Ancla para los links del navbar. Ej: "about" -> href="#about" */
@@ -21,21 +22,42 @@ type SectionProps = {
  * así un lector de pantalla puede listar las secciones y saltar entre ellas.
  * Una <section> sin nombre accesible no es un landmark: es un <div> con otro
  * nombre.
+ *
+ * LA APARICION AL SCROLL VIVE ACA, Y NO EN CADA SECCION. Es la misma razón que
+ * el ritmo vertical: si cada sección se acuerda de envolverse en <Reveal>, la
+ * quinta no lo va a hacer. Puesto acá, es por construcción.
  */
 export function Section({ id, title, children }: SectionProps) {
   const headingId = `${id}-heading`;
 
+  /*
+    EL id Y EL aria-labelledby QUEDAN FUERA DEL REVEAL, a propósito.
+
+    Un ancla del navbar (#about) apunta a este <section>. Si el elemento que
+    lleva el id fuera el que se traslada con translateY, el scroll del navbar
+    aterrizaría a 24px del lugar correcto mientras dura la animación. El <div>
+    animado es interno y no tiene ninguna responsabilidad estructural.
+  */
   return (
     <section id={id} aria-labelledby={headingId} className="py-section">
-      <div className="mx-auto w-full max-w-5xl px-6">
+      <Reveal className="mx-auto w-full max-w-5xl px-6">
+        {/*
+          EL TITULO NO CAMBIO DE TAMAÑO, CAMBIO DE PESO VISUAL. Sigue siendo
+          `text-sm` con el mismo tracking: es una etiqueta de sección, no un
+          titular, y agrandarla la pondría a competir con el contenido.
+
+          Lo que cambió es que era `text-muted` (6.20:1, gris) y ahora es
+          `text-foreground` con un glow azul detrás. El glow es text-shadow y no
+          una caja: sigue la forma de las letras. Ver --text-shadow-glow.
+        */}
         <h2
           id={headingId}
-          className="text-sm font-semibold uppercase tracking-[0.2em] text-muted"
+          className="text-sm font-semibold uppercase tracking-[0.2em] text-foreground text-shadow-glow"
         >
           {title}
         </h2>
         {children}
-      </div>
+      </Reveal>
     </section>
   );
 }

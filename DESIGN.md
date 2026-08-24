@@ -60,21 +60,69 @@ habría producido `bg-bg`.
 
 ---
 
-## Superficies: por qué casi no hay cards
+## Superficies: por qué una card no se rellena
 
 La separación entre los tres fondos de la paleta es de **1.17:1 o menos**. Están
 por debajo del umbral perceptual: en un monitor a oscuras se distinguen, en una
 notebook con brillo alto no existen.
 
-**Decisión: las superficies se separan con espacio y tipografía, no con color.**
+**Decisión: una card NO se separa del fondo con color.** Se separa con borde y
+un glow tenue (`--shadow-panel` / `--shadow-panel-sm`, componente `Panel.tsx`).
 
-- Las secciones se separan con `--spacing-section`, no con un cambio de fondo
-- Skills, About y Currently Learning **no llevan cards**
-- Las tarjetas de proyecto **sí**, porque ahí la tarjeta *es* la unidad de
-  interacción: es lo que se clickea
+Rellenar el panel con `bg-surface` es el instinto de todo el mundo y está mal
+por dos razones distintas:
+
+1. **No separaría nada.** 1.17:1 contra el fondo. Es el hallazgo de arriba.
+2. **Rompería un contraste que hoy pasa.** El azul sobre `surface` da 3.97:1 y
+   falla AA; sobre el fondo da 4.64:1 y pasa. El link "View the API" de las
+   certificaciones vive adentro de un panel: rellenarlo lo dejaría fallando
+   accesibilidad **sin verse distinto**. Hay un test en `Panel.test.tsx` que lo
+   fija, justamente porque es un cambio que pasa cualquier review visual.
+
+Efecto secundario deseable: sin fondo, el grid técnico de `body::before` sigue
+pasando por detrás en lugar de quedar tapado justo donde el panel ocupa más
+superficie.
+
+Dónde se usa:
+
+- **About** — la bio en un panel `md`, cada estudio en uno `sm`
+- **Las tarjetas de proyecto** llevan `bg-surface`, y ahí sí corresponde: la
+  tarjeta *es* la unidad de interacción, es lo que se clickea, y adentro no hay
+  texto en acento
 
 **El principio general:** una card tiene que ganarse su existencia. Si solo
 agrupa texto que ya estaba agrupado por su posición, es decoración.
+
+---
+
+## Aparición de secciones al scrollear
+
+Cada `<Section>` se envuelve sola en `Reveal` (opacidad 0 → 1 y 24px hacia
+arriba, `--duration-slow`). Está en `Section.tsx` y no en cada sección por la
+misma razón que el ritmo vertical: por construcción, no por memoria.
+
+Tres decisiones que sostienen esto:
+
+1. **El estado oculto vive en `@media (scripting: enabled)`**, no en una clase
+   de Tailwind. Con JavaScript apagado la regla no aplica y se ve todo. Un
+   `opacity-0` estático deja la página en blanco para un crawler.
+2. **`prefers-reduced-motion` no oculta nunca.** El bloque general solo acorta
+   transiciones, y eso dejaría el contenido invisible hasta que el observer lo
+   revele de golpe. Hay una regla explícita que lo fuerza a visible.
+3. **El `id` de la sección queda afuera del elemento animado.** Si el ancla del
+   navbar apuntara al div que se traslada, el scroll aterrizaría desplazado
+   mientras dura la animación.
+
+---
+
+## Glow: el blur escala con el texto, no con el sitio
+
+`--text-shadow-glow` usa radios de 6px y 16px, mucho más chicos que los 46px del
+glow de la foto. No es inconsistencia: **se midió**. Con 14px y 32px de blur, el
+resplandor del título llegaba a una intensidad máxima de **8 sobre 255** contra
+el fondo — invisible. El título mide 14px de alto, y un blur más ancho que la
+letra reparte la misma tinta sobre tanta superficie que no queda nada. Con 6px y
+16px sube a **34 sobre 255**: tenue, pero se ve.
 
 ---
 
