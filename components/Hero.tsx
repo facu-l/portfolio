@@ -125,7 +125,7 @@ export function Hero() {
               Glow azul alrededor de la foto (SPEC §2). Puro CSS: cero
               JavaScript, cero dependencias.
 
-              ES UNA CAJA INVISIBLE QUE SOLO PROYECTA SOMBRA, y termina al 80%
+              ES UNA CAJA INVISIBLE QUE SOLO PROYECTA SOMBRA, y termina al 61%
               de la altura de la foto. Las dos cosas son deliberadas:
 
               1. `box-shadow` y no un div relleno y desenfocado. El navegador
@@ -134,11 +134,29 @@ export function Hero() {
                  la máscara de la foto. Un div relleno obliga a taparlo con un
                  fondo opaco, y ahí se pierde el desvanecimiento.
 
-              2. `bottom-[20%]` en vez de cubrir toda la foto. Si la caja llega
-                 hasta abajo, su sombra dibuja un contorno nítido justo donde la
-                 imagen se está disolviendo: queda un rectángulo vacío marcado
-                 debajo de la foto. Terminándola antes, el glow se apaga en el
-                 mismo lugar donde la foto se desvanece.
+              2. `bottom-[39%]` en vez de cubrir toda la foto. Una sombra dibuja
+                 su franja más brillante JUSTO ABAJO del borde de su caja. Si esa
+                 franja cae donde la imagen ya empezó a desvanecerse, se
+                 transparenta y se ve como una línea azul cruzando la foto.
+
+                 EL 39% NO ES UN NUMERO A OJO, sale de atar tres valores que
+                 viven en dos archivos:
+
+                   · la máscara de la imagen es 100% opaca hasta el 74%
+                   · el blur de --shadow-glow-strong es 64px, ~13% del alto
+                   · 74% - 13% = 61%, así que la caja termina antes de ahí
+
+                 SE CALCULA CON EL BLUR DE HOVER Y NO EL DE REPOSO. En reposo
+                 son 46px (~9%) y daría 65%, pero la sombra crece al pasar el
+                 mouse: dimensionar con el valor chico deja el borde justo en el
+                 estado que no se estaba mirando.
+
+                 Con `bottom-[20%]` la caja terminaba en el 79%, ya dentro del
+                 desvanecimiento, y la línea se veía cruzando el cuello. SI
+                 ALGUIEN CAMBIA EL BLUR DEL TOKEN O EL 74% DE LA MASCARA, ESTE
+                 VALOR HAY QUE RECALCULARLO: ningún test lo puede detectar,
+                 porque el DOM sigue siendo correcto y lo único que falla es
+                 dónde caen los píxeles.
 
               Los bordes de esta caja no se ven nunca: no tiene fondo y está
               detrás de la parte opaca de la imagen. Lo único que aporta es la
@@ -149,7 +167,7 @@ export function Hero() {
             */}
             <div
               aria-hidden="true"
-              className="absolute inset-x-0 top-0 bottom-[20%] -z-10 rounded-lg shadow-glow transition-shadow duration-slow group-hover:shadow-glow-strong"
+              className="absolute inset-x-0 top-0 bottom-[39%] -z-10 rounded-lg shadow-glow transition-shadow duration-slow group-hover:shadow-glow-strong"
             />
 
             <div className="overflow-hidden rounded-lg">
