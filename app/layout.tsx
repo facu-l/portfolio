@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SITE_URL } from "@/content/site";
+import { SITE, SITE_URL } from "@/content/site";
 
 /**
  * Inter como fuente variable: un solo archivo cubre los pesos 100-900,
@@ -30,23 +30,41 @@ const inter = Inter({
  * dimensiones correctas. Escribirlo a mano además pisaría lo generado y sería
  * un segundo lugar donde la URL puede quedar vieja.
  */
+const TITLE = `${SITE.name} — ${SITE.role}`;
+
+/**
+ * UNA SOLA DESCRIPCION PARA TODO, Y DE MAS DE 100 CARACTERES.
+ *
+ * Antes había dos: esta, y una más corta repetida en `openGraph` y `twitter`
+ * que la pisaba. El resultado era que la card al compartir el link mostraba 46
+ * caracteres — "Building software with code, systems & AI." — y el Post
+ * Inspector de LinkedIn lo marcaba: pide un mínimo de 100.
+ *
+ * El tagline corto ya está en el Hero y en la imagen de la card. Repetirlo acá
+ * gastaba el único renglón donde se puede decir algo que el título no dice.
+ */
+const DESCRIPTION =
+  "Systems student at Universidad Nacional de La Plata, focused on building modern web applications and exploring AI engineering.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Facundo Lambertucci — Full Stack Developer",
-  description:
-    "Systems student at Universidad Nacional de La Plata, focused on building modern web applications and exploring AI engineering.",
+  title: TITLE,
+  description: DESCRIPTION,
+  /*
+    `openGraph` y `twitter` NO repiten title ni description: Next los completa
+    con los de arriba cuando faltan. Escritos a mano estaban tres veces cada
+    uno, y así fue como la description de la card quedó desincronizada de la
+    del sitio sin que nadie lo viera — el HTML se veía bien, solo que decía
+    otra cosa.
+  */
   openGraph: {
-    title: "Facundo Lambertucci — Full Stack Developer",
-    description: "Building software with code, systems & AI.",
     url: SITE_URL,
-    siteName: "Facundo Lambertucci",
+    siteName: SITE.name,
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Facundo Lambertucci — Full Stack Developer",
-    description: "Building software with code, systems & AI.",
   },
 };
 
