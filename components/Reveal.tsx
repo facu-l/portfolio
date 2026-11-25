@@ -79,8 +79,15 @@ export function Reveal({ children, className }: RevealProps) {
     return () => observer.disconnect();
   }, []);
 
+  /*
+    suppressHydrationWarning: revealAboveFold.ts le agrega `data-reveal-instant`
+    a este div ANTES de que React hidrate, a propósito. React ve un atributo que
+    su render no tiene y avisa de un desajuste. Es esperado: no lo tiene que
+    "corregir", y Reveal lo lee en el efecto. Solo silencia ESTE elemento, no a
+    sus hijos (las secciones siguen chequeadas).
+  */
   return (
-    <div ref={ref} data-reveal className={className}>
+    <div ref={ref} data-reveal className={className} suppressHydrationWarning>
       {children}
     </div>
   );
