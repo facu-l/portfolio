@@ -34,10 +34,16 @@ export function LanguageSwitcher({ locale, switchTo }: LanguageSwitcherProps) {
               href={switchLocalePath(pathname, code)}
               hrefLang={code}
               lang={code}
-              aria-label={switchTo}
               className="inline-flex min-h-11 items-center transition-colors duration-fast hover:text-foreground"
             >
+              {/*
+                El nombre accesible empieza con lo visible ("EN") y suma la
+                explicación solo para lectores de pantalla: "EN, Read in
+                English". Con aria-label el texto visible quedaba afuera del
+                nombre y el control por voz no encontraba el link (WCAG 2.5.3).
+              */}
               {code.toUpperCase()}
+              <span className="sr-only">, {switchTo}</span>
             </a>
           )}
         </span>
