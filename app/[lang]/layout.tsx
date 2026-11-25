@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "../globals.css";
 import { SITE_URL, PERSON } from "@/content/config";
 import { getContent } from "@/content";
@@ -12,21 +12,33 @@ import { REVEAL_ABOVE_FOLD_SCRIPT } from "@/components/revealAboveFold";
  * sobria y con carácter: el tono "cuaderno de ingeniería" del Casebook.
  * JetBrains Mono: solo para datos técnicos (stack, rutas, tablas, links a código).
  *
- * next/font las auto-hospeda en el build: no hay request a Google en runtime
- * (el CSP tiene font-src 'self'), ni layout shift esperando la fuente.
+ * LOCALES Y NO next/font/google: con la caché fría, el cargador de Google de
+ * Turbopack 16.3.2 falla el build ("queries have exactly one entry"), y Vercel
+ * compila con caché fría. Con los archivos en el repo (OFL, copiados de
+ * @fontsource, subset latin) el build no depende de la red y es reproducible.
+ * Igual que antes: se sirven desde el propio dominio (CSP font-src 'self') y
+ * next/font calcula el fallback ajustado para que no haya layout shift.
  */
-const schibsted = Schibsted_Grotesk({
+const schibsted = localFont({
   variable: "--font-schibsted",
-  subsets: ["latin"],
-  weight: ["400", "600", "800"],
   display: "swap",
+  src: [
+    { path: "../fonts/schibsted-grotesk-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/schibsted-grotesk-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/schibsted-grotesk-latin-800-normal.woff2", weight: "800", style: "normal" },
+  ],
 });
 
-const jetbrains = JetBrains_Mono({
+const jetbrains = localFont({
   variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["400", "500"],
   display: "swap",
+  // Sin preload: la mono solo va en textos chicos (estado, stack, links). Se
+  // descarga igual, pero no compite en la carga inicial con la del titular.
+  preload: false,
+  src: [
+    { path: "../fonts/jetbrains-mono-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/jetbrains-mono-latin-500-normal.woff2", weight: "500", style: "normal" },
+  ],
 });
 
 /**
@@ -34,15 +46,22 @@ const jetbrains = JetBrains_Mono({
  * propio <html lang>, que es lo que usan los lectores de pantalla para elegir
  * la pronunciación y Google para saber en qué idioma está la página.
  *
- * Las dos versiones se generan en el build (estáticas). `dynamicParams = false`
- * hace que cualquier otro segmento (/fr, /EN) sea un 404 en vez de renderizar
- * una página con un idioma que no existe.
+ * Las dos versiones se generan en el build (estáticas). Un idioma inexistente
+ * (/fr) es 404: lo corta el `notFound()` de abajo. Las mayúsculas (/EN) las
+ * normaliza proxy.ts antes de llegar acá.
+ *
+ * dynamicParams = true A PROPOSITO, aunque parezca más estricto ponerlo en
+ * false: este valor se hereda a los segmentos hijos, y con false un slug
+ * inexistente (/es/work/nope) devolvía el 404 genérico de Next, sin estilos y
+ * en inglés. Con true, la página llama a notFound() y se usa
+ * app/[lang]/not-found.tsx, en el idioma de la URL. Los idiomas y casos reales
+ * se siguen generando estáticos.
  */
 export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }));
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 const OG_LOCALE = { en: "en_US", es: "es_AR" } as const;
 
