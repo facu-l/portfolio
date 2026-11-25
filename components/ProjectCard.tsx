@@ -26,7 +26,7 @@ type ProjectCardProps = {
  */
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <article className="rounded-md border border-border bg-surface p-6">
+    <article className="rounded-sm border border-border bg-surface p-6">
       <div className="flex flex-col gap-6 sm:flex-row">
         {project.screenshot && (
           <Image

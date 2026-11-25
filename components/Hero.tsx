@@ -143,7 +143,7 @@ export function Hero() {
                  viven en dos archivos:
 
                    · la máscara de la imagen es 100% opaca hasta el 74%
-                   · el blur de --shadow-glow-strong es 64px, ~13% del alto
+                   · el blur de es 64px, ~13% del alto
                    · 74% - 13% = 61%, así que la caja termina antes de ahí
 
                  SE CALCULA CON EL BLUR DE HOVER Y NO EL DE REPOSO. En reposo
@@ -167,10 +167,10 @@ export function Hero() {
             */}
             <div
               aria-hidden="true"
-              className="absolute inset-x-0 top-0 bottom-[39%] -z-10 rounded-lg shadow-glow transition-shadow duration-slow group-hover:shadow-glow-strong"
+              className="absolute inset-x-0 top-0 bottom-[39%] -z-10 rounded-sm transition-shadow duration-slow"
             />
 
-            <div className="overflow-hidden rounded-lg">
+            <div className="overflow-hidden rounded-sm">
               <Image
                 src="/foto-facu.jpg"
                 alt={`${SITE.name}, ${SITE.role}`}

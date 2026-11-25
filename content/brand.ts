@@ -17,10 +17,10 @@
  * solo para lo que se renderiza fuera del navegador.
  */
 export const BRAND = {
-  background: "#16181c",
-  surface: "#22262c",
-  accent: "#007fff",
-  foreground: "#f5f7fa",
-  muted: "#9299a5",
-  border: "#30353d",
+  background: "#0c0d0f",
+  surface: "#141518",
+  accent: "#c8f03c",
+  foreground: "#eef0f2",
+  muted: "#8b9099",
+  border: "#24262b",
 } as const;

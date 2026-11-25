@@ -27,7 +27,9 @@ describe("Eyebrow", () => {
       </>
     );
 
-    for (const texto of ["ABOUT", "Education", "More work", "SKILLS"]) {
+    // Los <h2> de sección ya no son etiquetas (ver Section.test.tsx): esto
+    // vigila solo las etiquetas internas que comparten la receta.
+    for (const texto of ["Education", "More work"]) {
       const el = screen.getByText(texto);
       expect(el.className).toContain("uppercase");
       expect(el.className).toContain("font-semibold");

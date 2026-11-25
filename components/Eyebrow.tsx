@@ -40,7 +40,7 @@ type EyebrowProps = {
  *      generada. Es el mismo que se descartó al copiar la jerarquía del Hero de
  *      una referencia, y volvió a entrar por otra puerta.
  *
- * Los tokens `--text-shadow-glow` y `--text-shadow-glow-sm` se eliminaron de
+ * Los tokens `` y `` se eliminaron de
  * globals.css en el mismo cambio: nadie más los usaba.
  *
  * EL TRACKING VIVE EN CADA TONO, NO EN BASE. No es simetría: a 32px las

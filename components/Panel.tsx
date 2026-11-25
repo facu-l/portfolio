@@ -37,8 +37,8 @@ type PanelProps = {
  * del glow bajan juntos.
  */
 const SIZES: Record<PanelSize, string> = {
-  md: "rounded-lg p-6 shadow-panel sm:p-8",
-  sm: "rounded-md p-5 shadow-panel-sm",
+  md: "rounded-sm p-6 sm:p-8",
+  sm: "rounded-sm p-5",
 };
 
 export function panelClasses(size: PanelSize = "md") {

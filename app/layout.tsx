@@ -1,20 +1,28 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SITE, SITE_URL } from "@/content/site";
 import { REVEAL_ABOVE_FOLD_SCRIPT } from "@/components/revealAboveFold";
 
 /**
- * Inter como fuente variable: un solo archivo cubre los pesos 100-900,
- * incluidos los cuatro que usa el SPEC (400 / 600 / 700 / 900).
- * Un request en vez de cuatro.
+ * Schibsted Grotesk: titulares (800) y texto (400/600). Una grotesca de diario,
+ * sobria y con carácter: el tono "cuaderno de ingeniería" del Casebook.
+ * JetBrains Mono: solo para datos técnicos (stack, rutas, tablas, links a código).
  *
- * next/font la auto-hospeda en el build: no hay request a Google en runtime,
- * ni el layout shift de esperar a que llegue la fuente.
+ * next/font las auto-hospeda en el build: no hay request a Google en runtime
+ * (el CSP tiene font-src 'self'), ni layout shift esperando la fuente.
  */
-const inter = Inter({
-  variable: "--font-inter",
+const schibsted = Schibsted_Grotesk({
+  variable: "--font-schibsted",
   subsets: ["latin"],
+  weight: ["400", "600", "800"],
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  variable: "--font-jetbrains",
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -71,7 +79,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" className={`${schibsted.variable} ${jetbrains.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         {children}
         {/*

@@ -27,7 +27,7 @@ export function FeaturedProject({ project }: FeaturedProjectProps) {
     : undefined;
 
   return (
-    <article className="mt-block overflow-hidden rounded-md border border-border bg-surface">
+    <article className="mt-block overflow-hidden rounded-sm border border-border bg-surface">
       {project.screenshot && (
         <Image
           src={project.screenshot.src}

@@ -17,7 +17,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto bg-surface-sunken">
+    <footer className="mt-auto bg-surface">
       <div className="mx-auto flex max-w-5xl flex-col gap-stack px-6 py-block sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm font-bold tracking-[0.15em]">
           {SITE.name.toUpperCase()}

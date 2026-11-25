@@ -45,7 +45,7 @@ export function IconBadge({ icon: Icon, size = "md" }: IconBadgeProps) {
   return (
     <span
       aria-hidden="true"
-      className={`inline-flex ${box} shrink-0 items-center justify-center rounded-md border border-accent/25 bg-accent/12 text-accent`}
+      className={`inline-flex ${box} shrink-0 items-center justify-center rounded-sm border border-accent/25 bg-accent/12 text-accent`}
     >
       <Icon className={glyph} />
     </span>

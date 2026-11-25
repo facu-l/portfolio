@@ -105,7 +105,7 @@ export default function GymManagementSystemCaseStudy() {
                   width={shot.width}
                   height={shot.height}
                   sizes="(min-width: 1024px) 64rem, 100vw"
-                  className="w-full rounded-md border border-border"
+                  className="w-full rounded-sm border border-border"
                 />
                 <figcaption className="mt-2 text-sm text-muted">
                   {shot.alt}

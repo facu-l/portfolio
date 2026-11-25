@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   SISTEMA DE DISEÑO — Portfolio Facundo Lambertucci
-   Generado por /plan-design-review el 2026-08-22.
+   SISTEMA DE DISEÑO "CASEBOOK" — Portfolio Facundo Lambertucci
+   Fuente de verdad: docs/superpowers/specs/2026-11-14-portfolio-rebrand-design.md
 
    Tailwind v4: los tokens se declaran con @theme y Tailwind genera las
    utilidades solo. No existe tailwind.config.ts en v4.
@@ -13,121 +13,59 @@
 
 @theme {
   /* --- Color ---------------------------------------------------------------
-     Los 7 colores del SPEC. Contraste verificado con la fórmula WCAG 2.1:
-       texto sobre fondo          16.56:1  AAA
-       texto-muted sobre fondo     6.20:1  AA
-       accent sobre fondo          4.64:1  AA
-       fondo sobre accent          4.64:1  AA  <- el botón primario va con texto OSCURO
-     Las superficies (surface/surface-2) están a 1.17:1 del fondo: NO separan
-     por color. Se separan con espacio y tipografía. Ver DESIGN.md.
-  */
-  /* Nombres pensados para la utilidad que generan:
-     bg-background, bg-surface, text-foreground, text-muted, text-accent. */
-  --color-background: #16181c;
-  --color-surface-sunken: #1d2025;  /* footer */
-  --color-surface: #22262c;          /* tarjetas de proyecto */
-  --color-accent: #007fff;
-  --color-foreground: #f5f7fa;
-  --color-muted: #9299a5;
-  --color-border: #30353d;
+     Monocromo + UN acento. Contraste (WCAG 2.1):
+       foreground sobre background   ~17:1  AAA
+       muted sobre background        ~6.3:1 AA
+       muted sobre surface           ~5.8:1 AA
+       accent sobre background       ~15:1  AAA
+       background sobre accent       ~15:1  <- si algo va con fondo lima, el texto es oscuro
+
+     EL LIMA NO ES DECORACION: marca lo que se puede verificar o clickear
+     (links a código, "Decision N", el punto final, el estado "Open to work",
+     el foco). Si aparece en otro lado, deja de significar algo. */
+  --color-background: #0c0d0f;
+  --color-surface: #141518;          /* tarjetas de decisión, footer */
+  --color-border: #24262b;
+  --color-foreground: #eef0f2;
+  --color-muted: #8b9099;
+  --color-accent: #c8f03c;
 
   /* --- Tipografía ----------------------------------------------------------
-     Inter variable, cargada con next/font en app/layout.tsx.
-     Pesos del SPEC: 400 párrafos / 600-700 nav y botones / 900 títulos grandes.
-  */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+     Schibsted Grotesk para titulares y texto; JetBrains Mono para datos
+     técnicos (stack, rutas, nombres de tablas, links a commits).
+     Las dos se cargan con next/font en app/[lang]/layout.tsx. */
+  --font-sans: var(--font-schibsted), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 
-  /* Escala tipográfica. clamp() = mínimo mobile, escalado fluido, máximo desktop.
-     Evita tener que declarar un tamaño distinto por breakpoint. */
-  /* 36 -> 72px. El nombre del Hero.
-     BAJO DE 96px A 72px CUANDO EL TITULAR PASO A SER EL NOMBRE. El anterior
-     ("FULL STACK DEVELOPER") se partía a mano en dos líneas de 10 caracteres y
-     entraba. "LAMBERTUCCI" son 11 caracteres que no se pueden cortar: a 96px
-     medía 690px, y como una columna de grid no baja de su contenido mínimo,
-     empujaba a la foto hasta dejarla en 200px. El tamaño de la tipografía
-     estaba decidiendo el layout. */
-  --text-display: clamp(2.25rem, 6vw, 4.5rem);
-  --text-h2: clamp(1.75rem, 4vw, 2.5rem);        /* 28 -> 40px  título del proyecto destacado */
-
-  /* 22 -> 32px. El <h2> de cada sección (ABOUT, WORK, SKILLS...).
-     ANTES MEDIA 18px Y ESE ERA EL PROBLEMA: el título de una sección pesaba
-     menos de la mitad que el título de un proyecto que vive ADENTRO de esa
-     sección (40px). La jerarquía decía una cosa y el tamaño decía la contraria.
-
-     ES clamp() AUNQUE LAS DEMAS ETIQUETAS SEAN FIJAS. A 18px daba igual el
-     viewport, y por eso el tamaño era fijo. A 32px ya no: "CURRENTLY LEARNING"
-     en mayúsculas con tracking mide ~443px, y en un teléfono de 390px hay 342px
-     de ancho útil. Sin clamp se parte en dos renglones. */
-  --text-section: clamp(1.375rem, 4vw, 2rem);
-  --text-h3: 1.25rem;                            /* 20px        títulos de proyecto */
-  --text-lead: 1.125rem;                         /* 18px        subtítulo del Hero */
+  /* Escala tipográfica. clamp() = mínimo mobile, escalado fluido, máximo desktop. */
+  --text-display: clamp(2.5rem, 6vw, 4.75rem);   /* 40 -> 76px  rol del Hero */
+  --text-h2: clamp(1.875rem, 4vw, 3rem);         /* 30 -> 48px  título de caso */
+  --text-section: clamp(1.75rem, 3.5vw, 2.5rem); /* 28 -> 40px  <h2> de sección */
+  --text-h3: 1.25rem;                            /* 20px        título de decisión */
+  --text-lead: 1.1875rem;                        /* 19px        frase de valor */
   --text-body: 1rem;                             /* 16px        párrafos */
-  --text-sm: 0.875rem;                           /* 14px        microtexto, eyebrows */
+  --text-sm: 0.875rem;                           /* 14px        microtexto */
+  --text-mono: 0.8125rem;                        /* 13px        datos técnicos en mono */
 
-  /* EL TOKEN --text-cta SE ELIMINO, y vale la pena saber por qué.
-     Eran 19px y no era una decisión estética: el texto claro #F5F7FA sobre el
-     botón azul #007FFF da 3.57:1, que falla AA para texto normal (4.5:1) y solo
-     pasa como "texto grande" de WCAG (>=18.66px en bold). El tamaño era la
-     única forma de que ese contraste fuera legal.
-     Invirtiendo el botón a texto OSCURO (#16181C sobre #007FFF) el contraste
-     sube a 4.64:1 y pasa AA para texto normal. Los botones ahora usan
-     --text-body como cualquier otro texto: la restricción desapareció porque
-     desapareció su causa, no porque la ignoremos. Ver components/Button.tsx. */
-
-  /* --- Ritmo vertical ------------------------------------------------------
-     "Espaciado generoso" del SPEC, traducido a números.
-     Como las superficies no separan por color, el aire ES la separación:
-     estos valores no son decorativos, son estructurales. */
-  --spacing-section: clamp(2.5rem, 5vw, 4rem);    /* 160 -> 256px entre secciones */
-  --spacing-block: 2.5rem;                       /* 40px entre bloques internos */
-  --spacing-stack: 1.25rem;                      /* 20px entre elementos hermanos */
+  /* --- Ritmo vertical ------------------------------------------------------ */
+  --spacing-section: clamp(3.5rem, 7vw, 6rem);
+  --spacing-block: 2.5rem;
+  --spacing-stack: 1.25rem;
 
   /* --- Radios --------------------------------------------------------------
-     Contenidos a propósito. Radios grandes y uniformes en todo son uno de los
-     patrones que delatan una interfaz generada. El tono del sitio es técnico:
-     esquinas precisas, no burbujas. */
-  --radius-sm: 0.25rem;                          /* 4px  inputs */
-  --radius-md: 0.5rem;                           /* 8px  botones, tarjetas de proyecto */
-  --radius-lg: 0.75rem;                          /* 12px foto del Hero */
+     REGLA COMPLETA, SIN EXCEPCIONES: superficies e imágenes 4px, botones en
+     píldora (rounded-full). md y lg existen solo como alias de 4px para que
+     ningún componente quede con otro radio por accidente. */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.25rem;
 
   /* --- Movimiento ----------------------------------------------------------
-     Toda transición usa uno de estos tres. Duraciones distintas por componente
-     hacen que la interfaz se sienta desprolija sin que se pueda señalar por qué. */
+     Toda transición usa uno de estos. Nada pasa de 400ms. */
   --duration-fast: 150ms;                        /* hover, foco */
-  --duration-base: 250ms;                        /* cambios de estado */
-  --duration-slow: 400ms;                        /* entradas al hacer scroll */
-  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* --- Glow de la foto del Hero --------------------------------------------
-     Un box-shadow y NO un div desenfocado detrás. La diferencia no es de estilo:
-     el navegador dibuja la sombra exterior por FUERA de la caja y nunca por
-     debajo, así que la foto puede seguir desvaneciéndose en su borde inferior
-     sin que el azul se cuele por ese hueco. Un div relleno detrás obliga a
-     taparlo con un fondo opaco, y ahí se pierde el desvanecimiento.
-
-     Los valores usan --color-accent en vez de un hexadecimal: si cambia el
-     acento, cambia el glow. Es la regla número uno de DESIGN.md. */
-  --shadow-glow: 0 0 46px 2px
-    color-mix(in oklab, var(--color-accent) 34%, transparent);
-  --shadow-glow-strong: 0 0 64px 8px
-    color-mix(in oklab, var(--color-accent) 62%, transparent);
-
-  /* --- Glow de paneles y títulos de sección --------------------------------
-     Mismo recurso que el glow de la foto, dos órdenes de magnitud más tenue.
-
-     POR QUE EXISTE: los tres fondos de la paleta están a 1.17:1 entre sí, así
-     que un recuadro no se puede separar del fondo con color. El borde solo lo
-     hace, pero plano. El glow es lo que da la elevación sin tocar el fondo — y
-     sin tocar el fondo, el azul de los links sigue teniendo sus 4.64:1.
-     Ver components/Panel.tsx.
-
-     `md` para bloques de sección, `sm` para ítems dentro de un bloque: el ritmo
-     del sitio depende de que lo chico se vea chico también en el resplandor. */
-  --shadow-panel: 0 0 34px
-    color-mix(in oklab, var(--color-accent) 18%, transparent);
-  --shadow-panel-sm: 0 0 22px
-    color-mix(in oklab, var(--color-accent) 12%, transparent);
-
+  --duration-base: 300ms;                        /* aparición al scroll */
+  --duration-slow: 400ms;                        /* tope: entrada del Hero */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ============================================================================
@@ -142,26 +80,102 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Scroll suave al usar los anclas del navbar.
-   Respeta prefers-reduced-motion por el bloque del final del archivo. */
 html {
   scroll-behavior: smooth;
 }
 
-/* Foco visible y consistente en todo el sitio.
-   #007FFF sobre el fondo da 4.64:1, por encima del 3:1 que WCAG pide para
-   componentes de UI. El offset separa el anillo del elemento para que se lea
-   incluso sobre el botón azul.
-   :focus-visible y no :focus -> el anillo aparece con teclado, no con click. */
+/* Foco visible en lima: ~15:1 sobre el fondo. Con teclado, no con click. */
 :focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
 
-/* prefers-reduced-motion aplicado a TODO el sitio, no solo al Hero.
-   Es un ítem del checklist de seguridad del SPEC. Cubre el glow del Hero y
-   cualquier transición que se agregue más adelante. */
+/* ============================================================================
+   MICROINTERACCIONES COMPARTIDAS
+   Solo transform y opacity (y el grosor del subrayado, que no mueve layout).
+   Todo dentro de no-preference: con movimiento reducido, estado final directo.
+   ========================================================================= */
+
+/* Link a evidencia: subrayado lima que engrosa y flecha ↗ que se corre 2px.
+   Comunica "esto se puede verificar" sin agregar otro color. */
+.link-evidence {
+  color: var(--color-foreground);
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.link-evidence .link-arrow {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .link-evidence {
+    transition: text-decoration-thickness var(--duration-fast) var(--ease-out);
+  }
+
+  .link-evidence .link-arrow {
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .link-evidence:hover .link-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  /* Botones en píldora: se "hunden" al apretarlos. */
+  .btn-pill {
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .btn-pill:active {
+    transform: scale(0.98);
+  }
+}
+
+.link-evidence:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ============================================================================
+   Aparición de secciones al hacer scroll
+
+   El estado OCULTO vive acá y no en una clase de Tailwind aplicada en el JSX:
+   `@media (scripting: enabled)` significa "solo si este navegador va a correr
+   el JavaScript que después lo va a revelar". Con JS apagado, o con un crawler
+   que no lo ejecuta, la regla no aplica y se ve todo el contenido.
+
+   La lógica que agrega `data-revealed` está en components/Reveal.tsx.
+   ========================================================================= */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    /* 8px: se percibe como "aparece" sin que el bloque parezca venir volando. */
+    transform: translateY(0.5rem);
+    transition:
+      opacity var(--duration-base) var(--ease-out),
+      transform var(--duration-base) var(--ease-out);
+  }
+
+  [data-reveal][data-revealed] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Lo que ya estaba a la vista al cargar no se anima: aparece de una.
+     Lo marca components/revealAboveFold.ts antes del primer pintado. */
+  [data-reveal][data-reveal-instant] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Con movimiento reducido no hay animaciones ni transiciones en ningún lado. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -170,122 +184,5 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-/* ==========================================================================
-   Grid técnico de fondo (SPEC §2)
-
-   Dos gradientes repetidos que dibujan una retícula de 1px cada 80px. La
-   máscara radial la desvanece hacia los bordes, así no queda un patrón
-   uniforme de pared a pared: se insinúa en el centro y desaparece.
-
-   POR QUE UN ::before FIJO Y NO UN BACKGROUND EN EL BODY: fijo al viewport,
-   la retícula NO se mueve con el scroll. El contenido pasa por delante de una
-   grilla quieta, que es lo que da la sensación de plano técnico. Un background
-   en el body scrollearía junto con el texto y se leería como papel cuadriculado.
-
-   pointer-events: none es obligatorio: sin eso, una capa a pantalla completa
-   se come todos los clicks del sitio.
-   ========================================================================== */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      var(--color-border) 0 1px,
-      transparent 1px 80px
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      var(--color-border) 0 1px,
-      transparent 1px 80px
-    );
-  /* 0.28 es el punto donde se percibe como textura y no como una tabla.
-     Más arriba compite con el texto; más abajo directamente no existe. */
-  opacity: 0.28;
-  -webkit-mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 30%,
-    black 0%,
-    transparent 75%
-  );
-  mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 30%,
-    black 0%,
-    transparent 75%
-  );
-}
-
-/* El contenido va por delante de la grilla. Sin esto, el ::before se apoya
-   encima del texto en vez de quedar detrás. */
-body > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* ==========================================================================
-   Aparición de secciones al hacer scroll
-
-   El estado OCULTO vive acá y no en una clase de Tailwind aplicada en el JSX,
-   por una razón que no es de estilo:
-
-   `@media (scripting: enabled)` significa "solo si este navegador va a correr
-   el JavaScript que después lo va a revelar". Con JS apagado — o con un crawler
-   que no lo ejecuta — la regla directamente no aplica y se ve todo el
-   contenido. Una clase `opacity-0` estática dejaría la página en blanco para
-   ellos, que es la forma más común de romper un sitio con este efecto.
-
-   La lógica que agrega `data-revealed` está en components/Reveal.tsx.
-   ========================================================================== */
-@media (scripting: enabled) {
-  [data-reveal] {
-    opacity: 0;
-    /* 1.5rem: se percibe como "sube al aparecer" sin que el bloque parezca
-       venir volando desde afuera de la pantalla. */
-    transform: translateY(1.5rem);
-    transition:
-      opacity var(--duration-slow) var(--ease-out),
-      transform var(--duration-slow) var(--ease-out);
-  }
-
-  [data-reveal][data-revealed] {
-    opacity: 1;
-    transform: none;
-  }
-
-  /* Lo que ya estaba a la vista al cargar la página no se anima: aparece de
-     una, sin transición.
-
-     `transition: none` NO es un detalle — es el punto. Sin eso el bloque
-     igual arrancaría oculto y entraría con el fade de 400ms, que es
-     exactamente el retraso que se está tratando de sacar. Acá el contenido
-     tiene que estar visible en el primer pintado, no 400ms después.
-
-     Una animación de entrada al hacer scroll es para algo que el visitante
-     todavía no vio. Aplicarla a lo que ya está en pantalla no es un efecto:
-     es contenido que tarda en aparecer.
-
-     Quien pone el atributo es el script de components/revealAboveFold.ts,
-     antes de que el navegador pinte. */
-  [data-reveal][data-reveal-instant] {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
-/* Con movimiento reducido el contenido está visible DESDE EL ARRANQUE.
-   El bloque general de prefers-reduced-motion de más arriba solo acorta las
-   transiciones: eso dejaría el contenido oculto hasta que el observer lo
-   revele de golpe. Acá directamente nunca se oculta.
-   Va después de aquel bloque a propósito — misma especificidad, gana el último. */
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal] {
-    opacity: 1;
-    transform: none;
   }
 }

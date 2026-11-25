@@ -14,11 +14,11 @@ describe("Panel", () => {
    * Es un cambio que pasa cualquier review visual y deja el sitio peor. Por eso
    * lo fija un test y no solo un comentario.
    */
-  it("no tiene fondo propio: el borde y el glow hacen el recuadro", () => {
+  it("no tiene fondo propio ni glow: el borde hace el recuadro", () => {
     for (const size of ["md", "sm"] as const) {
       expect(panelClasses(size)).not.toMatch(/\bbg-/);
       expect(panelClasses(size)).toContain("border");
-      expect(panelClasses(size)).toMatch(/shadow-panel/);
+      expect(panelClasses(size)).not.toMatch(/shadow-/);
     }
   });
 
@@ -28,10 +28,12 @@ describe("Panel", () => {
    * leerse como tres cosas del mismo peso.
    */
   it("el tamaño sm es visualmente menor que md", () => {
-    expect(panelClasses("md")).toContain("rounded-lg");
-    expect(panelClasses("sm")).toContain("rounded-md");
-    expect(panelClasses("sm")).toContain("shadow-panel-sm");
-    expect(panelClasses("md")).not.toContain("shadow-panel-sm");
+    // Un solo radio en todo el sitio (4px); la jerarquía la da el padding.
+    for (const size of ["md", "sm"] as const) {
+      expect(panelClasses(size)).toContain("rounded-sm");
+    }
+    expect(panelClasses("md")).toContain("p-6");
+    expect(panelClasses("sm")).toContain("p-5");
   });
 
   it("renderiza el elemento que se le pide, para poder ser un <li>", () => {

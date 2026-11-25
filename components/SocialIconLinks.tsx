@@ -30,7 +30,7 @@ export function SocialIconLinks() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex size-11 items-center justify-center rounded-md border border-border text-muted transition-colors duration-fast hover:border-accent hover:text-accent"
+              className="inline-flex size-11 items-center justify-center rounded-sm border border-border text-muted transition-colors duration-fast hover:border-accent hover:text-accent"
             >
               <Icon className="size-5" />
               <span className="sr-only">

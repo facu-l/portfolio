@@ -32,7 +32,7 @@ type ButtonLinkProps = {
  * de estilos y el CTA principal del sitio vuelve a fallar sin que nada avise.
  */
 const BASE =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2.5 text-body font-semibold transition-colors duration-fast";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full btn-pill px-5 py-2.5 text-body font-semibold transition-colors duration-fast";
 
 const VARIANTS: Record<Variant, string> = {
   /*
