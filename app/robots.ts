@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/content/site";
+import { SITE_URL } from "@/content/config";
 
 /**
  * robots.txt generado por Next en el build.

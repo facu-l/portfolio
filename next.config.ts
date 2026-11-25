@@ -67,6 +67,21 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
+  /*
+    La URL del case study anterior al sitio bilingüe ya circula (CV, LinkedIn).
+    308 permanente: el contenido se mudó para siempre, y así Google transfiere
+    lo que ya tenía indexado a la URL nueva. Va al inglés porque el sitio
+    viejo estaba en inglés: quien tenía ese link leía en inglés.
+  */
+  async redirects() {
+    return [
+      {
+        source: "/work/gym-management-system",
+        destination: "/en/work/gym-management-system",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

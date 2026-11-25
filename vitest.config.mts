@@ -15,7 +15,7 @@ export default defineConfig({
     globals: true,
     // Los tests unitarios viven junto al codigo o en tests/.
     // e2e/ queda afuera: eso lo corre Playwright, que tiene su propio runner.
-    include: ['{app,components,content,lib,tests}/**/*.test.{ts,tsx}'],
+    include: ['{app,components,content,lib,tests}/**/*.test.{ts,tsx}', 'next.config.test.ts', 'proxy.test.ts'],
     exclude: ['node_modules', '.next', 'e2e'],
   },
   resolve: {
