@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { eyebrowClasses } from "./Eyebrow";
 import { About } from "./About";
-import { Projects } from "./Projects";
 import { Skills } from "./Skills";
 
 describe("Eyebrow", () => {
@@ -22,14 +21,13 @@ describe("Eyebrow", () => {
     render(
       <>
         <About />
-        <Projects />
         <Skills />
       </>
     );
 
     // Los <h2> de sección ya no son etiquetas (ver Section.test.tsx): esto
     // vigila solo las etiquetas internas que comparten la receta.
-    for (const texto of ["Education", "More work"]) {
+    for (const texto of ["Education"]) {
       const el = screen.getByText(texto);
       expect(el.className).toContain("uppercase");
       expect(el.className).toContain("font-semibold");

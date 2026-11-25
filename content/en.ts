@@ -20,6 +20,7 @@ export const en: SiteContent = {
     description:
       "Junior Full Stack Developer from Argentina. I build web apps end to end, from the database rules to the interface, and keep them under test.",
   },
+  a11y: { opensInNewTab: "(opens in a new tab)" },
   nav: {
     label: "Main",
     skipToContent: "Skip to content",

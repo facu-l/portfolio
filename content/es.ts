@@ -19,6 +19,7 @@ export const es: SiteContent = {
     description:
       "Desarrollador Full Stack Junior de Argentina. Construyo aplicaciones web de punta a punta, desde las reglas de la base de datos hasta la interfaz, y las mantengo bajo tests.",
   },
+  a11y: { opensInNewTab: "(se abre en una pestaña nueva)" },
   nav: {
     label: "Principal",
     skipToContent: "Saltar al contenido",

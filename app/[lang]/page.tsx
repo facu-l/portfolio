@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
-import { Projects } from "@/components/Projects";
+import { Work } from "@/components/Work";
 import { Skills } from "@/components/Skills";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
@@ -39,7 +39,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
       <main id="main">
         <Hero hero={content.hero} locale={lang} />
-        <Projects />
+        <Work work={content.work} cases={content.cases} opensInNewTab={content.a11y.opensInNewTab} locale={lang} />
         <Skills />
         <About />
         <Contact />

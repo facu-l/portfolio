@@ -86,6 +86,8 @@ export type ContactFormCopy = {
 export type SiteContent = {
   locale: Locale;
   meta: { title: string; description: string };
+  /** Textos solo para lectores de pantalla. */
+  a11y: { opensInNewTab: string };
   nav: {
     label: string;
     skipToContent: string;
