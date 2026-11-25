@@ -15,7 +15,7 @@ const CEF_REPO = "https://github.com/canizafa/sistema-cef";
 export const es: SiteContent = {
   locale: "es",
   meta: {
-    title: "Facundo Lambertucci · Desarrollador Full Stack Junior",
+    title: "Facundo Lambertucci · Desarrollador Full Stack",
     description:
       "Desarrollador Full Stack Junior de Argentina. Construyo aplicaciones web de punta a punta, desde las reglas de la base de datos hasta la interfaz, y las mantengo bajo tests.",
   },
@@ -31,10 +31,10 @@ export const es: SiteContent = {
     switchTo: "Read in English",
   },
   hero: {
-    role: "Desarrollador Full Stack Junior",
+    role: "Desarrollador Full Stack",
     valueProp:
       "Construyo aplicaciones web de punta a punta, desde las reglas de la base de datos hasta la interfaz, y las mantengo bajo tests.",
-    status: "Buscando trabajo · Argentina y remoto · Full-time o part-time",
+    status: "Buscando puesto Junior · Argentina y remoto · Full-time o part-time",
     cvLabel: "Descargar CV",
     copyLabel: "Copiar email",
     copiedLabel: "Email copiado",

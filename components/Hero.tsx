@@ -19,7 +19,7 @@ type HeroProps = {
  * con el CTA.
  *
  * EL h1 ES EL ROL, NO EL NOMBRE. El nombre ya está en la navbar y en el
- * <title>; el h1 es lo que se lee primero y "Junior Full Stack Developer" es
+ * <title>; el h1 es lo que se lee primero y "Full Stack Developer" es
  * la respuesta a la pregunta que el recruiter trae.
  *
  * El punto de estado (lima) es el único punto de color del sitio: comunica un

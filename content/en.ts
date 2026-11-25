@@ -16,7 +16,7 @@ const CEF_REPO = "https://github.com/canizafa/sistema-cef";
 export const en: SiteContent = {
   locale: "en",
   meta: {
-    title: "Facundo Lambertucci · Junior Full Stack Developer",
+    title: "Facundo Lambertucci · Full Stack Developer",
     description:
       "Junior Full Stack Developer from Argentina. I build web apps end to end, from the database rules to the interface, and keep them under test.",
   },
@@ -32,10 +32,10 @@ export const en: SiteContent = {
     switchTo: "Leer en español",
   },
   hero: {
-    role: "Junior Full Stack Developer",
+    role: "Full Stack Developer",
     valueProp:
       "I build web apps end to end, from the database rules to the interface, and keep them under test.",
-    status: "Open to work · Argentina & remote · Full-time or part-time",
+    status: "Open to Junior roles · Argentina & remote · Full-time or part-time",
     cvLabel: "Download CV",
     copyLabel: "Copy email",
     copiedLabel: "Email copied",

@@ -34,7 +34,7 @@ Regla editorial que gobierna todo (ya vigente en `content/about.ts`): **un curso
 
 ## 3. Posicionamiento y mensaje
 
-- **Rol:** Junior Full Stack Developer.
+- **Rol:** Junior Full Stack Developer. En el titular va solo "Full Stack Developer"; el nivel ("Junior") se dice en la línea de estado, la bio y Contact (decisión del 2026-11-25: en el h1 se leía como descuento antes de la evidencia).
 - **Frase de valor (EN):** "I build web apps end to end, from the database rules to the interface, and keep them under test."
 - **Frase de valor (ES):** "Construyo aplicaciones web de punta a punta, desde las reglas de la base de datos hasta la interfaz, y las mantengo bajo tests."
 - **Estado (EN):** "Open to work · Argentina & remote · Full-time or part-time" (ES equivalente). Disponibilidad inmediata se dice en Contact, no en el hero (límite de 4 elementos del hero).

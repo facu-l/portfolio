@@ -146,3 +146,24 @@ describe("bilingual content", () => {
     }
   });
 });
+
+/**
+ * EL NIVEL VA EN EL ESTADO, NO EN EL TITULAR. "Junior" en el h1 es lo primero
+ * que se lee y funciona como descuento antes de ver la evidencia; pero el
+ * recruiter tiene que saber para qué puesto aplica, así que el nivel sigue
+ * explícito en la línea de estado (y en la bio y en Contact).
+ */
+describe("seniority placement", () => {
+  for (const locale of LOCALES) {
+    const { hero, meta } = getContent(locale);
+
+    it(`${locale}: the headline and page title name the role without the level`, () => {
+      expect(hero.role).not.toMatch(/junior/i);
+      expect(meta.title).not.toMatch(/junior/i);
+    });
+
+    it(`${locale}: the status line keeps the level explicit`, () => {
+      expect(hero.status).toMatch(/Junior/);
+    });
+  }
+});
