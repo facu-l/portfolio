@@ -22,6 +22,14 @@ condición volvería a estar sobre la mesa.
 
 **Disparador:** si el LCP real p75 en mobile pasa de 2.5 s. Recién ahí vale la pena reducir Client Components o JS. **Effort:** M · **Priority:** P3
 
+### Completar "AI Engineer con Python" cuando haya repo
+
+**What:** Sumarle a la entrada de Código Facilito en `about.certifications` (los dos idiomas) un `topics` con lo que construiste y un `evidence` con el link al repo. Al terminar el curso: sacar `inProgress` y poner la fecha de fin en `detail`.
+
+**Why:** Hoy figura como "En curso" sin topics porque todo es teoría; listar el temario sería afirmar algo que no hiciste. Con un repo, la línea pasa de dato a evidencia. Ojo: si llegás a un proyecto de IA defendible, ese es también el disparador de la sección "Currently Learning" de abajo.
+
+**Disparador:** el primer repo del curso, aunque esté a medias. **Effort:** S · **Priority:** P2
+
 ## Currently Learning
 
 > Desde el rebranding, el contenido vive en `content/en.ts` y `content/es.ts`

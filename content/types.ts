@@ -67,8 +67,14 @@ export type Certification = {
   title: string;
   institution: string;
   detail: string;
-  /** Qué se construyó en el curso. Concreto, no el temario. */
-  topics: string;
+  /**
+   * Qué se construyó en el curso. Concreto, no el temario. Un curso en curso
+   * sin nada construido todavía no lo lleva: listar el temario sería afirmar
+   * algo que no hiciste.
+   */
+  topics?: string;
+  /** Cursando hoy. `detail` dice desde cuándo, no una fecha de fin estimada. */
+  inProgress?: boolean;
   evidence?: Link;
 };
 
@@ -135,6 +141,8 @@ export type SiteContent = {
     howIWork: string[];
     freelance: string;
     educationTitle: string;
+    /** Etiqueta de un curso que se está cursando ("En curso"). */
+    inProgressLabel: string;
     degree: Degree;
     certifications: Certification[];
   };

@@ -167,3 +167,19 @@ describe("seniority placement", () => {
     });
   }
 });
+
+describe("education entries", () => {
+  for (const locale of LOCALES) {
+    const { about } = getContent(locale);
+
+    it(`${locale}: an in-progress course says since when, and finished ones say what was built`, () => {
+      for (const cert of about.certifications) {
+        if (cert.inProgress) {
+          expect(cert.detail).toMatch(locale === "es" ? /^Desde / : /^Since /);
+        } else {
+          expect(cert.topics?.trim()).toBeTruthy();
+        }
+      }
+    });
+  }
+});

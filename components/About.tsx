@@ -44,11 +44,25 @@ export function About({ about, opensInNewTab }: AboutProps) {
             </li>
             {about.certifications.map((cert) => (
               <li key={cert.title} className="py-5">
-                <h4 className="font-semibold">{cert.title}</h4>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <h4 className="font-semibold">{cert.title}</h4>
+                  {/*
+                    "En curso" en gris y con borde, NO en lima: el lima marca lo
+                    verificable o clickeable, y un curso que todavía no tiene
+                    nada construido no es ninguna de las dos cosas.
+                  */}
+                  {cert.inProgress && (
+                    <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-mono text-muted">
+                      {about.inProgressLabel}
+                    </span>
+                  )}
+                </div>
                 <p className="mt-1 text-sm text-muted">
                   {cert.institution} · {cert.detail}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-foreground/80">{cert.topics}</p>
+                {cert.topics && (
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/80">{cert.topics}</p>
+                )}
                 {cert.evidence && (
                   <ExternalLink
                     href={cert.evidence.href}

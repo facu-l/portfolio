@@ -275,6 +275,7 @@ export const en: SiteContent = {
     ],
     freelance: "I also take on small freelance projects.",
     educationTitle: "Education",
+    inProgressLabel: "In progress",
     degree: {
       title: "Licenciatura en Sistemas",
       institution: "Facultad de Informática, Universidad Nacional de La Plata",
@@ -296,6 +297,12 @@ export const en: SiteContent = {
         institution: "Código Facilito",
         detail: "12 weeks · August 2026",
         topics: "Python for AI, model fundamentals and applied workflows",
+      },
+      {
+        title: "AI Engineer with Python",
+        institution: "Código Facilito",
+        detail: "Since October 2026",
+        inProgress: true,
       },
     ],
   },

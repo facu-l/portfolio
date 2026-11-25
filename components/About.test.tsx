@@ -28,4 +28,17 @@ describe.each(LOCALES)("About (%s)", (locale) => {
     const link = screen.getByRole("link", { name: new RegExp(about.certifications[0].evidence!.label) });
     expect(link).toHaveAttribute("href", "https://github.com/facu-l/articulos-api-spring-boot");
   });
+
+  /*
+    Un curso en curso es un hecho de HOY (estás inscripto y cursando), no una
+    promesa. Se marca como tal y no lleva "qué construí" hasta que haya algo
+    construido: listar el temario sería afirmar algo que todavía no hiciste.
+  */
+  it("marks the AI Engineer program as in progress, without topics", () => {
+    renderAbout();
+    const title = screen.getByText(/^AI Engineer (con|with) Python$/);
+    const item = title.closest("li")!;
+    expect(item).toHaveTextContent(about.inProgressLabel);
+    expect(item.querySelectorAll("p")).toHaveLength(1);
+  });
 });

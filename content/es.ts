@@ -274,6 +274,7 @@ export const es: SiteContent = {
     ],
     freelance: "También tomo proyectos freelance chicos.",
     educationTitle: "Formación",
+    inProgressLabel: "En curso",
     degree: {
       title: "Licenciatura en Sistemas",
       institution: "Facultad de Informática, Universidad Nacional de La Plata",
@@ -295,6 +296,12 @@ export const es: SiteContent = {
         institution: "Código Facilito",
         detail: "12 semanas · agosto 2026",
         topics: "Python para IA, fundamentos de modelos y flujos aplicados",
+      },
+      {
+        title: "AI Engineer con Python",
+        institution: "Código Facilito",
+        detail: "Desde octubre 2026",
+        inProgress: true,
       },
     ],
   },
