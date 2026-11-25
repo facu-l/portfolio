@@ -87,16 +87,29 @@ export default async function OpenGraphImage({ params }: { params: Promise<{ lan
               </div>
             ))}
           </div>
+          {/*
+            El estado se parte SOLO en los separadores " · ". Como texto corrido,
+            Satori cortaba en el guion de "part-time" y dejaba "part-" / "time".
+            Cada tramo es una caja que no se parte; el separador va pegado al
+            tramo anterior para que nunca empiece un renglón.
+          */}
           <div
             style={{
               display: "flex",
+              flexWrap: "wrap",
               marginTop: 28,
               fontFamily: "JetBrains",
               fontSize: 26,
+              lineHeight: 1.4,
               color: BRAND.muted,
             }}
           >
-            {hero.status}
+            {hero.status.split(" · ").map((part, i, parts) => (
+              <div key={i} style={{ display: "flex", whiteSpace: "nowrap" }}>
+                {part}
+                {i < parts.length - 1 && "\u00a0·\u00a0"}
+              </div>
+            ))}
           </div>
         </div>
 
