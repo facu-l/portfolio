@@ -47,12 +47,13 @@ export function About({ about, opensInNewTab }: AboutProps) {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <h4 className="font-semibold">{cert.title}</h4>
                   {/*
-                    "En curso" en gris y con borde, NO en lima: el lima marca lo
-                    verificable o clickeable, y un curso que todavía no tiene
-                    nada construido no es ninguna de las dos cosas.
+                    "En curso" en lima: es un indicador de estado real, igual
+                    que el punto de "Buscando puesto" del hero, y el lima marca
+                    estados además de lo verificable o clickeable. Va como texto
+                    y borde, nunca de fondo (ver DESIGN.md).
                   */}
                   {cert.inProgress && (
-                    <span className="rounded-sm border border-border px-2 py-0.5 font-mono text-mono text-muted">
+                    <span className="rounded-sm border border-accent/40 px-2 py-0.5 font-mono text-mono text-accent">
                       {about.inProgressLabel}
                     </span>
                   )}

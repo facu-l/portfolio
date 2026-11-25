@@ -15,7 +15,7 @@ Este archivo es el resumen para consultar rápido.
 | `border` | `#24262b` | líneas |
 | `foreground` | `#eef0f2` | texto principal, botón primario |
 | `muted` | `#8b9099` | texto secundario |
-| `accent` | `#c8f03c` | **solo** lo verificable o clickeable: links a código, "Decision N", el punto final, el estado "Open to work", el foco |
+| `accent` | `#c8f03c` | **solo** lo verificable o clickeable: links a código, "Decision N", el punto final, el estado "Open to work", la etiqueta "En curso" de Formación, el foco |
 
 **Si el lima aparece en algo decorativo, deja de significar algo.** El botón
 primario es blanco a propósito: es el elemento más grande de la pantalla.
