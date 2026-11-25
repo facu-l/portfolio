@@ -1,18 +1,21 @@
 # Portfolio — Facundo Lambertucci
 
-Portfolio personal. Una sola página con secciones, más un case study en ruta
-propia. Sin backend: el formulario de contacto va directo a Web3Forms.
+Portfolio personal para conseguir entrevistas como **Junior Full Stack
+Developer**, en inglés (`/en`) y español (`/es`). Cada proyecto se presenta como
+un caso con decisiones técnicas que linkean al código que las prueba. Sin
+backend: el formulario de contacto va directo a Web3Forms.
 
 **Producción:** https://facundolambertucci.vercel.app
+**Decisiones de diseño y contenido:** [docs/superpowers/specs/2026-11-14-portfolio-rebrand-design.md](docs/superpowers/specs/2026-11-14-portfolio-rebrand-design.md)
 
 ## Stack
 
 | Qué | Con qué |
 |---|---|
-| Framework | Next.js 16 (App Router, Turbopack) |
+| Framework | Next.js 16 (App Router, Turbopack, `proxy.ts`) |
 | Lenguaje | TypeScript |
-| Estilos | Tailwind CSS v4 — **sin `tailwind.config.ts`**, los tokens viven en `@theme` dentro de [app/globals.css](app/globals.css) |
-| Tipografía | Inter vía `next/font` (self-hosted, sin request a Google en runtime) |
+| Estilos | Tailwind CSS v4: **sin `tailwind.config.ts`**, los tokens viven en `@theme` dentro de [app/globals.css](app/globals.css) |
+| Tipografía | Schibsted Grotesk (titulares y texto) + JetBrains Mono (datos técnicos), vía `next/font` |
 | Tests | Vitest + Testing Library + jsdom |
 | Formulario | Web3Forms |
 | Deploy | Vercel |
@@ -22,7 +25,7 @@ propia. Sin backend: el formulario de contacto va directo a Web3Forms.
 ```bash
 npm install
 cp .env.example .env.local   # y completar las variables (ver abajo)
-npm run dev                  # http://localhost:3000
+npm run dev                  # http://localhost:3000 (redirige a /en o /es)
 ```
 
 ## Comandos
@@ -43,91 +46,108 @@ Variables** de Vercel para producción.
 
 | Variable | Para qué | Si falta |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | URL absoluta del sitio: metatags de Open Graph, `robots.txt` y `sitemap.xml` | Cae a `http://localhost:3000`. La tarjeta al compartir el link apunta a localhost y no carga, y el sitemap declara URLs que no existen |
-| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Envío del formulario de contacto | La sección Contact muestra los links sociales en vez del formulario |
+| `NEXT_PUBLIC_SITE_URL` | URL absoluta del sitio: metatags de Open Graph, hreflang, `robots.txt` y `sitemap.xml` | Cae a `http://localhost:3000`. La tarjeta al compartir el link apunta a localhost y no carga |
+| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | Envío del formulario de contacto | Contact muestra los links directos en vez del formulario |
 
 > **`NEXT_PUBLIC_` se reemplaza en tiempo de BUILD, no de runtime.** Agregar o
 > cambiar una de estas variables en Vercel **no hace nada hasta que redeployés**.
-> Ya nos pasó una vez con `og:url`.
 
 La access key de Web3Forms **es pública por diseño**: viaja en el body de un POST
-desde el navegador y cualquiera puede verla en las devtools. No es un secret.
-Está en una variable de entorno igual, para poder rotarla sin tocar código y para
-no dejarla escrita en un repo público.
+desde el navegador. Está en una variable de entorno para poder rotarla sin tocar
+código, no para esconderla.
+
+## Dos idiomas
+
+- Todas las páginas viven bajo [app/[lang]/](app/[lang]/): `/en`, `/es` y
+  `/[lang]/work/[slug]`. Se generan estáticas en el build; cualquier otro idioma
+  da 404 (`dynamicParams = false`).
+- [proxy.ts](proxy.ts) corre **solo en `/`** y redirige al idioma del navegador
+  (`Accept-Language`). Nada más pasa por el proxy.
+- **Todo el texto** está en [content/en.ts](content/en.ts) y
+  [content/es.ts](content/es.ts), con la forma de `SiteContent`
+  ([content/types.ts](content/types.ts)). Si a un idioma le falta una clave, no
+  compila. [content/i18n.test.ts](content/i18n.test.ts) cubre lo que el tipo no
+  ve: mismos casos, misma cantidad de decisiones, mismos links, ningún texto
+  vacío y ningún guion largo.
+- La URL vieja `/work/gym-management-system` redirige (308) a la versión en
+  inglés, desde [next.config.ts](next.config.ts).
+
+> **Al editar copy: siempre en los dos archivos.** Y cada decisión técnica tiene
+> que seguir probada por el link que la acompaña.
 
 ## La tarjeta al compartir el link
 
-[app/opengraph-image.tsx](app/opengraph-image.tsx) genera en el build la imagen
-de 1200×630 que dibujan WhatsApp, LinkedIn y Slack al pegar el link. Lee `SITE` y
-`BRAND`, así que cambia sola cuando cambia el contenido o la paleta.
+[app/[lang]/opengraph-image.tsx](app/[lang]/opengraph-image.tsx) genera en el
+build una imagen de 1200×630 por idioma. Lee el rol y el estado del contenido y
+los colores de [content/brand.ts](content/brand.ts) (un test los mantiene
+iguales a `globals.css`).
 
-Los `.woff` de [app/fonts/](app/fonts/) están versionados porque **Satori —el
-motor que convierte ese JSX en PNG— no soporta woff2**, que es lo que entrega
-`next/font`. Son 60KB que nunca viajan al navegador: los usa solo el build.
+**Satori, el motor que convierte ese JSX en PNG, no soporta woff2**, que es lo
+que entrega `next/font`. Por eso las fuentes de la tarjeta salen de los paquetes
+`@fontsource/*` (dependencias de desarrollo, traen `.woff`). Nunca viajan al
+navegador.
 
-> **Las plataformas cachean la tarjeta.** Una vez que LinkedIn o WhatsApp
-> guardan la previsualización de una URL, no la vuelven a mirar aunque cambies el
-> sitio. Si cambiaste la imagen, hay que forzar el refresco desde el debugger de
-> cada plataforma antes de compartir el link en serio.
+> **Las plataformas cachean la tarjeta.** Si cambiaste la imagen, forzá el
+> refresco desde el debugger de LinkedIn antes de compartir el link en serio.
 
 ## Estructura
 
 ```
 app/
-  layout.tsx                          fuente, metadata, Open Graph
-  page.tsx                            orden de las secciones
-  globals.css                         EL SISTEMA DE DISEÑO (tokens @theme)
-  work/gym-management-system/page.tsx case study
-components/                           un componente por sección + primitivas
-content/                              todo el texto y los datos, separados del JSX
-public/proyectos/                     capturas de los proyectos
+  globals.css                    EL SISTEMA DE DISEÑO (tokens @theme)
+  sitemap.ts, robots.ts          con hreflang para los dos idiomas
+  [lang]/
+    layout.tsx                   <html lang>, fuentes, metadata
+    page.tsx                     home: Hero, Work, Skills, About, Contact
+    opengraph-image.tsx          tarjeta por idioma
+    work/[slug]/page.tsx         página de cada caso
+proxy.ts                         "/" -> "/en" o "/es"
+lib/locale.ts                    idiomas, negociación, cambio de idioma
+content/                         todo el texto (en.ts, es.ts) y la config
+components/                      un componente por sección + primitivas
+public/proyectos/                capturas de los proyectos
 ```
 
-**Regla de dependencia:** los componentes importan de `content/`, nunca al revés.
-Si un texto está escrito dentro del JSX, está en el lugar equivocado.
+**Regla de dependencia:** las páginas leen el contenido con `getContent(lang)` y
+se lo pasan a los componentes como props. Los componentes no saben de idiomas:
+reciben texto. Por eso se testean en los dos idiomas sin simular Next.
 
 **Regla de estilos:** ningún hexadecimal ni número mágico en el JSX. Si hace
-falta un valor que no existe, se agrega primero como token en `globals.css`.
+falta un valor que no existe, se agrega primero como token en `globals.css`. El
+lima (`--color-accent`) marca solo lo verificable o clickeable.
 
 ## Client Components
 
-Cuatro, y cada uno tiene su razón escrita en el archivo:
+Cinco, y cada uno tiene su razón escrita en el archivo:
 
 | Componente | Por qué necesita el navegador |
 |---|---|
 | [StickyHeader.tsx](components/StickyHeader.tsx) | Observa el scroll para compactar el header |
+| [LanguageSwitcher.tsx](components/LanguageSwitcher.tsx) | Lee la ruta actual para ofrecer la misma página en el otro idioma |
+| [CopyEmailButton.tsx](components/CopyEmailButton.tsx) | Portapapeles y feedback de "copiado" |
 | [ContactForm.tsx](components/ContactForm.tsx) | Estado de envío del formulario |
 | [Reveal.tsx](components/Reveal.tsx) | `IntersectionObserver` para la aparición al scroll |
-| [SplitHeading.tsx](components/SplitHeading.tsx) | Anima el `<h2>` de cada sección letra por letra |
 
 Todo lo demás es Server Component y no viaja como JavaScript al navegador.
 
 `"use client"` es una **frontera, no una etiqueta**: se hereda hacia abajo por el
 árbol de imports, no por el de JSX. Por eso `Reveal` puede envolver una sección
-entera sin volverla cliente — la sección se renderiza en el servidor y le llega
-como `children` ya armada.
-
-Los dos últimos cargan su dependencia tarde. `SplitHeading` hace `await
-import("animejs")` recién cuando la sección entra en pantalla, así que la
-librería sale en su propio chunk y quien no scrollea nunca la descarga.
+entera sin volverla cliente.
 
 ### La aparición al scroll, en tres piezas
 
-Vale la pena saber que no es solo CSS:
-
 1. [globals.css](app/globals.css) oculta los bloques `[data-reveal]`, pero dentro
-   de `@media (scripting: enabled)`. Con JavaScript apagado la regla no aplica y
-   se ve todo el contenido — un `opacity: 0` estático dejaría la página en blanco
-   para un crawler.
+   de `@media (scripting: enabled) and (prefers-reduced-motion: no-preference)`.
+   Con JavaScript apagado, o con movimiento reducido, se ve todo desde el inicio.
 2. [revealAboveFold.ts](components/revealAboveFold.ts) es un script inline al
    final del `<body>`. Corre **antes del primer pintado** y marca los bloques que
-   ya estaban a la vista para que aparezcan de una, sin animarse. Sin él, lo que
-   entra en el primer pantallazo queda en blanco hasta que React hidrata.
+   ya estaban a la vista para que aparezcan de una.
 3. `Reveal` anima el resto cuando entran al viewport.
 
 ## Documentación relacionada
 
-- [DESIGN.md](DESIGN.md) — por qué los tokens valen lo que valen, contraste
-  verificado y las reglas que salen de esa tabla
-- [TODOS.md](TODOS.md) — trabajo diferido a propósito, con el disparador
-  concreto que lo volvería a poner sobre la mesa
+- [Brief de diseño](docs/superpowers/specs/2026-11-14-portfolio-rebrand-design.md):
+  posicionamiento, jerarquía, dirección visual, criterio de movimiento
+- [Plan de implementación](docs/superpowers/plans/2026-11-14-portfolio-rebrand.md)
+- [TODOS.md](TODOS.md): trabajo diferido a propósito, con el disparador concreto
+  que lo volvería a poner sobre la mesa

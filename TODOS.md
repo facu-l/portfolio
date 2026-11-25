@@ -4,7 +4,29 @@ Trabajo diferido conscientemente. Cada item es el reverso de una decisión que y
 se tomó: no son ideas sueltas, son la alternativa que se descartó y bajo qué
 condición volvería a estar sobre la mesa.
 
+## Después del rebranding Casebook (2026-11)
+
+### Verificar en el preview de Vercel que `/EN` da 404
+
+**What:** Abrir `/EN` y `/Es` en el deploy de preview y confirmar que responden 404.
+
+**Why:** En `next start` sobre Windows responden 200 (el sistema de archivos no distingue mayúsculas y sirve `es.html` para `/Es`). El `lang` de la página sale bien igual. En Linux (Vercel) debería ser 404 por `dynamicParams = false`, pero no se pudo verificar localmente.
+
+**Disparador:** el primer deploy de preview de la rama. **Effort:** XS · **Priority:** P2
+
+### Medir el LCP real en celular antes de optimizar JavaScript
+
+**What:** Activar Vercel Speed Insights y mirar el LCP de usuarios reales en mobile.
+
+**Why:** Lighthouse mobile (4G lento simulado + CPU 4x) da LCP 3.1 s y rendimiento 90-94; desktop da 100. Se descartó con un experimento que fuera la animación del hero (sin ella, mismo LCP) y que fueran las fuentes (76 KB precargados). Lo que queda es render delay del hilo principal: hidratación de React y ~53 KB de JS sin usar. Sin limitación de CPU, el mismo delay mide 486 ms.
+
+**Disparador:** si el LCP real p75 en mobile pasa de 2.5 s. Recién ahí vale la pena reducir Client Components o JS. **Effort:** M · **Priority:** P3
+
 ## Currently Learning
+
+> Desde el rebranding, el contenido vive en `content/en.ts` y `content/es.ts`
+> (tipo `SiteContent`). Si la sección vuelve, su texto va ahí en los dos idiomas,
+> no en un `content/learning.ts` aparte.
 
 ### Devolver la sección cuando haya algo que mostrar
 

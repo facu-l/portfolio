@@ -14,11 +14,11 @@
 @theme {
   /* --- Color ---------------------------------------------------------------
      Monocromo + UN acento. Contraste (WCAG 2.1):
-       foreground sobre background   ~17:1  AAA
-       muted sobre background        ~6.3:1 AA
-       muted sobre surface           ~5.8:1 AA
-       accent sobre background       ~15:1  AAA
-       background sobre accent       ~15:1  <- si algo va con fondo lima, el texto es oscuro
+       foreground sobre background   17.0:1 AAA
+       muted sobre background         6.1:1 AA
+       muted sobre surface            5.7:1 AA  (el par más justo)
+       accent sobre background       14.8:1 AAA
+       background sobre accent       14.8:1 <- si algo va con fondo lima, el texto es oscuro
 
      EL LIMA NO ES DECORACION: marca lo que se puede verificar o clickear
      (links a código, "Decision N", el punto final, el estado "Open to work",
