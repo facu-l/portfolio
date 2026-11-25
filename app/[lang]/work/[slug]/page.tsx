@@ -16,7 +16,11 @@ export function generateStaticParams() {
   return getContent("en").cases.map((c) => ({ slug: c.slug }));
 }
 
-export const dynamicParams = false;
+// Slugs desconocidos SI llegan a la página (ver el comentario de dynamicParams
+// en app/[lang]/layout.tsx): así notFound() usa app/[lang]/not-found.tsx
+export const dynamicParams = true;
+
+const OG_LOCALE = { en: "en_US", es: "es_AR" } as const;
 
 function findCase(lang: string, slug: string) {
   if (!isLocale(lang)) return undefined;
@@ -36,6 +40,17 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/work/[slug
     alternates: {
       canonical: `/${lang}/work/${slug}`,
       languages: { en: `/en/work/${slug}`, es: `/es/work/${slug}`, "x-default": `/en/work/${slug}` },
+    },
+    /*
+      Next REEMPLAZA el openGraph del layout en vez de mezclarlo. Sin esto, la
+      página hereda og:url = /es y la card de un caso compartido lleva al home.
+      Por eso se repiten siteName y locale.
+    */
+    openGraph: {
+      url: `/${lang}/work/${slug}`,
+      siteName: PERSON.name,
+      locale: OG_LOCALE[found.lang],
+      type: "article",
     },
   };
 }
