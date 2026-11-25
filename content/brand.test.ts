@@ -42,6 +42,14 @@ describe("BRAND", () => {
    * garantizar es que todo lo que está en BRAND siga existiendo del otro lado,
    * que es la mitad que se rompe en silencio.
    */
+  it("globals.css has no glow tokens left", () => {
+    expect(css).not.toMatch(/--shadow-glow/);
+  });
+
+  it("el acento es el lima del Casebook", () => {
+    expect(BRAND.accent.toLowerCase()).toBe("#c8f03c");
+  });
+
   it("no quedan colores en BRAND que ya no existan en el CSS", () => {
     const huerfanos = Object.keys(BRAND).filter((n) => !tokenDelCss(n));
     expect(huerfanos).toEqual([]);

@@ -2,31 +2,28 @@ type ExternalLinkProps = {
   href: string;
   children: React.ReactNode;
   className?: string;
+  /**
+   * Lo que escucha un lector de pantalla después del texto, en el idioma de la
+   * página: "(opens in a new tab)" / "(se abre en una pestaña nueva)".
+   */
+  opensInNewTab: string;
 };
 
 /**
- * Link a otro sitio. Server Component.
+ * Link a otro sitio: pestaña nueva + rel de seguridad + aviso accesible.
  *
- * Existe para no repetir tres cosas en cada link externo del portfolio
- * (Hero, Projects, Footer):
+ * `noopener` impide que la página abierta controle esta vía window.opener.
+ * El aviso existe porque abrir una pestaña sin avisar desorienta a quien usa
+ * lector de pantalla: el botón "atrás" de repente no hace nada.
  *
- * 1. rel="noopener noreferrer"
- *    Sin `noopener`, la página que abrís puede acceder a `window.opener` y
- *    redirigir tu pestaña a otro lado. Se llama tabnabbing.
- *
- * 2. El aviso de que abre en otra pestaña
- *    La flecha ↗ es información visual: quien usa lector de pantalla no la ve.
- *    Va oculta con aria-hidden y el aviso va en un <span> que solo leen los
- *    lectores. Abrir una pestaña sin avisar desorienta: el botón "atrás" deja
- *    de funcionar y no queda claro por qué.
- *
- * 3. Área de toque
- *    min-h-11 son 44px, el mínimo de WCAG para algo clickeable con el dedo.
+ * La flecha ↗ se desplaza 2px en hover (clase .link-arrow, ver globals.css):
+ * es la señal visual de "sale del sitio".
  */
 export function ExternalLink({
   href,
   children,
   className = "",
+  opensInNewTab,
 }: ExternalLinkProps) {
   return (
     <a
@@ -36,8 +33,10 @@ export function ExternalLink({
       className={`inline-flex min-h-11 items-center gap-1 transition-colors duration-fast ${className}`}
     >
       {children}
-      <span aria-hidden="true">↗</span>
-      <span className="sr-only">{" (opens in a new tab)"}</span>
+      <span aria-hidden="true" className="link-arrow">
+        ↗
+      </span>
+      <span className="sr-only"> {opensInNewTab}</span>
     </a>
   );
 }

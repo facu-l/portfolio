@@ -49,3 +49,6 @@ CLAUDE.md
 # herramientas de desarrollo, no documentacion del proyecto. Va ignorado y no
 # solo borrado, porque si no reaparece como cambio sin commitear cada vez.
 AGENTS.md
+
+# Mockups del brainstorming (superpowers visual companion)
+.superpowers/

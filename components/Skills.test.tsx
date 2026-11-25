@@ -1,85 +1,36 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { Skills } from "./Skills";
-import { FEATURED_SKILLS, OTHER_SKILLS } from "@/content/skills";
+import { getContent } from "@/content";
+import { LOCALES } from "@/lib/locale";
 
-describe("Skills", () => {
-  it("es un landmark con nombre accesible", () => {
-    render(<Skills />);
-    expect(screen.getByRole("region", { name: /skills/i })).toBeInTheDocument();
-  });
+describe.each(LOCALES)("Skills (%s)", (locale) => {
+  const content = getContent(locale);
 
-  /**
-   * Este test protege la decisión del design review, no el markup. Con 7
-   * categorías de peso idéntico un recruiter no elige ninguna. Si alguien
-   * "completa" la sección moviendo todo a destacadas, la jerarquía desaparece
-   * sin que nada se vea roto — y eso es justo lo que hace difícil detectarlo.
-   */
-  it("destaca exactamente tres categorías", () => {
-    expect(FEATURED_SKILLS).toHaveLength(3);
-    render(<Skills />);
-    expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(3);
-  });
+  function renderSkills() {
+    return render(
+      <Skills skills={content.skills} cases={content.cases} opensInNewTab={content.a11y.opensInNewTab} locale={locale} />
+    );
+  }
 
-  it("las destacadas son las que sostienen la promesa del Hero", () => {
-    const titulos = FEATURED_SKILLS.map((c) => c.title);
-    expect(titulos).toContain("Backend");
-    expect(titulos).toContain("Frontend");
-    expect(titulos).toContain("AI-assisted workflow");
-  });
-
-  it("cada categoría destacada tiene su nota explicativa", () => {
-    render(<Skills />);
-    for (const category of FEATURED_SKILLS) {
-      expect(category.note).toBeDefined();
-      expect(screen.getByText(category.note!)).toBeInTheDocument();
-    }
-  });
-
-  /**
-   * El rediseño a tarjetas con icono hizo que este test cambiara de forma pero
-   * no de intención. Antes el título de la categoría ERA el <dt>; ahora es un
-   * <span> adentro del <dt>, porque el <dt> además contiene el icono.
-   *
-   * Lo que se protege es lo mismo y sigue siendo lo importante: que sea un par
-   * categoría/items y NO un heading. Convertirlo en <h3> para que se vea igual
-   * a las destacadas es el cambio natural al rediseñar, se ve idéntico, y lleva
-   * el índice de encabezados de tres entradas (las categorías que importan) a
-   * siete.
-   */
-  it("las secundarias van como pares categoría/items, no como headings", () => {
-    render(<Skills />);
-    for (const category of OTHER_SKILLS) {
-      const titulo = screen.getByText(category.title);
-      expect(titulo.closest("dt")).not.toBeNull();
-      expect(
-        screen.queryByRole("heading", { name: category.title })
-      ).toBeNull();
-    }
-  });
-
-  it("cada categoría renderiza todos sus items", () => {
-    render(<Skills />);
-    for (const category of [...FEATURED_SKILLS, ...OTHER_SKILLS]) {
-      const lista = screen.getByRole("list", {
-        name: `${category.title} skills`,
-      });
-      for (const item of category.items) {
-        expect(lista).toHaveTextContent(item);
+  it("every group shows a Used in line whose links are case pages of the current locale or https URLs", () => {
+    renderSkills();
+    for (const group of content.skills.groups) {
+      const block = screen.getByRole("heading", { name: group.title }).closest("div")!;
+      expect(within(block).getByText(content.skills.usedInLabel, { exact: false })).toBeInTheDocument();
+      const hrefs = within(block).getAllByRole("link").map((a) => a.getAttribute("href")!);
+      expect(hrefs.length).toBeGreaterThan(0);
+      for (const href of hrefs) {
+        expect(href).toMatch(new RegExp(`^(/${locale}/work/[a-z-]+|https://)`));
       }
     }
   });
 
-  /**
-   * Una tecnología repetida en dos categorías se lee como relleno. TypeScript
-   * en Frontend y en Languages es a propósito (es el lenguaje Y la herramienta
-   * del stack), pero cualquier otra duplicación probablemente sea un descuido.
-   */
-  it("no hay tecnologías duplicadas fuera de las esperadas", () => {
-    const todas = [...FEATURED_SKILLS, ...OTHER_SKILLS].flatMap((c) => c.items);
-    const repetidas = todas.filter(
-      (item, i) => todas.indexOf(item) !== i
-    );
-    expect([...new Set(repetidas)].sort()).toEqual(["Java", "TypeScript"]);
+  it("the Java group links to articulos-api and says it was a course project", () => {
+    renderSkills();
+    const block = screen.getByRole("heading", { name: "Java" }).closest("div")!;
+    const link = within(block).getByRole("link", { name: /articulos-api/ });
+    expect(link).toHaveAttribute("href", "https://github.com/facu-l/articulos-api-spring-boot");
+    expect(link).toHaveTextContent(/course project|proyecto de curso/);
   });
 });

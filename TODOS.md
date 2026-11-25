@@ -4,7 +4,37 @@ Trabajo diferido conscientemente. Cada item es el reverso de una decisión que y
 se tomó: no son ideas sueltas, son la alternativa que se descartó y bajo qué
 condición volvería a estar sobre la mesa.
 
+## Después del rebranding Casebook (2026-11)
+
+### 404 localizado para idiomas inexistentes (`/fr`)
+
+**What:** Que `/fr` (u otro idioma que no existe) muestre el 404 del sitio y no el genérico de Next.
+
+**Why:** Los casos inexistentes (`/es/work/nope`) ya muestran el 404 en su idioma. `/fr` no puede, porque no hay layout raíz para un idioma que no existe; la solución es `app/global-not-found.tsx`, que en Next 16 sigue siendo experimental.
+
+**Disparador:** que `global-not-found` deje de ser experimental, o que aparezcan visitas reales a idiomas inexistentes. **Effort:** S · **Priority:** P4
+
+### Medir el LCP real en celular antes de optimizar JavaScript
+
+**What:** Activar Vercel Speed Insights y mirar el LCP de usuarios reales en mobile.
+
+**Why:** Lighthouse mobile (4G lento simulado + CPU 4x) da LCP 3.1 s y rendimiento 90-94; desktop da 100. Se descartó con un experimento que fuera la animación del hero (sin ella, mismo LCP) y que fueran las fuentes (76 KB precargados). Lo que queda es render delay del hilo principal: hidratación de React y ~53 KB de JS sin usar. Sin limitación de CPU, el mismo delay mide 486 ms.
+
+**Disparador:** si el LCP real p75 en mobile pasa de 2.5 s. Recién ahí vale la pena reducir Client Components o JS. **Effort:** M · **Priority:** P3
+
+### Completar "AI Engineer con Python" cuando haya repo
+
+**What:** Sumarle a la entrada de Código Facilito en `about.certifications` (los dos idiomas) un `topics` con lo que construiste y un `evidence` con el link al repo. Al terminar el curso: sacar `inProgress` y poner la fecha de fin en `detail`.
+
+**Why:** Hoy figura como "En curso" sin topics porque todo es teoría; listar el temario sería afirmar algo que no hiciste. Con un repo, la línea pasa de dato a evidencia. Ojo: si llegás a un proyecto de IA defendible, ese es también el disparador de la sección "Currently Learning" de abajo.
+
+**Disparador:** el primer repo del curso, aunque esté a medias. **Effort:** S · **Priority:** P2
+
 ## Currently Learning
+
+> Desde el rebranding, el contenido vive en `content/en.ts` y `content/es.ts`
+> (tipo `SiteContent`). Si la sección vuelve, su texto va ahí en los dos idiomas,
+> no en un `content/learning.ts` aparte.
 
 ### Devolver la sección cuando haya algo que mostrar
 

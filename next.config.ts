@@ -18,22 +18,29 @@ import type { NextConfig } from "next";
  *
  * connect-src CON api.web3forms.com ES OBLIGATORIO. El formulario hace fetch a
  * ese dominio desde el navegador. Sin esa línea el CSP lo bloquea y el form
- * falla SOLO EN PRODUCCION — en desarrollo no hay headers y todo anda. Es el
- * peor tipo de bug: el que aparece después de deployar.
+ * falla. Ojo: Next aplica estos headers también en `next dev`.
+ *
+ * 'unsafe-eval' SOLO EN DESARROLLO: React en dev usa eval() para reconstruir
+ * los stack traces, y sin él el overlay de Next muestra un error en cada carga
+ * que tapa los errores reales. En producción React nunca usa eval.
  */
-const CSP = [
-  "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
-  "font-src 'self'",
-  "connect-src 'self' https://api.web3forms.com",
-  "form-action 'self' https://api.web3forms.com",
-  "frame-ancestors 'none'",
-  "base-uri 'self'",
-  "object-src 'none'",
-  "upgrade-insecure-requests",
-].join("; ");
+export function contentSecurityPolicy({ isDev }: { isDev: boolean }): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self'",
+    "connect-src 'self' https://api.web3forms.com",
+    "form-action 'self' https://api.web3forms.com",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "upgrade-insecure-requests",
+  ].join("; ");
+}
+
+const CSP = contentSecurityPolicy({ isDev: process.env.NODE_ENV === "development" });
 
 const SECURITY_HEADERS = [
   { key: "Content-Security-Policy", value: CSP },
@@ -66,6 +73,21 @@ const SECURITY_HEADERS = [
 const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
+  /*
+    La URL del case study anterior al sitio bilingüe ya circula (CV, LinkedIn).
+    308 permanente: el contenido se mudó para siempre, y así Google transfiere
+    lo que ya tenía indexado a la URL nueva. Va al inglés porque el sitio
+    viejo estaba en inglés: quien tenía ese link leía en inglés.
+  */
+  async redirects() {
+    return [
+      {
+        source: "/work/gym-management-system",
+        destination: "/en/work/gym-management-system",
+        permanent: true,
+      },
+    ];
   },
 };
 

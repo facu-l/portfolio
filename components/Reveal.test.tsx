@@ -109,3 +109,31 @@ describe("Reveal", () => {
     expect(container.querySelector("#demo")?.tagName).toBe("SECTION");
   });
 });
+
+/**
+ * revealAboveFold.ts agrega `data-reveal-instant` al HTML del servidor ANTES
+ * de que React hidrate. Ese atributo no existe en el render del cliente, así
+ * que React avisaba de un desajuste de hidratación en cada carga (en dev).
+ */
+describe("Reveal hydration", () => {
+  it("hydrates without warnings after the above-fold script marked it", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const { hydrateRoot } = await import("react-dom/client");
+    const { act } = await import("react");
+
+    const container = document.createElement("div");
+    container.innerHTML = renderToString(<Reveal>content</Reveal>);
+    container.querySelector("[data-reveal]")!.setAttribute("data-reveal-instant", "");
+    document.body.appendChild(container);
+
+    const errors: unknown[][] = [];
+    const spy = vi.spyOn(console, "error").mockImplementation((...args) => errors.push(args));
+    await act(async () => {
+      hydrateRoot(container, <Reveal>content</Reveal>);
+    });
+    spy.mockRestore();
+    container.remove();
+
+    expect(errors.map((e) => String(e[0]))).toEqual([]);
+  });
+});

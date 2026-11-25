@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, act, within } from "@testing-library/react";
 import { Navbar } from "./Navbar";
-import { SITE } from "@/content/site";
+import { getContent } from "@/content";
+
+vi.mock("next/navigation", () => ({ usePathname: () => "/en" }));
+
+const en = getContent("en");
+const es = getContent("es");
 
 /**
  * Observer controlable: guarda el callback que le pasa el componente para que
@@ -53,22 +58,30 @@ afterEach(() => {
 });
 
 describe("Navbar", () => {
-  it("muestra el wordmark en mayúsculas", () => {
-    render(<Navbar />);
-    expect(
-      screen.getByRole("link", { name: SITE.name.toUpperCase() })
-    ).toBeInTheDocument();
+  it("the name ends in an accent period and links home in the current locale", () => {
+    render(<Navbar nav={es.nav} locale="es" />);
+    const home = screen.getByRole("link", { name: /Facundo Lambertucci/ });
+    expect(home).toHaveAttribute("href", "/es");
+    const period = within(home).getByText(".");
+    expect(period).toHaveClass("text-accent");
   });
 
-  it("renderiza los 4 links de navegación apuntando a anclas de la página", () => {
-    render(<Navbar />);
-    const nav = screen.getByRole("navigation", { name: /main/i });
-    expect(nav).toBeInTheDocument();
+  it("renders Work, Skills, About and Contact in that order, pointing to sections of the current locale", () => {
+    render(<Navbar nav={en.nav} locale="en" />);
+    const nav = screen.getByRole("navigation", { name: en.nav.label });
+    const labels = within(nav)
+      .getAllByRole("link")
+      .map((a) => a.textContent)
+      .filter((text) => ["Work", "Skills", "About", "Contact"].includes(text ?? ""));
+    expect(labels).toEqual(["Work", "Skills", "About", "Contact"]);
+    expect(screen.getByRole("link", { name: "Work" })).toHaveAttribute("href", "/en#work");
+  });
 
-    for (const label of ["About", "Work", "Skills", "Contact"]) {
-      const link = screen.getByRole("link", { name: label });
-      expect(link.getAttribute("href")).toMatch(/^#/);
-    }
+  it("offers the CV of the current locale as a download", () => {
+    render(<Navbar nav={es.nav} locale="es" />);
+    const cv = screen.getByRole("link", { name: es.nav.cv });
+    expect(cv).toHaveAttribute("href", "/cv-facundo-lambertucci-es.pdf");
+    expect(cv).toHaveAttribute("download");
   });
 
   /**
@@ -76,7 +89,7 @@ describe("Navbar", () => {
    * Si esto no funciona, todo el costo de "use client" fue en vano.
    */
   it("aplica el blur solo después de scrollear", () => {
-    const { container } = render(<Navbar />);
+    const { container } = render(<Navbar nav={en.nav} locale="en" />);
     const header = container.querySelector("header");
 
     expect(header).toHaveAttribute("data-scrolled", "false");
@@ -89,7 +102,7 @@ describe("Navbar", () => {
   });
 
   it("vuelve al estado inicial al volver arriba", () => {
-    const { container } = render(<Navbar />);
+    const { container } = render(<Navbar nav={en.nav} locale="en" />);
     const header = container.querySelector("header");
 
     simularScroll(true);
@@ -105,7 +118,7 @@ describe("Navbar", () => {
    * no rompe nada visible y no aparece en ningún test que no la busque.
    */
   it("desconecta el observer al desmontarse", () => {
-    const { unmount } = render(<Navbar />);
+    const { unmount } = render(<Navbar nav={en.nav} locale="en" />);
     expect(desconectado).toBe(false);
     unmount();
     expect(desconectado).toBe(true);

@@ -1,216 +1,86 @@
 import Image from "next/image";
-import { SITE } from "@/content/site";
+import type { SiteContent } from "@/content";
+import { CV_FILES, PERSON } from "@/content/config";
+import type { Locale } from "@/lib/locale";
 import { ButtonLink } from "./Button";
-import { CvDownload } from "./CvDownload";
-import { SocialIconLinks } from "./SocialIconLinks";
+import { CopyEmailButton } from "./CopyEmailButton";
+
+type HeroProps = {
+  hero: SiteContent["hero"];
+  locale: Locale;
+};
 
 /**
- * Hero. SERVER COMPONENT — y tiene que seguir siéndolo.
+ * El primer pantallazo responde lo que un recruiter busca en 10 segundos:
+ * qué rol, qué hace, si está buscando, y cómo bajar el CV o escribirle.
  *
- * Nada del Hero es Client Component: ni el glow ni el popover del CV necesitan
- * JavaScript. En el App Router "use client" no marca un componente, marca una
- * frontera: todo lo que cuelga debajo se vuelve cliente. Si alguna vez sube a
- * este archivo, el nombre, el título, la foto y los CTAs dejan de existir en el
- * HTML inicial y pasan a depender de que cargue JavaScript. Es exactamente el
- * contenido que un recruiter y un crawler tienen que ver primero.
+ * CUATRO ELEMENTOS DE TEXTO COMO MAXIMO (rol, frase de valor, estado, CTAs).
+ * "Disponible ahora" vive en Contact: acá sería un quinto renglón compitiendo
+ * con el CTA.
  *
- * Nota sobre el copy: el SPEC lista una "descripción corta" además del
- * subtítulo. No está acá a propósito — ya cumple su función como meta
- * description en app/layout.tsx, y dos frases de apoyo en el Hero compiten
- * entre sí. El Hero tiene una sola frase de apoyo; la evidencia larga va en
- * About.
+ * EL h1 ES EL ROL, NO EL NOMBRE. El nombre ya está en la navbar y en el
+ * <title>; el h1 es lo que se lee primero y "Full Stack Developer" es
+ * la respuesta a la pregunta que el recruiter trae.
  *
- * El glow azul del contorno de la foto (SPEC §2) es puro CSS y vive en este
- * archivo. Hubo una versión con la librería `liquid-gooey`: se descartó porque
- * el efecto de fusión da bordes duros, y lo que se buscaba era un resplandor.
+ * El punto de estado (lima) es el único punto de color del sitio: comunica un
+ * estado real (está buscando trabajo), no es decoración.
  */
-export function Hero() {
-  /*
-    overflow-x-clip por el glow: se extiende más allá de la caja de la foto, y
-    en mobile la foto está centrada con solo 24px de padding. Sin esto, el
-    desborde se convierte en scroll horizontal de TODA la página — pasó con la
-    versión anterior del efecto y se midió: 419px de contenido en un viewport
-    de 390, y 808 en uno de 768.
-
-    `clip` Y NO `hidden`: `overflow-x: hidden` obliga al otro eje a `auto` y
-    convierte la sección en un contenedor de scroll, lo que rompe cualquier
-    `position: sticky` que quede adentro. `clip` recorta sin crear scroll.
-  */
+export function Hero({ hero, locale }: HeroProps) {
   return (
-    <section
-      id="top"
-      aria-labelledby="hero-heading"
-      className="overflow-x-clip py-section"
-    >
-      <div className="mx-auto w-full max-w-5xl px-6">
-        <div className="grid gap-block md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-16">
-          {/* --- Columna de contenido --- */}
-          <div>
-            {/*
-              JERARQUIA: saludo → NOMBRE → rol.
+    <section id="top" aria-labelledby="hero-heading" className="mx-auto w-full max-w-6xl px-4 pt-10 pb-section sm:px-6 md:pt-16">
+      <div className="grid items-end gap-10 md:grid-cols-[1.5fr_1fr] md:gap-12">
+        <div className="hero-enter">
+          <h1
+            id="hero-heading"
+            className="text-display leading-[0.98] font-extrabold tracking-[-0.035em] text-balance"
+          >
+            {hero.role}
+            <span aria-hidden="true" className="text-accent">
+              .
+            </span>
+          </h1>
 
-              Antes el h1 era "FULL STACK DEVELOPER" a tamaño display. El
-              problema no era el tamaño, era qué ocupaba el lugar más grande de
-              la página: un puesto que comparten millones de personas. El nombre
-              es lo único irrepetible acá, y es lo que tiene que quedar cuando
-              alguien cierra la pestaña.
+          <p className="mt-6 max-w-[40ch] text-lead leading-relaxed text-foreground/80">
+            {hero.valueProp}
+          </p>
 
-              EL SALUDO NO ES DECORACION NI ES EL TITULO. Va chico y en gris
-              porque es tejido conectivo: sin él, "FACUNDO LAMBERTUCCI" solo,
-              gigante, se lee como una portada. Con él, se lee como alguien
-              presentándose.
-
-              Los tres van DENTRO del h1 con <span> de bloque, no como elementos
-              separados. Un lector de pantalla anuncia un solo encabezado:
-              "Hi, I'm Facundo Lambertucci, Full Stack Developer". Partirlo en
-              h1 + p sueltos rompe esa frase en pedazos sin relación.
-            */}
-            <h1 id="hero-heading" className="text-balance">
-              <span className="block text-lead text-muted">
-                {SITE.greeting}
-              </span>
-
-              <span className="mt-2 block text-display font-black uppercase leading-[0.95] tracking-tight">
-                {SITE.name}
-              </span>
-
-              {/*
-                El rol en acento: es la promesa del sitio y lo que un recruiter
-                busca en los primeros 3 segundos. Sobre el fondo de página el
-                azul da 4.64:1 y pasa AA — la restricción de DESIGN.md es no
-                usarlo sobre `surface` (3.97:1), y acá no hay surface.
-              */}
-              <span className="mt-stack block text-h2 font-bold text-accent">
-                {SITE.role}
-              </span>
-            </h1>
-
-            <p className="mt-block max-w-md text-lead text-muted">
-              {SITE.tagline}
-            </p>
-
-            {/*
-              DOS ACCIONES ARRIBA, LAS REDES ABAJO Y MAS CHICAS.
-
-              Antes había tres botones del mismo tamaño en una fila: ver el
-              trabajo, GitHub y el CV. Tres CTAs con el mismo peso no son una
-              jerarquía, son un menú — el visitante elige el que le queda más
-              cerca, no el que importa.
-
-              Arriba quedan las dos acciones que querés que haga alguien que
-              recién llega. GitHub bajó a la fila de iconos, que es donde
-              cualquiera espera encontrarlo, y de paso dejó de competir con el
-              CV por atención.
-            */}
-            <div className="mt-block flex flex-wrap gap-3">
-              <ButtonLink href="#work">VIEW MY WORK</ButtonLink>
-              <CvDownload />
-            </div>
-
-            <SocialIconLinks />
-
-            <p className="mt-block text-sm text-muted">{SITE.location}</p>
-          </div>
-
-          {/* --- Columna de la foto --- */}
-          {/*
-            En mobile la foto va DEBAJO del contenido, no arriba.
-            Con max-w-xs y ratio 3:4 la foto mide ~427px de alto: puesta arriba
-            empuja el titular abajo del fold en un teléfono chico, y el titular
-            es el mensaje. Además así el orden visual coincide con el orden del
-            DOM en todos los viewports.
-          */}
-          <div className="group relative mx-auto w-full max-w-xs md:max-w-none">
-            {/*
-              Glow azul alrededor de la foto (SPEC §2). Puro CSS: cero
-              JavaScript, cero dependencias.
-
-              ES UNA CAJA INVISIBLE QUE SOLO PROYECTA SOMBRA, y termina al 61%
-              de la altura de la foto. Las dos cosas son deliberadas:
-
-              1. `box-shadow` y no un div relleno y desenfocado. El navegador
-                 dibuja la sombra exterior POR FUERA de la caja y nunca por
-                 debajo, así que el azul no puede colarse por el hueco que deja
-                 la máscara de la foto. Un div relleno obliga a taparlo con un
-                 fondo opaco, y ahí se pierde el desvanecimiento.
-
-              2. `bottom-[39%]` en vez de cubrir toda la foto. Una sombra dibuja
-                 su franja más brillante JUSTO ABAJO del borde de su caja. Si esa
-                 franja cae donde la imagen ya empezó a desvanecerse, se
-                 transparenta y se ve como una línea azul cruzando la foto.
-
-                 EL 39% NO ES UN NUMERO A OJO, sale de atar tres valores que
-                 viven en dos archivos:
-
-                   · la máscara de la imagen es 100% opaca hasta el 74%
-                   · el blur de --shadow-glow-strong es 64px, ~13% del alto
-                   · 74% - 13% = 61%, así que la caja termina antes de ahí
-
-                 SE CALCULA CON EL BLUR DE HOVER Y NO EL DE REPOSO. En reposo
-                 son 46px (~9%) y daría 65%, pero la sombra crece al pasar el
-                 mouse: dimensionar con el valor chico deja el borde justo en el
-                 estado que no se estaba mirando.
-
-                 Con `bottom-[20%]` la caja terminaba en el 79%, ya dentro del
-                 desvanecimiento, y la línea se veía cruzando el cuello. SI
-                 ALGUIEN CAMBIA EL BLUR DEL TOKEN O EL 74% DE LA MASCARA, ESTE
-                 VALOR HAY QUE RECALCULARLO: ningún test lo puede detectar,
-                 porque el DOM sigue siendo correcto y lo único que falla es
-                 dónde caen los píxeles.
-
-              Los bordes de esta caja no se ven nunca: no tiene fondo y está
-              detrás de la parte opaca de la imagen. Lo único que aporta es la
-              sombra.
-
-              Los valores viven como tokens en globals.css: ningún color
-              hardcodeado acá (regla número uno de DESIGN.md).
-            */}
-            <div
+          <p className="mt-7 flex items-center gap-2.5 font-mono text-mono text-muted">
+            <span
               aria-hidden="true"
-              className="absolute inset-x-0 top-0 bottom-[39%] -z-10 rounded-lg shadow-glow transition-shadow duration-slow group-hover:shadow-glow-strong"
+              className="size-2 shrink-0 rounded-full bg-accent shadow-[0_0_0_4px_color-mix(in_oklab,var(--color-accent)_22%,transparent)]"
             />
+            <span>{hero.status}</span>
+          </p>
 
-            <div className="overflow-hidden rounded-lg">
-              <Image
-                src="/foto-facu.jpg"
-                alt={`${SITE.name}, ${SITE.role}`}
-                width={1200}
-                height={1607}
-                /*
-                  priority: esta imagen es el elemento LCP de la página. Sin
-                  esto Next la difiere como cualquier otra y el LCP se dispara.
-                  El screenshot del dashboard, que está abajo del fold, va sin
-                  priority a propósito: marcar todo como prioritario equivale a
-                  no marcar nada.
-                */
-                priority
-                sizes="(max-width: 768px) 20rem, 40vw"
-                className="h-auto w-full scale-105 transition-transform duration-slow group-hover:scale-110"
-                style={{
-                  /*
-                    Difumina el borde inferior para que la foto se integre con
-                    el fondo grafito en vez de leerse como un recorte pegado
-                    encima (SPEC §2).
-
-                    TERMINA EN 93% Y NO EN 100%, y eso es lo que hace que el
-                    desvanecimiento se vea. `scale-105` agranda la imagen un 5%
-                    y el contenedor recorta el sobrante: lo último visible es el
-                    ~97.6% de la imagen. Con el degradado terminando en 100%, el
-                    corte caía donde todavía quedaba ~11% de opacidad, y ese 11%
-                    dibujaba una línea horizontal nítida. Cerrando en 93%, para
-                    cuando llega el recorte ya no queda nada que cortar.
-
-                    El 93% también aguanta el hover: con `scale-110` lo visible
-                    baja al ~95.2%, y sigue estando después del final.
-                  */
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, black 74%, transparent 93%)",
-                  maskImage:
-                    "linear-gradient(to bottom, black 74%, transparent 93%)",
-                }}
-              />
-            </div>
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <ButtonLink href={CV_FILES[locale]} download>
+              {hero.cvLabel}
+            </ButtonLink>
+            <CopyEmailButton
+              email={PERSON.email}
+              copyLabel={hero.copyLabel}
+              copiedLabel={hero.copiedLabel}
+              copyFailedLabel={hero.copyFailedLabel}
+            />
           </div>
+        </div>
+
+        <div className="hero-enter relative mx-auto w-full max-w-[220px] md:mx-0 md:max-w-none">
+          <Image
+            src="/foto-facu.jpg"
+            alt={hero.photoAlt}
+            width={1200}
+            height={1607}
+            /*
+              priority: esta imagen es el elemento LCP de la página. Sin esto
+              Next la difiere como cualquier otra y el LCP se dispara.
+            */
+            priority
+            sizes="(min-width: 768px) 40vw, 220px"
+            className="aspect-[4/5] w-full rounded-sm object-cover"
+          />
+          {/* Filete lima en la base de la foto: el mismo acento que el punto final. */}
+          <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-accent" />
         </div>
       </div>
     </section>
