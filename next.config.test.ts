@@ -15,3 +15,17 @@ describe("next.config redirects", () => {
     });
   });
 });
+
+describe("Content-Security-Policy", () => {
+  /*
+    React en desarrollo usa eval() para reconstruir los stack traces. Sin
+    'unsafe-eval' el overlay de Next muestra un error en cada carga, y ese ruido
+    tapa los errores reales (así se escondió un desajuste de hidratación).
+    En producción React nunca usa eval, así que ahí no se habilita.
+  */
+  it("allows eval only in development", async () => {
+    const { contentSecurityPolicy } = await import("./next.config");
+    expect(contentSecurityPolicy({ isDev: true })).toMatch(/script-src [^;]*'unsafe-eval'/);
+    expect(contentSecurityPolicy({ isDev: false })).not.toMatch(/unsafe-eval/);
+  });
+});
