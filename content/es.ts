@@ -169,7 +169,7 @@ export const es: SiteContent = {
       problem:
         "Construir un sistema completo desde cero para un cliente real, con tres roles que tienen necesidades y permisos distintos: el dueño, la recepción y los propios socios.",
       team:
-        "Un equipo de 5 personas trabajando con Git Flow y ceremonias ágiles. Cada cambio pasaba por un pull request y code review antes de llegar a la rama principal, lo que implicaba coordinar ramas entre cinco personas sin bloquearnos.",
+        "Un equipo de 5 personas trabajando con Git Flow y ceremonias ágiles. Los cambios pasaban por pull requests y code review antes de llegar a la rama principal, lo que implicaba coordinar ramas entre cinco personas sin bloquearnos.",
       role:
         "Hice el lado del socio en el frontend, con React y TypeScript: membresías y el lado cliente del flujo de pago con Mercado Pago, el saldo de créditos de clases, las reservas con lista de espera y un QR por reserva para registrar la asistencia. El backend en Rust lo construyeron mis compañeros; mi trabajo fue el lado cliente de estos módulos y su integración con ese backend.",
       stack: ["React", "TypeScript", "Tailwind CSS", "Vite", "Rust (equipo)", "SQLite"],
@@ -180,15 +180,15 @@ export const es: SiteContent = {
       decisions: [
         {
           title: "Una clase está llena cuando lo dicen sus reservas, no un campo aparte.",
-          why: "La disponibilidad se guardaba en un campo separado que podía desincronizarse de las reservas reales. La derivé de las inscripciones contra el cupo, así hay una sola fuente de verdad.",
+          why: "La pantalla de membresías confiaba en un campo \"lleno\" guardado aparte, que podía desincronizarse de las reservas reales. La cambié para que compare las inscripciones contra el cupo, así lo que ve el socio coincide con las reservas.",
           evidence: {
             label: "Ver el commit",
             href: `${CEF_REPO}/commit/2ce08c8d224c306d5d166a4b4f7775b2a08f7bb6`,
           },
         },
         {
-          title: "Cada reserva tiene su propio QR, válido por 15 minutos.",
-          why: "Una captura de un QR no debería servir para siempre. Una ventana corta por reserva limita que se comparta o se reutilice en recepción.",
+          title: "El QR de asistencia identifica una reserva, no el DNI del socio.",
+          why: "El QR codificaba el DNI del socio: el mismo código para todas las clases y un documento personal a la vista. Lo cambié por un QR por reserva que codifica el id de la reserva, visible durante 15 minutos desde la pantalla de reservas.",
           evidence: {
             label: "Ver el commit",
             href: `${CEF_REPO}/commit/8890f71e817ddb7d26d82495597f721cafe73f21`,
@@ -196,7 +196,7 @@ export const es: SiteContent = {
         },
         {
           title: "Pagar una membresía nunca reserva dos veces la misma clase.",
-          why: "Si un socio ya había pagado una clase suelta y después compra una membresía que la incluye, el flujo saltea esa reserva. Los socios cuyas clases estaban llenas entran en lista de espera y se anotan solos.",
+          why: "Si un socio ya había pagado una clase suelta y después compra una membresía que la incluye, el flujo saltea esa reserva en vez de duplicarla.",
           evidence: {
             label: "Ver el pull request 278",
             href: `${CEF_REPO}/pull/278`,
@@ -214,7 +214,7 @@ export const es: SiteContent = {
         {
           src: "/proyectos/cef-clases.png",
           alt: "Grilla de clases del gimnasio con horarios y cupos disponibles",
-          caption: "La grilla de clases con disponibilidad en tiempo real.",
+          caption: "La grilla de clases con los cupos disponibles.",
           width: 1888,
           height: 912,
         },
@@ -318,4 +318,9 @@ export const es: SiteContent = {
     },
   },
   footer: { builtWith: "Hecho con Next.js" },
+  notFound: {
+    title: "Esta página no existe",
+    body: "Puede que el link sea viejo o tenga un error. Los proyectos y el contacto están en el inicio.",
+    backHome: "Ir al inicio",
+  },
 };

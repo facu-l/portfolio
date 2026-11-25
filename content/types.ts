@@ -148,4 +148,5 @@ export type SiteContent = {
     form: ContactFormCopy;
   };
   footer: { builtWith: string };
+  notFound: { title: string; body: string; backHome: string };
 };

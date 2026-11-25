@@ -92,6 +92,44 @@ describe("bilingual content", () => {
     expect(es.cases[1].role).toMatch(/compañer/);
   });
 
+  /*
+    VERDAD DEL CONTENIDO (revisión final). Cada test fija una afirmación que la
+    evidencia NO respalda, para que no vuelva:
+  */
+  it("the CEF QR decision describes what commit 8890f71 does: booking id instead of the member's DNI", () => {
+    const [enQr, esQr] = [en.cases[1].decisions[1], es.cases[1].decisions[1]];
+    expect(enQr.why).toMatch(/DNI/);
+    expect(esQr.why).toMatch(/DNI/);
+    // El vencimiento es un contador en pantalla: el backend no valida tiempo.
+    expect(enQr.why).not.toMatch(/screenshot|reus/i);
+    expect(esQr.why).not.toMatch(/captura|reutilice/i);
+  });
+
+  it("CEF decision 3 only claims what pull request 278 contains (no waiting list)", () => {
+    expect(en.cases[1].decisions[2].why).not.toMatch(/waiting list/i);
+    expect(es.cases[1].decisions[2].why).not.toMatch(/lista de espera/i);
+  });
+
+  it("CEF decision 1 does not overstate a two-line frontend change as a single source of truth", () => {
+    expect(en.cases[1].decisions[0].why).not.toMatch(/single source of truth/i);
+    expect(es.cases[1].decisions[0].why).not.toMatch(/una sola fuente de verdad/i);
+  });
+
+  it("the CEF team line does not claim every change went through a pull request", () => {
+    expect(en.cases[1].team).not.toMatch(/Every change/i);
+    expect(es.cases[1].team).not.toMatch(/Cada cambio/i);
+  });
+
+  it("no caption claims real-time behavior there is no evidence for", () => {
+    for (const content of [en, es]) {
+      for (const c of content.cases) {
+        for (const shot of c.gallery) {
+          expect(shot.caption ?? "").not.toMatch(/live availability|tiempo real/i);
+        }
+      }
+    }
+  });
+
   it("every gallery src exists in public/", () => {
     for (const c of en.cases) {
       for (const shot of c.gallery) {

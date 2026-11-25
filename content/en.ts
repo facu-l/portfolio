@@ -170,7 +170,7 @@ export const en: SiteContent = {
       problem:
         "Building a complete system from scratch for a real client, serving three roles with different needs and permissions: the owner, the front-desk staff and the members themselves.",
       team:
-        "A 5-person team working with Git Flow and agile ceremonies. Every change went through a pull request and code review before reaching the main branch, which meant coordinating branches across five people without blocking each other.",
+        "A 5-person team working with Git Flow and agile ceremonies. Changes went through pull requests and code review before reaching the main branch, which meant coordinating branches across five people without blocking each other.",
       role:
         "I built the members' side of the frontend in React and TypeScript: memberships and the client side of the Mercado Pago payment flow, the class credit balance, bookings with a waiting list, and a QR code per booking for check-in. The Rust backend was built by my teammates; my work was the client side of these modules and their integration with it.",
       stack: ["React", "TypeScript", "Tailwind CSS", "Vite", "Rust (team)", "SQLite"],
@@ -181,15 +181,15 @@ export const en: SiteContent = {
       decisions: [
         {
           title: "A class is full when its bookings say so, not when a flag says so.",
-          why: "Availability was stored in a separate field that could drift from the real bookings. I derived it from enrollments against capacity, so there is a single source of truth.",
+          why: "The membership screen trusted a stored \"full\" flag that could drift from the real bookings. I changed it to compare enrollments against capacity, so what the member sees matches the actual bookings.",
           evidence: {
             label: "See the commit",
             href: `${CEF_REPO}/commit/2ce08c8d224c306d5d166a4b4f7775b2a08f7bb6`,
           },
         },
         {
-          title: "Each booking gets its own QR, valid for 15 minutes.",
-          why: "A screenshot of a QR code shouldn't work forever. A short window per booking limits sharing or reusing it at the front desk.",
+          title: "The check-in QR identifies a booking, not the member's ID.",
+          why: "The QR used to encode the member's DNI (Argentina's national ID number): the same code for every class, and a personal document on screen. I changed it to one QR per booking that encodes the booking id, shown for 15 minutes from the bookings page.",
           evidence: {
             label: "See the commit",
             href: `${CEF_REPO}/commit/8890f71e817ddb7d26d82495597f721cafe73f21`,
@@ -197,7 +197,7 @@ export const en: SiteContent = {
         },
         {
           title: "Paying a membership never books the same class twice.",
-          why: "If a member had already paid for a class on its own and then bought a membership that includes it, the flow skips that booking. Members whose classes were full join a waiting list and are enrolled automatically.",
+          why: "If a member had already paid for a class on its own and then bought a membership that includes it, the flow skips that booking instead of creating a duplicate.",
           evidence: {
             label: "See pull request 278",
             href: `${CEF_REPO}/pull/278`,
@@ -215,7 +215,7 @@ export const en: SiteContent = {
         {
           src: "/proyectos/cef-clases.png",
           alt: "Gym class schedule with times and available spots",
-          caption: "Class schedule with live availability.",
+          caption: "Class schedule with available spots.",
           width: 1888,
           height: 912,
         },
@@ -319,4 +319,9 @@ export const en: SiteContent = {
     },
   },
   footer: { builtWith: "Built with Next.js" },
+  notFound: {
+    title: "This page doesn't exist",
+    body: "The link may be old or mistyped. The work and the contact details are on the home page.",
+    backHome: "Go to the home page",
+  },
 };
