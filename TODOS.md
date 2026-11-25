@@ -6,13 +6,13 @@ condición volvería a estar sobre la mesa.
 
 ## Después del rebranding Casebook (2026-11)
 
-### Verificar en el preview de Vercel que `/EN` da 404
+### 404 localizado para idiomas inexistentes (`/fr`)
 
-**What:** Abrir `/EN` y `/Es` en el deploy de preview y confirmar que responden 404.
+**What:** Que `/fr` (u otro idioma que no existe) muestre el 404 del sitio y no el genérico de Next.
 
-**Why:** En `next start` sobre Windows responden 200 (el sistema de archivos no distingue mayúsculas y sirve `es.html` para `/Es`). El `lang` de la página sale bien igual. En Linux (Vercel) debería ser 404 por `dynamicParams = false`, pero no se pudo verificar localmente.
+**Why:** Los casos inexistentes (`/es/work/nope`) ya muestran el 404 en su idioma. `/fr` no puede, porque no hay layout raíz para un idioma que no existe; la solución es `app/global-not-found.tsx`, que en Next 16 sigue siendo experimental.
 
-**Disparador:** el primer deploy de preview de la rama. **Effort:** XS · **Priority:** P2
+**Disparador:** que `global-not-found` deje de ser experimental, o que aparezcan visitas reales a idiomas inexistentes. **Effort:** S · **Priority:** P4
 
 ### Medir el LCP real en celular antes de optimizar JavaScript
 

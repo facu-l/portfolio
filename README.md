@@ -15,7 +15,7 @@ backend: el formulario de contacto va directo a Web3Forms.
 | Framework | Next.js 16 (App Router, Turbopack, `proxy.ts`) |
 | Lenguaje | TypeScript |
 | Estilos | Tailwind CSS v4: **sin `tailwind.config.ts`**, los tokens viven en `@theme` dentro de [app/globals.css](app/globals.css) |
-| Tipografía | Schibsted Grotesk (titulares y texto) + JetBrains Mono (datos técnicos), vía `next/font` |
+| Tipografía | Schibsted Grotesk (titulares y texto) + JetBrains Mono (datos técnicos), con `next/font/local` desde [app/fonts/](app/fonts/) (OFL). No se usa `next/font/google`: con la caché fría, Turbopack 16.3.2 falla el build al bajarlas |
 | Tests | Vitest + Testing Library + jsdom |
 | Formulario | Web3Forms |
 | Deploy | Vercel |
@@ -59,10 +59,12 @@ código, no para esconderla.
 ## Dos idiomas
 
 - Todas las páginas viven bajo [app/[lang]/](app/[lang]/): `/en`, `/es` y
-  `/[lang]/work/[slug]`. Se generan estáticas en el build; cualquier otro idioma
-  da 404 (`dynamicParams = false`).
-- [proxy.ts](proxy.ts) corre **solo en `/`** y redirige al idioma del navegador
-  (`Accept-Language`). Nada más pasa por el proxy.
+  `/[lang]/work/[slug]`. Se generan estáticas en el build. Un idioma inexistente
+  da 404 y un caso inexistente muestra el 404 del idioma
+  ([app/[lang]/not-found.tsx](app/[lang]/not-found.tsx)).
+- [proxy.ts](proxy.ts) hace dos cosas: manda `/` al idioma del navegador
+  (`Accept-Language`, 307) y normaliza mayúsculas (`/ES/...` → `/es/...`, 308).
+  Conserva el query string. Ninguna URL ya canónica pasa por ahí.
 - **Todo el texto** está en [content/en.ts](content/en.ts) y
   [content/es.ts](content/es.ts), con la forma de `SiteContent`
   ([content/types.ts](content/types.ts)). Si a un idioma le falta una clave, no
