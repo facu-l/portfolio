@@ -11,8 +11,11 @@ type CopyEmailButtonProps = {
 
 type CopyState = "idle" | "copied" | "failed";
 
-/** Cuánto se muestra "copiado" antes de volver al estado inicial. */
-const FEEDBACK_MS = 1500;
+/**
+ * Cuánto dura cada aviso antes de volver al estado inicial. El de fallo dura
+ * más: es más largo de leer y es el único aviso de que algo salió mal.
+ */
+const FEEDBACK_MS: Record<Exclude<CopyState, "idle">, number> = { copied: 1500, failed: 4000 };
 
 /**
  * El email, visible y copiable con un click.
@@ -51,7 +54,7 @@ export function CopyEmailButton({
     }
     setState(next);
     clearTimer(timer);
-    timer.current = setTimeout(() => setState("idle"), FEEDBACK_MS);
+    timer.current = setTimeout(() => setState("idle"), FEEDBACK_MS[next]);
   }
 
   const announcement =

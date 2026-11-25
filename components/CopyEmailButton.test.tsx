@@ -64,6 +64,27 @@ describe("CopyEmailButton", () => {
     expect(screen.getByRole("link", { name: EMAIL })).toHaveAttribute("href", `mailto:${EMAIL}`);
   });
 
+  /*
+    "Couldn't copy. Use the link instead" es más largo que "Email copied" y es
+    el único aviso de que algo salió mal: 1,5 s no alcanzaba para leerlo.
+  */
+  it("keeps the failure label long enough to read it", async () => {
+    vi.stubGlobal("navigator", {});
+    renderButton();
+    fireEvent.click(screen.getByRole("button", { name: LABELS.copyLabel }));
+    await flush();
+
+    act(() => {
+      vi.advanceTimersByTime(3500);
+    });
+    expect(screen.getByRole("status")).toHaveTextContent(LABELS.copyFailedLabel);
+
+    act(() => {
+      vi.advanceTimersByTime(1000);
+    });
+    expect(screen.getByRole("status")).toHaveTextContent("");
+  });
+
   it("when the clipboard rejects (permission denied), shows the failure label", async () => {
     vi.stubGlobal("navigator", { clipboard: { writeText: vi.fn().mockRejectedValue(new Error("denied")) } });
     renderButton();
