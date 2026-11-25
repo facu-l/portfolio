@@ -21,6 +21,7 @@ export const es: SiteContent = {
   },
   nav: {
     label: "Principal",
+    skipToContent: "Saltar al contenido",
     work: "Proyectos",
     skills: "Skills",
     about: "Sobre mí",

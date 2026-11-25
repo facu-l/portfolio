@@ -1,46 +1,55 @@
-import { SITE } from "@/content/site";
+import type { SiteContent } from "@/content";
+import { CV_FILES, PERSON } from "@/content/config";
+import type { Locale } from "@/lib/locale";
 import { StickyHeader } from "./StickyHeader";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+
+type NavbarProps = {
+  nav: SiteContent["nav"];
+  locale: Locale;
+};
 
 /**
- * Navbar. SERVER COMPONENT.
+ * Navbar: nombre (con el punto lima, la firma del Casebook), las cuatro
+ * secciones, el selector de idioma y el CV.
  *
- * Este archivo no tiene "use client" y no debe tenerlo. La interactividad
- * (el blur al scrollear) vive en StickyHeader; el wordmark y los links entran
- * ahí como children y siguen renderizándose en el servidor.
+ * LOS LINKS SON /${locale}#seccion Y NO #seccion: la misma navbar se usa en las
+ * páginas de caso, y ahí "#work" no existe. Desde el home el navegador
+ * reconoce que es la misma página y solo hace scroll.
  *
- * DECISION (design review): en mobile solo el wordmark, sin links.
- * El sitio es una sola página con scroll, así que los links son un atajo y no
- * la única vía. Un menú hamburguesa es una máquina de estados completa
- * (overlay, bloqueo del scroll del body, focus trap, cierre con Escape) para
- * saltar entre 4 secciones de la misma página. No lo vale.
+ * En celular las cuatro secciones se ocultan (el home se lee scrolleando); el
+ * CV y el idioma quedan siempre visibles porque son las dos acciones que un
+ * recruiter busca primero.
  */
-const LINKS = [
-  { href: "#about", label: "About" },
-  { href: "#work", label: "Work" },
-  { href: "#skills", label: "Skills" },
-  { href: "#contact", label: "Contact" },
-] as const;
+export function Navbar({ nav, locale }: NavbarProps) {
+  const links = [
+    { id: "work", label: nav.work },
+    { id: "skills", label: nav.skills },
+    { id: "about", label: nav.about },
+    { id: "contact", label: nav.contact },
+  ];
 
-export function Navbar() {
   return (
     <StickyHeader>
       <nav
-        aria-label="Main"
-        className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5"
+        aria-label={nav.label}
+        className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6"
       >
         <a
-          href="#top"
-          className="inline-flex min-h-11 items-center text-sm font-bold tracking-[0.15em] transition-colors duration-fast hover:text-accent"
+          href={`/${locale}`}
+          className="inline-flex min-h-11 items-center text-base font-extrabold tracking-tight whitespace-nowrap"
         >
-          {SITE.name.toUpperCase()}
+          {PERSON.name}
+          <span aria-hidden="true" className="text-accent">
+            .
+          </span>
         </a>
 
-        {/* hidden por debajo de md: la decisión de arriba */}
-        <ul className="hidden items-center gap-8 md:flex">
-          {LINKS.map((link) => (
-            <li key={link.href}>
+        <ul className="hidden items-center gap-7 md:flex">
+          {links.map((link) => (
+            <li key={link.id}>
               <a
-                href={link.href}
+                href={`/${locale}#${link.id}`}
                 className="inline-flex min-h-11 items-center text-sm font-semibold text-muted transition-colors duration-fast hover:text-foreground"
               >
                 {link.label}
@@ -48,6 +57,17 @@ export function Navbar() {
             </li>
           ))}
         </ul>
+
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher locale={locale} switchTo={nav.switchTo} />
+          <a
+            href={CV_FILES[locale]}
+            download
+            className="btn-pill inline-flex min-h-11 items-center rounded-full border border-border px-4 font-mono text-mono text-foreground hover:border-foreground"
+          >
+            {nav.cv}
+          </a>
+        </div>
       </nav>
     </StickyHeader>
   );

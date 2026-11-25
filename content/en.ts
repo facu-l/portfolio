@@ -22,6 +22,7 @@ export const en: SiteContent = {
   },
   nav: {
     label: "Main",
+    skipToContent: "Skip to content",
     work: "Work",
     skills: "Skills",
     about: "About",

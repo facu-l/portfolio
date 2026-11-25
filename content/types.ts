@@ -88,6 +88,7 @@ export type SiteContent = {
   meta: { title: string; description: string };
   nav: {
     label: string;
+    skipToContent: string;
     work: string;
     skills: string;
     about: string;

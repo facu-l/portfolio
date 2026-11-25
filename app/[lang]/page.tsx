@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
@@ -5,49 +6,42 @@ import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { getContent } from "@/content";
+import { isLocale } from "@/lib/locale";
 
 /**
- * Orden de secciones:
- * Hero -> About (incluye Education) -> Projects -> Skills -> Contact -> Footer
+ * Home. Lee el contenido del idioma una vez y lo reparte como props: los
+ * componentes no saben de idiomas, reciben texto.
  *
- * About va ANTES que Projects a propósito: el visitante lee quién sos antes de
- * ver qué construiste.
- *
- * EL SPEC TENIA UNA SECCION MAS, "Currently Learning", ENTRE SKILLS Y CONTACT.
- * Se sacó, y no por espacio: su contenido era un roadmap que todavía no había
- * empezado. Un encabezado que dice CURRENTLY LEARNING sobre algo que no arrancó
- * no es contenido flojo, es una afirmación falsa — y este portfolio se sostiene
- * sobre la regla contraria, escrita en content/about.ts: un curso listado es una
- * afirmación, un repo que se puede abrir es evidencia.
- *
- * El mensaje no se perdió: la bio ya cierra con "building toward AI engineering
- * as a deeper specialization", que dice lo mismo como dirección y no como
- * actividad en curso. Las condiciones para que la sección vuelva están en
- * TODOS.md.
+ * Orden (spec §4.1): Hero -> Work -> Skills -> About -> Contact. Primero lo que
+ * se evalúa (el trabajo), después quién es.
  */
-export default function Home() {
+export default async function Home({ params }: PageProps<"/[lang]">) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+  const content = getContent(lang);
+
   return (
     <>
       {/*
         Skip link: primer elemento focuseable de la página. Invisible hasta que
-        alguien tabula, y ahí aparece. Le permite a quien navega con teclado o
-        lector de pantalla saltear el navbar en vez de tabular por los 4 links
-        en cada carga.
+        alguien tabula. Le permite a quien navega con teclado o lector de
+        pantalla saltear la navbar en cada carga.
       */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-6 focus:top-6 focus:z-[100] focus:rounded-sm focus:bg-accent focus:px-4 focus:py-2 focus:text-body focus:font-semibold focus:text-foreground"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-sm focus:bg-foreground focus:px-4 focus:py-2 focus:font-semibold focus:text-background"
       >
-        Skip to content
+        {content.nav.skipToContent}
       </a>
 
-      <Navbar />
+      <Navbar nav={content.nav} locale={lang} />
 
       <main id="main">
-        <Hero />
-        <About />
+        <Hero hero={content.hero} locale={lang} />
         <Projects />
         <Skills />
+        <About />
         <Contact />
       </main>
 
