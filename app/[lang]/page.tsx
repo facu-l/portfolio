@@ -8,6 +8,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { SkipLink } from "@/components/SkipLink";
 import { getContent } from "@/content";
+import { WEB3FORMS_ACCESS_KEY } from "@/content/config";
 import { isLocale } from "@/lib/locale";
 
 /**
@@ -31,12 +32,12 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <main id="main">
         <Hero hero={content.hero} locale={lang} />
         <Work work={content.work} cases={content.cases} opensInNewTab={content.a11y.opensInNewTab} locale={lang} />
-        <Skills />
-        <About />
-        <Contact />
+        <Skills skills={content.skills} cases={content.cases} opensInNewTab={content.a11y.opensInNewTab} locale={lang} />
+        <About about={content.about} opensInNewTab={content.a11y.opensInNewTab} />
+        <Contact contact={content.contact} hero={content.hero} opensInNewTab={content.a11y.opensInNewTab} accessKey={WEB3FORMS_ACCESS_KEY} />
       </main>
 
-      <Footer />
+      <Footer footer={content.footer} opensInNewTab={content.a11y.opensInNewTab} />
     </>
   );
 }

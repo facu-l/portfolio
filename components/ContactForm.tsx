@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { buttonClasses } from "./Button";
 import { ContactFallback } from "./ContactFallback";
-import { CONTACT_COPY, HONEYPOT_FIELD } from "@/content/contact";
+import { HONEYPOT_FIELD } from "@/content/config";
+import type { ContactFormCopy } from "@/content";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -15,15 +16,18 @@ type ContactFormProps = {
    * Component. Si este componente también consultara el entorno, la misma
    * decisión viviría en dos archivos y podrían discrepar. Además vuelve al
    * componente testeable sin tocar variables de entorno: se le pasa una key y
-   * listo.
+   * listo. Mismo criterio para el texto: llega traducido desde la página.
    */
   accessKey: string;
+  /** Etiquetas y mensajes en el idioma de la página. */
+  copy: ContactFormCopy;
+  opensInNewTab: string;
 };
 
 const INPUT_CLASSES =
   "w-full rounded-sm border border-border bg-surface px-4 py-3 text-foreground placeholder:text-muted transition-colors duration-fast hover:border-muted";
 
-const LABEL_CLASSES = "text-sm font-semibold uppercase tracking-[0.2em] text-muted";
+const LABEL_CLASSES = "text-sm font-semibold text-muted";
 
 /**
  * Formulario de contacto. EL SEGUNDO Y ULTIMO CLIENT COMPONENT DEL SITIO.
@@ -45,7 +49,7 @@ const LABEL_CLASSES = "text-sm font-semibold uppercase tracking-[0.2em] text-mut
  * FormData ya sabe leer un form. Meter una dependencia acá sería agregar
  * concepto sin resolver un problema que exista.
  */
-export function ContactForm({ accessKey }: ContactFormProps) {
+export function ContactForm({ accessKey, copy, opensInNewTab }: ContactFormProps) {
   const [status, setStatus] = useState<Status>("idle");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -81,7 +85,7 @@ export function ContactForm({ accessKey }: ContactFormProps) {
         aprieta "Send" y no se entera de que funcionó.
       */
       <p role="status" className="mt-block text-lead text-foreground">
-        {CONTACT_COPY.success}
+        {copy.success}
       </p>
     );
   }
@@ -112,11 +116,11 @@ export function ContactForm({ accessKey }: ContactFormProps) {
     elemento raíz son dos expresiones de primer nivel y no compila.)
   */
   return (
-    <form onSubmit={handleSubmit} className="mt-block max-w-2xl">
+    <form onSubmit={handleSubmit} className="mt-6 max-w-2xl">
       <div className="flex flex-col gap-block">
         <div className="flex flex-col gap-2">
           <label htmlFor="contact-name" className={LABEL_CLASSES}>
-            {CONTACT_COPY.nameLabel}
+            {copy.nameLabel}
           </label>
           <input
             id="contact-name"
@@ -130,7 +134,7 @@ export function ContactForm({ accessKey }: ContactFormProps) {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="contact-email" className={LABEL_CLASSES}>
-            {CONTACT_COPY.emailLabel}
+            {copy.emailLabel}
           </label>
           {/*
             type="email" no es cosmético: le da al navegador la validación y, en
@@ -148,7 +152,7 @@ export function ContactForm({ accessKey }: ContactFormProps) {
 
         <div className="flex flex-col gap-2">
           <label htmlFor="contact-message" className={LABEL_CLASSES}>
-            {CONTACT_COPY.messageLabel}
+            {copy.messageLabel}
           </label>
           <textarea
             id="contact-message"
@@ -188,11 +192,11 @@ export function ContactForm({ accessKey }: ContactFormProps) {
           disabled={isSubmitting}
           className={`${buttonClasses("primary")} disabled:cursor-not-allowed disabled:opacity-60`}
         >
-          {isSubmitting ? CONTACT_COPY.submitting : CONTACT_COPY.submit}
+          {isSubmitting ? copy.submitting : copy.submit}
         </button>
       </div>
 
-      {status === "error" && <ContactFallback message={CONTACT_COPY.error} />}
+      {status === "error" && <ContactFallback message={copy.error} opensInNewTab={opensInNewTab} />}
     </form>
   );
 }

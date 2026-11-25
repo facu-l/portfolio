@@ -6,7 +6,7 @@ type ExternalLinkProps = {
    * Lo que escucha un lector de pantalla después del texto, en el idioma de la
    * página: "(opens in a new tab)" / "(se abre en una pestaña nueva)".
    */
-  opensInNewTab?: string;
+  opensInNewTab: string;
 };
 
 /**
@@ -23,9 +23,7 @@ export function ExternalLink({
   href,
   children,
   className = "",
-  // TRANSITORIO: el default existe mientras About/Contact/Footer no pasan el
-  // texto traducido (Tarea 7). Después la prop vuelve a ser obligatoria.
-  opensInNewTab = "(opens in a new tab)",
+  opensInNewTab,
 }: ExternalLinkProps) {
   return (
     <a

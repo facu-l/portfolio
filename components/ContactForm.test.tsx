@@ -2,7 +2,11 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ContactForm } from "./ContactForm";
-import { HONEYPOT_FIELD, CONTACT_COPY } from "@/content/contact";
+import { HONEYPOT_FIELD } from "@/content/config";
+import { getContent } from "@/content";
+
+const { contact, a11y } = getContent("en");
+const CONTACT_COPY = contact.form;
 
 const KEY = "clave-de-prueba";
 
@@ -21,7 +25,7 @@ describe("ContactForm", () => {
   });
 
   it("los tres campos tienen label asociado y el tipo correcto", () => {
-    render(<ContactForm accessKey={KEY} />);
+    render(<ContactForm accessKey={KEY} copy={CONTACT_COPY} opensInNewTab={a11y.opensInNewTab} />);
     expect(screen.getByLabelText(/name/i)).toBeRequired();
     expect(screen.getByLabelText(/email/i)).toHaveAttribute("type", "email");
     expect(screen.getByLabelText(/message/i)).toBeRequired();
@@ -40,7 +44,7 @@ describe("ContactForm", () => {
    *   lo complete sin querer y quede marcado como bot.
    */
   it("el honeypot conserva el nombre, el tipo y el aislamiento que necesita", () => {
-    const { container } = render(<ContactForm accessKey={KEY} />);
+    const { container } = render(<ContactForm accessKey={KEY} copy={CONTACT_COPY} opensInNewTab={a11y.opensInNewTab} />);
     const honeypot = container.querySelector(`[name="${HONEYPOT_FIELD}"]`);
 
     expect(honeypot).not.toBeNull();
@@ -55,7 +59,7 @@ describe("ContactForm", () => {
       .mockResolvedValue({ ok: true, json: async () => ({ success: true }) });
     vi.stubGlobal("fetch", fetchMock);
 
-    render(<ContactForm accessKey={KEY} />);
+    render(<ContactForm accessKey={KEY} copy={CONTACT_COPY} opensInNewTab={a11y.opensInNewTab} />);
     await completarYEnviar();
 
     await waitFor(() =>
@@ -83,7 +87,7 @@ describe("ContactForm", () => {
       vi.fn().mockResolvedValue({ ok: true, json: async () => ({ success: false }) })
     );
 
-    render(<ContactForm accessKey={KEY} />);
+    render(<ContactForm accessKey={KEY} copy={CONTACT_COPY} opensInNewTab={a11y.opensInNewTab} />);
     await completarYEnviar();
 
     await waitFor(() =>
@@ -95,7 +99,7 @@ describe("ContactForm", () => {
   it("si la red falla ofrece el camino alternativo en vez de un error seco", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline")));
 
-    render(<ContactForm accessKey={KEY} />);
+    render(<ContactForm accessKey={KEY} copy={CONTACT_COPY} opensInNewTab={a11y.opensInNewTab} />);
     await completarYEnviar();
 
     await waitFor(() =>
@@ -116,7 +120,7 @@ describe("ContactForm", () => {
       vi.fn().mockReturnValue(new Promise((res) => (resolver = res)))
     );
 
-    render(<ContactForm accessKey={KEY} />);
+    render(<ContactForm accessKey={KEY} copy={CONTACT_COPY} opensInNewTab={a11y.opensInNewTab} />);
     await completarYEnviar();
 
     const boton = screen.getByRole("button", { name: /sending/i });

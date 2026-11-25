@@ -58,7 +58,7 @@ export default async function CaseStudyRoute({ params }: PageProps<"/[lang]/work
           locale={found.lang}
         />
       </main>
-      <Footer />
+      <Footer footer={content.footer} opensInNewTab={content.a11y.opensInNewTab} />
     </>
   );
 }

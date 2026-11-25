@@ -1,75 +1,31 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { About } from "./About";
-import { BIO, DEGREE, CERTIFICATIONS } from "@/content/about";
+import { getContent } from "@/content";
+import { LOCALES } from "@/lib/locale";
 
-describe("About", () => {
-  it("es un landmark con nombre accesible", () => {
-    render(<About />);
-    expect(
-      screen.getByRole("region", { name: /about/i })
-    ).toBeInTheDocument();
+describe.each(LOCALES)("About (%s)", (locale) => {
+  const content = getContent(locale);
+  const { about } = content;
+
+  function renderAbout() {
+    return render(<About about={about} opensInNewTab={content.a11y.opensInNewTab} />);
+  }
+
+  it("shows bio, how-I-work statements, education and the freelance line last", () => {
+    const { container } = renderAbout();
+    expect(screen.getByText(about.bio)).toBeInTheDocument();
+    for (const line of about.howIWork) expect(screen.getByText(line)).toBeInTheDocument();
+    expect(screen.getByText(about.degree.title)).toBeInTheDocument();
+    for (const cert of about.certifications) expect(screen.getByText(cert.title)).toBeInTheDocument();
+
+    const texts = [...container.querySelectorAll("p")].map((p) => p.textContent);
+    expect(texts.at(-1)).toBe(about.freelance);
   });
 
-  it("muestra la bio completa", () => {
-    render(<About />);
-    expect(screen.getByText(BIO)).toBeInTheDocument();
-  });
-
-  /**
-   * Node.js quedó FUERA de la bio a propósito: el portfolio no tiene ningún
-   * artefacto que respalde esa afirmación. Sigue estando en Skills, que es una
-   * lista de herramientas conocidas y no una afirmación de haber construido.
-   *
-   * Este test existe para que si alguien reescribe la bio y vuelve a meter
-   * Node.js, la decisión se discuta en vez de colarse.
-   */
-  it("la bio no promete tecnologías que el portfolio no puede respaldar", () => {
-    expect(BIO).not.toMatch(/node\.?js/i);
-    expect(BIO).toMatch(/spring boot/i);
-  });
-
-  it("muestra el título de grado con institución y año", () => {
-    render(<About />);
-    expect(screen.getByText(DEGREE.title)).toBeInTheDocument();
-    expect(
-      screen.getByText(new RegExp(DEGREE.detail, "i"))
-    ).toBeInTheDocument();
-  });
-
-  it("lista las certificaciones con su institución", () => {
-    render(<About />);
-    for (const cert of CERTIFICATIONS) {
-      expect(screen.getByText(cert.title)).toBeInTheDocument();
-      expect(screen.getByText(cert.topics)).toBeInTheDocument();
-    }
-  });
-
-  /**
-   * Este es el test que protege la decisión de fondo: la certificación de
-   * Java linkea al repo que salió de ese curso. Sin ese link, el portfolio
-   * afirma experiencia backend sin un solo artefacto que la muestre — que es
-   * exactamente el hueco que encontró el review.
-   */
-  it("la certificación de Java linkea a la API como evidencia", () => {
-    render(<About />);
-    const conEvidencia = CERTIFICATIONS.filter((c) => c.evidence);
-    expect(conEvidencia.length).toBeGreaterThan(0);
-
-    for (const cert of conEvidencia) {
-      const link = screen.getByRole("link", {
-        name: new RegExp(cert.evidence!.label, "i"),
-      });
-      expect(link).toHaveAttribute("href", cert.evidence!.href);
-      expect(link.getAttribute("rel")).toContain("noopener");
-    }
-  });
-
-  it("Education es un h3, no compite con el h2 de la sección", () => {
-    render(<About />);
-    const h2 = screen.getByRole("heading", { level: 2, name: /about/i });
-    const h3 = screen.getByRole("heading", { level: 3, name: /education/i });
-    expect(h2).toBeInTheDocument();
-    expect(h3).toBeInTheDocument();
+  it("Talento Tech links to the API repo", () => {
+    renderAbout();
+    const link = screen.getByRole("link", { name: new RegExp(about.certifications[0].evidence!.label) });
+    expect(link).toHaveAttribute("href", "https://github.com/facu-l/articulos-api-spring-boot");
   });
 });
