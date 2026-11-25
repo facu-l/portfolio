@@ -47,7 +47,7 @@ Regla editorial que gobierna todo (ya vigente en `content/about.ts`): **un curso
 
 ### 4.1 Home (`/[lang]`)
 1. **Navbar:** nombre con punto lima · Work · Skills · About · Contact · selector EN/ES · "CV".
-2. **Hero:** rol + frase de valor + estado + CTAs `Download CV` (primario) y email con copiar al portapapeles (secundario). Foto real en B/N a la derecha (abajo en celular).
+2. **Hero:** rol + frase de valor + estado + CTAs `Download CV` (primario) y email con copiar al portapapeles (secundario). Foto real en color a la derecha (abajo en celular); se pasó de B/N a color el 2026-11-25: el fondo neutro no compite con el lima y la cara gana calidez.
 3. **Work:** dos casos, cada uno con resumen, stack, links y **una** tarjeta de decisión destacada, más link "Read the case study".
 4. **Skills:** agrupadas, y cada grupo dice **dónde se usó** con link (ver 4.4).
 5. **About:** bio, cómo trabajo (tests, decisiones documentadas, IA con revisión), Educación (UNLP + 2 certificaciones; Talento Tech con "View the API" → articulos-api), línea freelance.

@@ -77,7 +77,7 @@ export function Hero({ hero, locale }: HeroProps) {
             */
             priority
             sizes="(min-width: 768px) 40vw, 220px"
-            className="aspect-[4/5] w-full rounded-sm object-cover grayscale"
+            className="aspect-[4/5] w-full rounded-sm object-cover"
           />
           {/* Filete lima en la base de la foto: el mismo acento que el punto final. */}
           <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-accent" />
