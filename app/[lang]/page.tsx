@@ -6,6 +6,7 @@ import { Work } from "@/components/Work";
 import { Skills } from "@/components/Skills";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { SkipLink } from "@/components/SkipLink";
 import { getContent } from "@/content";
 import { isLocale } from "@/lib/locale";
 
@@ -23,17 +24,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
   return (
     <>
-      {/*
-        Skip link: primer elemento focuseable de la página. Invisible hasta que
-        alguien tabula. Le permite a quien navega con teclado o lector de
-        pantalla saltear la navbar en cada carga.
-      */}
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:rounded-sm focus:bg-foreground focus:px-4 focus:py-2 focus:font-semibold focus:text-background"
-      >
-        {content.nav.skipToContent}
-      </a>
+      <SkipLink label={content.nav.skipToContent} />
 
       <Navbar nav={content.nav} locale={lang} />
 
